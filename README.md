@@ -1,177 +1,96 @@
+# Fashionix Next
+
 <p align="center">
-  <a href="https://bagisto.com/en/headless-ecommerce/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/bagisto/temp-media/0b0984778fae92633f57e625c5494ead1fe320c3/dark-logo-P5H7MBtx.svg">
-      <source media="(prefers-color-scheme: light)" srcset="https://bagisto.com/wp-content/themes/bagisto/images/logo.png">
-      <img src="https://bagisto.com/wp-content/themes/bagisto/images/logo.png" alt="Bagisto logo">
-    </picture>
-  </a>
+  <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=80" alt="Fashionix storefront preview" width="720">
 </p>
 
 <p align="center">
-    <a href="https://bagisto.com/en/headless-ecommerce/">Website</a> | <a href="https://bagisto.com/en/bagisto-headless-ecommerce-installation-guide/">Documentation</a> | <a href="https://forums.bagisto.com/">Forums</a> | <a href="https://www.facebook.com/groups/bagisto/">Community</a>
+  <b>Fashionix</b> &#x1F6CD; menghadirkan pengalaman belanja fashion kelas butik dengan kecepatan dan fleksibilitas headless commerce modern.
 </p>
 
-<p align="center">
-    <a href="https://twitter.com/intent/follow?screen_name=bagistoshop"><img src="https://img.shields.io/twitter/follow/bagistoshop?style=social"></a>
-    <a href="https://www.youtube.com/channel/UCbrfqnhyiDv-bb9QuZtonYQ"><img src="https://img.shields.io/youtube/channel/subscribers/UCbrfqnhyiDv-bb9QuZtonYQ?style=social"></a>
-</p>
+## &#x1F31F; Pengenalan Fashionix
 
-<p align="center">
-    <a href="https://packagist.org/packages/bagisto/bagisto"><img src="https://poser.pugx.org/bagisto/bagisto/license.svg" alt="License"></a>
-</p>
+Fashionix adalah ekosistem e-commerce yang dirancang untuk brand fashion digital-first. Dengan arsitektur headless berbasis Next.js, Fashionix memisahkan front-end dan back-end agar tim kreatif dan pengembang dapat meluncurkan kampanye, katalog, serta personalisasi pengalaman pelanggan dengan gesit. Fokus kami adalah tampilan premium, checkout cepat, dan konten dinamis yang tetap aman serta mudah dirawat.
 
-#  Bagisto Next.js Commerce
+- Navigasi koleksi yang kaya visual guna memikat pelanggan sejak halaman pertama.
+- Pengelolaan produk, stok, dan promosi melalui integrasi GraphQL yang konsisten.
+- Analitik real-time untuk memahami performa kampanye fashion secara mendalam.
 
-A [**headless eCommerce framework**](https://bagisto.com/en/headless-ecommerce/) built with **Next.js** and powered by **Bagisto**, designed for modern scalability and flexibility.
-Through layered caching and optimized rendering strategies, it consistently achieves a **100/100 Core Web Vitals score**, delivering lightning-fast performance and seamless shopping experiences.
+![Fashionix multi device preview](https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80)
 
-Check the [Documentation](https://bagisto.com/en/bagisto-headless-ecommerce-installation-guide/) to quickly set up your Headless eCommerce store.
+## &#x1F9F0; Teknologi yang Digunakan
 
-**Bagisto Version:** v2.3.0
+- Next.js 15 dengan mode App Router dan Turbopack untuk rendering super cepat.
+- React 18 yang memanfaatkan Suspense dan Server Components demi pengalaman interaktif halus.
+- HeroUI dan Tailwind CSS 4 untuk sistem desain yang elegan dan responsif.
+- TanStack Query serta GraphQL Request untuk pengambilan data yang tangguh dan tersinkron.
+- Redux Toolkit untuk state management lintas halaman, termasuk keranjang dan preferensi pelanggan.
+- PNPM sebagai package manager ringan yang efisien untuk monorepo dan workspace tim.
 
-**Bagisto GraphQL API:** v2.3.0
+## &#x1F680; Cara Pakai Fashionix
 
-![Bagisto Headless Commerce Image](https://raw.githubusercontent.com/bagisto/temp-media/refs/heads/master/bagisto-headless-commerce-home.png)
-## Features
+### &#x2705; System Requirements
 
-- **Ultra-fast storefront** with 100/100 Core Web Vitals score.  
-- **Layered caching** for API responses and page rendering.  
-- Fully **responsive and mobile-friendly** design.  
-- SEO optimized with meta tags, OpenGraph, and Twitter cards.  
-- Secure authentication via **NextAuth.js**.  
-- Powered by **Bagisto** GraphQL APIs for robust commerce functionality.  
-- **Incremental Static Regeneration (ISR)** with revalidation.
-  
-Bagisto Open Source Headless eCommerce is optimized to deliver a **100/100 Core Web Vitals score** across devices, ensuring top-tier performance and user experience.
+- Node.js 18 atau lebih baru
+- pnpm 8 atau lebih baru
 
-![Bagisto Headless Commerce Image](https://raw.githubusercontent.com/bagisto/temp-media/refs/heads/master/bagisto-headless-commerce-performance.png)
-
-## Prerequisites
-
-Before you begin, ensure you have the following installed:
-
-- **Node.js** 18+ and **pnpm**
-- Check Bagisto [backend requirement detail](https://devdocs.bagisto.com/2.3/introduction/requirements.html#server-configuration)
-
----
-
-## Installation
-
-1) Install Bagisto
- 
-    Begin by [installing the Bagisto](https://devdocs.bagisto.com/) eCommerce platform on your server or local environment.
-
-2) Install the Bagisto Headless Extension
-
-    After installing Bagisto, install the [Bagisto Headless Extension](https://github.com/bagisto/headless-ecommerce/) to expose the required APIs for your frontend.
-
-3) Get your storefront up and running in one command:
-   
-   ```bash
-   npx -y @bagisto-headless/create your-storefront
-   ```
-   
-4) Configure `.env.local` in the Next.js Project
-
-   In your Next.js frontend project, create or update your `.env.local` file with the following variables:
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `SITE_NAME` | Your store name | `My Awesome Store` |
-| `BAGISTO_STORE_DOMAIN` | Your Bagisto backend URL | `https://api.mystore.com` |
-| `IMAGE_DOMAIN` | Domain for product images | `api.mystore.com` |
-| `REVALIDATION_DURATION` | ISR cache duration (seconds) | `3600` |
-| `NEXTAUTH_URL` | Your frontend URL | `https://mystore.com` |
-| `NEXTAUTH_SECRET` | Random secret for NextAuth | Generate with `openssl rand -base64 32` |
-
-
-**Important Notes**  
-- You will need to use the environment variables defined in `.env.example` to run Next.js Commerce.  
-- It’s recommended to use **Vercel Environment Variables**, but a `.env` file is sufficient for local development.  
-- **Never commit your `.env` file** to version control — it contains secrets that would allow others to control your Bagisto store.  
-
----
-
-**Vercel Setup**
-
-Install the Vercel CLI:
+### &#x1F4E6; Clone dan Install
 
 ```bash
-npm i -g vercel
+git clone https://github.com/your-org/fashionix-next.git
+cd fashionix-next
+pnpm install
 ```
 
-Link your local instance with Vercel and GitHub accounts (this creates the `.vercel` directory):
+> Ganti `your-org` dengan organisasi atau akun GitHub kamu.
+
+### &#x1F510; Setup Environment
 
 ```bash
-vercel link
+cp .env.example .env.local
 ```
 
-Download your environment variables:
+Isi variabel berikut agar koneksi ke layanan Fashionix berjalan mulus:
 
-```bash
-vercel env pull
-```
+| Variabel | Keterangan |
+| --- | --- |
+| `NEXTAUTH_URL` | URL aplikasi Fashionix (mis. `http://localhost:3000`) |
+| `IMAGE_DOMAIN` | Domain CDN atau host gambar produk |
+| `BAGISTO_STORE_DOMAIN` | Endpoint backend Bagisto atau API katalog Fashionix |
+| `BAGISTO_SESSION` | Session token untuk autentikasi layanan katalog |
+| `COMPANY_NAME` | Nama perusahaan atau brand utama |
+| `SITE_NAME` | Nama tampilan storefront Fashionix |
+| `TWITTER_CREATOR` | Handle Twitter akun kreator konten |
+| `TWITTER_SITE` | Handle Twitter brand Fashionix |
+| `REVALIDATION_DURATION` | Durasi revalidasi ISR dalam detik |
+| `NEXTAUTH_SECRET` | Secret NextAuth (gunakan `openssl rand -base64 32`) |
+| `NEXT_PUBLIC_API_URL` | URL API publik untuk data storefront |
+| `NEXT_PUBLIC_SITE_NAME` | Nama yang muncul di metadata publik |
 
----
-
-**Run the development server:**
+### &#x1F9EA; Jalankan Mode Pengembangan
 
 ```bash
 pnpm dev
 ```
 
-**Build for production:**
+Buka `http://localhost:3000` lalu jelajahi pengalaman katalog dan checkout real-time.
+
+### &#x1F3D7; Build untuk Production
 
 ```bash
 pnpm build
+```
+
+### &#x1F6A2; Start Server Production
+
+```bash
 pnpm start
 ```
 
----
-
-## Usage
-
-Start the development server:
+Tambahan opsional untuk menjaga kualitas sebelum rilis:
 
 ```bash
-pnpm dev
+pnpm lint
 ```
-Access the store at:[http://localhost:3000](http://localhost:3000)
 
----
-
-## Products
-
-The Open Source Headless eCommerce allows users to browse a wide range of products with built-in pagination and search functionality. Each product has its own detailed page showcasing images, descriptions, pricing, reviews, and availability.
-
-Bagisto Headless Commerce APIs support multiple product types, including simple, configurable, bundled, and downloadable products, ensuring flexibility for different business needs.
-
-![Bagisto Headless Commerce Image](https://raw.githubusercontent.com/bagisto/temp-media/refs/heads/master/bagisto-headless-commerce-product-page.png)
-
-## Categories
-
-Products are neatly organized into hierarchical categories, making it easy for customers to navigate the store. Each category page displays relevant product listings with filtering and sorting options for a better shopping experience.
-
-The Open Source Headless eCommerce also ensures SEO-friendly category URLs with meta titles, descriptions, and breadcrumbs for improved discoverability.
-
-![Bagisto Headless Commerce Image](https://raw.githubusercontent.com/bagisto/temp-media/refs/heads/master/bagisto-headless-commercecategory.png)
- 
-## Checkout
-
-The checkout process is fully functional, featuring complete cart management where customers can add, update, or remove items.
-
-Both guest and logged-in users can proceed through checkout, selecting shipping addresses and preferred payment methods.
-
-Once the order is placed, it is instantly synchronized with the Bagisto backend, enabling smooth order processing and management.
-
-![Bagisto Headless Commerce Image](https://raw.githubusercontent.com/bagisto/temp-media/refs/heads/master/bagisto-headless-commerce-cart-checkout.png)
-
-## Community
-Get Bagisto Headless Commerce support on [Facebook Group](https://www.facebook.com/groups/bagisto) and [Forum](https://forums.bagisto.com/)
-
-## License
-Bagisto headless eCommerce framework that will always remain free under the [MIT License](https://github.com/bagisto/nextjs-commerce/blob/main/license.md).
-
-## Security Vulnerabilities
-If you think that you have found a security issue in Bagisto Headless Commerce, please do not use the issue tracker and do not post it publicly. Instead, all security issues must be sent to [mailto:support@bagisto.com](mailto:support@bagisto.com).
+Selamat berkreasi dengan Fashionix! &#x1F389;
