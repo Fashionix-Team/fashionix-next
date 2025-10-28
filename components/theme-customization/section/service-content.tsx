@@ -1,7 +1,7 @@
 import { FC, JSX } from "react";
 
 import DollerIcon from "@/components/icons/service/doller-icon";
-import EarphoneIcon from "@/components/icons/service/easphone-icon";
+import EarphoneIcon from "@/components/icons/service/earphone-icon";
 import ProductIcon from "@/components/icons/service/product-icon";
 import TruckIcon from "@/components/icons/service/truck-icon";
 import { OptionDataTypes, TranslationsTypes } from "@/lib/bagisto/types";
