@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
-import Footer from "@/components/layout/footer";
-import Navbar from "@/components/layout/navbar";
+import Navbar from "@/components/custom-layout/navbar";
+import Footer from "@/components/custom-layout/footer";
 
 export default async function RootLayout({
   children,
