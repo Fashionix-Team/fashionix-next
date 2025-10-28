@@ -1,5 +1,3 @@
-import { getCollectionHomePage } from "@/lib/bagisto";
-import ThemeCustomization from "@/components/theme-customization";
 export const revalidate = 60;
 export const dynamic = "auto";
 export const metadata = {
@@ -13,6 +11,5 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const themeCustomization = await getCollectionHomePage("homepage-handle");
-  return <ThemeCustomization themeCustomization={themeCustomization} />;
+  return <div>Welcome to Bagisto Commerce!</div>;
 }
