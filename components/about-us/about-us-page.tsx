@@ -1,7 +1,4 @@
 import Image from 'next/image';
-import TruckIcon from '@/components/icons/service/truck-icon';
-import DollerIcon from '@/components/icons/service/doller-icon';
-import EarphoneIcon from '@/components/icons/service/earphone-icon';
 
 // Data team members
   const teamMembers = [
