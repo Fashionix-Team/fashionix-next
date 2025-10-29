@@ -1,14 +1,15 @@
-'use client';
+export const revalidate = 60;
+export const dynamic = "auto";
+export const metadata = {
+  description:
+    "High-performance ecommerce store built with Next.js, Vercel, and Bagisto.",
+  openGraph: {
+    type: "website",
+    title: "Bagisto Commerce",
+    url: process.env.NEXTAUTH_URL,
+  },
+};
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-
-export default function HomePage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push('/login');
-  }, [router]);
-
-  return null;
+export default async function HomePage() {
+  return <div>Welcome to Bagisto Commerce!</div>;
 }
