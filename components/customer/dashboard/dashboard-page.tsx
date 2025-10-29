@@ -10,6 +10,7 @@ import  RightArrow  from "@/components/icons/right-arrow"; // Asumsi ikon panah 
 import  EarphoneIcon from "@/components/icons/service/earphone-icon";
 import { ShoppingCartIcon } from "@/components/icons/shopping-cart";
 import CheckSign from "@/components/icons/check-sign";
+import { LeftArrow } from "@/components/icons/service/left-arrow";
 
 // Interface tetap sama
 interface DashboardUser {
@@ -31,6 +32,16 @@ interface DashboardContentProps {
     defaultAddress: string;
     totalWishlist: number;
    };
+}
+
+// Interface Pesanan Terbaru
+interface LatestOrder {
+    id: string;
+    orderId: string;
+    date: string;
+    status: 'Pending' | 'In Progress' | 'Completed' | 'Canceled';
+    total: string;
+    link: string;
 }
 
 // Komponen Card yang dapat digunakan kembali untuk konsistensi visual
@@ -68,6 +79,101 @@ const SummaryListCard = ({ title, value, linkHref, icon }: { title: string, valu
         <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
     </Link>
 );
+
+// ✅ KOMPONEN BARU: Menampilkan Daftar Pesanan Terbaru
+const LatestOrdersSection = () => {
+    // Data Dummy untuk Pesanan
+    const latestOrders: LatestOrder[] = useMemo(() => [
+        { id: '1', orderId: '#1001', date: '25 Okt 2025', status: 'In Progress', total: 'Rp 450.000', link: '/customer/orders/1001' },
+        { id: '2', orderId: '#1000', date: '20 Okt 2025', status: 'Completed', total: 'Rp 210.000', link: '/customer/orders/1000' },
+        { id: '3', orderId: '#0999', date: '15 Okt 2025', status: 'Pending', total: 'Rp 60.000', link: '/customer/orders/0999' },
+    ], []);
+
+    // Fungsi untuk mendapatkan warna status
+    const getStatusColor = (status: LatestOrder['status']) => {
+        switch (status) {
+            case 'Completed': return 'text-green-600 bg-green-100 dark:bg-green-800';
+            case 'Pending': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-800';
+            case 'In Progress': return 'text-blue-600 bg-blue-100 dark:bg-blue-800';
+            default: return 'text-gray-600 bg-gray-100 dark:bg-gray-700';
+        }
+    };
+
+    return (
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="flex justify-between items-center mb-4 border-b pb-2 dark:border-gray-700">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Pesanan Terbaru</h2>
+                <Link 
+                    href="/customer/orders" 
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 text-sm font-medium inline-flex items-center"
+                >
+                    Lihat Semua Pesanan
+                    <RightArrow className="w-4 h-4 ml-1.5" />
+                </Link>
+            </div>
+
+            {/* Header Tabel */}
+            <div className="hidden md:grid grid-cols-6 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider pb-2 border-b dark:border-gray-700">
+                <p className="col-span-2">ID Pesanan</p>
+                <p>Status</p>
+                <p>Tanggal</p>
+                <p className="text-right">Total</p>
+                <p className="text-right">Tindakan</p>
+            </div>
+
+            {/* Isi Tabel */}
+            <div className="divide-y dark:divide-gray-700">
+                {latestOrders.map((order) => (
+                    <div
+                        key={order.id}
+                        className="grid grid-cols-2 md:grid-cols-6 items-center py-4"
+                    >
+                        {/* Nomor Pesanan & Link */}
+                        <div className="col-span-2 text-gray-900 dark:text-white font-medium flex items-center">
+                            <Link href={order.link} className="flex items-center hover:text-blue-600 transition">
+                                <ShoppingCartIcon className="w-4 h-4 mr-2" />
+                                {order.orderId}
+                            </Link>
+                        </div>
+
+                        {/* Status */}
+                        <div className="text-sm">
+                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}> 
+                                {order.status}
+                            </span>
+                        </div>
+                        
+                        {/* Tanggal */}
+                        <p className="text-sm text-gray-600 dark:text-gray-400 hidden md:block"> 
+                            {order.date}
+                        </p>
+                        
+                        {/* Total */}
+                        <p className="text-sm font-semibold text-right text-gray-900 dark:text-white"> 
+                            {order.total}
+                        </p>
+
+                        {/* Tindakan */}
+                        <div className="text-right hidden md:block">
+                            <Link 
+                                href={order.link}
+                                className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
+                            >
+                                Lihat Detail
+                                <RightArrow className="w-3 h-3 ml-1" />
+                            </Link>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            
+            {/* Jika tidak ada pesanan */}
+            {latestOrders.length === 0 && (
+                <p className="py-4 text-center text-gray-500 dark:text-gray-400">Anda belum memiliki pesanan.</p>
+            )}
+        </div>
+    );
+};
 
 
 export default function DashboardContent({ user, summary }: DashboardContentProps) {
@@ -177,6 +283,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                     ))}
                 </div>
             </div>
-        </div>
+        <LatestOrdersSection />
+    </div>
   );
 }
