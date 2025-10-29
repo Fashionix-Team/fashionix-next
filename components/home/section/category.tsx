@@ -15,44 +15,44 @@ interface CategoryItem {
 const categories: CategoryItem[] = [
   {
     id: 1,
-    title: 'Computer & Laptop',
-    image: '/image/product/product-9.png',
+    title: 'Accessories',
+    image: '/image/product/product-15.jpeg',
     href: '#'
   },
   {
     id: 2,
-    title: 'SmartPhone',
-    image: '/image/product/product-10.png',
+    title: 'Kaos',
+    image: '/image/product/product-16.jpeg',
     href: '#'
   },
   {
     id: 3,
-    title: 'Headphones',
-    image: '/image/product/product-11.png',
+    title: 'Jam',
+    image: '/image/product/product-17.jpeg',
     href: '#'
   },
   {
     id: 4,
-    title: 'Accessories',
-    image: '/image/product/product-12.png',
+    title: 'Jeans',
+    image: '/image/product/product-18.jpeg',
     href: '#'
   },
   {
     id: 5,
-    title: 'Camera & Photo',
-    image: '/image/product/product-13.png',
+    title: 'Onyot',
+    image: '/image/product/product-19.jpeg',
     href: '#'
   },
   {
     id: 6,
-    title: 'TV & Homes',
-    image: '/image/product/product-14.png',
+    title: 'Jam',
+    image: '/image/product/product-20.jpeg',
     href: '#'
   },
   {
     id: 7,
-    title: 'Accessories',
-    image: '/image/product/product-12.png',
+    title: 'Onyot Style',
+    image: '/image/product/product-21.jpeg',
     href: '#'
   }
 ];
