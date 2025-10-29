@@ -33,7 +33,7 @@ import Image from 'next/image';
       photo: "/image/team/akbar.jpg",
     },
     {
-      name: "Nurhalizah Apriyani",
+      name: "Nurhalizah Apriliyani",
       role: "Fullstack Developer",
       photo: "/image/team/nurhalizah.jpg",
     },
