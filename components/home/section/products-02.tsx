@@ -1,7 +1,6 @@
 ﻿"use client";
 
-import Image from "next/image";
-import { PRODUCTS } from "@/data/products";
+import { PRODUCTS2 } from "@/data/products";
 import ProductsTabs from "../products/product-tabs";
 import ProductActions, { IconButton } from "../products/product-actions";
 import ProductCard from "../products/product-card";
@@ -41,7 +40,8 @@ export default function Products02Section() {
           {/* Products */}
           <main className="order-2 2xl:order-1 2xl:col-span-9">
             <ProductsTabs
-              products={PRODUCTS}
+              title="Produk Unggulan"
+              products={PRODUCTS2}
               renderGrid={(list) => (
                 <div className="mt-8">
                   <div className="grid grid-cols-1 gap-4 mx-[30px] sm:mx-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

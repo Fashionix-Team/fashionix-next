@@ -1,4 +1,4 @@
-export type TabId = "all" | "key-mouse" | "headphon" | "webcam" | "printer";
+export type TabId = "all" | "women" | "men" | "accessories" | "footwear";
 
 export type ProductBadgeVariant = "secondary" | "danger" | "success" | "warning";
 
