@@ -9,18 +9,18 @@ import Image from 'next/image';
     },
     {
       name: "Rafly Alamsyach",
-      role: "Frontend Developer",
+      role: "Fullstack Developer",
       photo: "/image/team/rafly.jpg",
     },
     {
       name: "Panji Hidayatullah",
       role: "Fullstack Developer",
-      photo: "/image/team/panji.jpg",
+      photo: "/image/team/panji.jpeg",
     },
     {
       name: "Mukarrobin",
       role: "Fullstack Developer",
-      photo: "/image/team/mukarrobin.jpg",
+      photo: "/image/team/robin.jpg",
     },
      {
       name: "Muhammad Raihan",
