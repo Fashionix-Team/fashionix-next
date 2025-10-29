@@ -107,7 +107,7 @@ export default function RiwayatPesananPage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{order.date}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{order.total}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        <Link href={`/dashboard/DetailPesanan/${order.id.replace('id', '')}`} className="text-blue-600 hover:underline">
+                                        <Link href={`/dashboard/DetailPesanan/${order.id.replace('#', '')}`} className="text-blue-600 hover:underline">
                                             Lihat Detail &rarr;
                                         </Link>
                                     </td>
