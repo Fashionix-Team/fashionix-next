@@ -8,6 +8,8 @@ import { EditIcon } from "@/components/icons/edit-icon";
 import { MapIcon } from "@/components/icons/map-icon";
 import  RightArrow  from "@/components/icons/right-arrow"; // Asumsi ikon panah ada di sini
 import  EarphoneIcon from "@/components/icons/service/earphone-icon";
+import { ShoppingCartIcon } from "@/components/icons/shopping-cart";
+import CheckSign from "@/components/icons/check-sign";
 
 // Interface tetap sama
 interface DashboardUser {
@@ -18,7 +20,7 @@ interface DashboardUser {
   lastName: string;
   accessToken?: string;
   role?: string;
-phone?: number; // Tambahkan properti phone
+phone?: number;
 }
 
 interface DashboardContentProps {
@@ -42,7 +44,6 @@ const DashboardCard = ({ title, children, linkHref, linkText }: { title: string,
         </div>
         <Link 
             href={linkHref}
-             // ✅ MODIFIKASI: Menambahkan styling untuk membuat tombol stroke biru
             className="w-50 flex justify-center text-blue-600 dark:text-blue-400 hover:text-white dark:hover:text-white 
                        border border-blue-600 dark:border-blue-400 
                        hover:bg-blue-600 dark:hover:bg-blue-400 
@@ -54,21 +55,58 @@ const DashboardCard = ({ title, children, linkHref, linkText }: { title: string,
     </div>
 );
 
+// ✅ Komponen Kartu Ringkasan
+const SummaryListCard = ({ title, value, linkHref, icon }: { title: string, value: string | number, linkHref: string, icon: React.ReactNode }) => (
+    <Link 
+        href={linkHref} 
+        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 flex items-center justify-between hover:shadow-lg transition duration-200"
+    >
+        <div className="flex items-center space-x-3">
+            <div className="text-blue-600 dark:text-blue-400">{icon}</div>
+            <p className="text-base font-medium text-gray-700 dark:text-gray-300">{title}</p>
+        </div>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+    </Link>
+);
+
 
 export default function DashboardContent({ user, summary }: DashboardContentProps) {
-  // Logika useMemo untuk summary cards (dipertahankan)
-  // const summaryCards = useMemo(() => [ ... ], [summary]);
+  const enhancedSummary = useMemo(() => ({
+        ...summary,
+        completedOrders: summary.totalOrders - summary.pendingOrders > 0 ? summary.totalOrders - summary.pendingOrders : 0, // Data dummy
+    }), [summary]);
+
+    // Data untuk 3 Kartu Ringkasan Pesanan
+    const orderSummaryCards = useMemo(() => [
+        {
+            title: 'Total Pesanan',
+            value: enhancedSummary.totalOrders, 
+            linkHref: '/customer/orders',
+            icon: <ShoppingCartIcon className="w-6 h-20" />
+        },
+        {
+            title: 'Pesanan Tertunda',
+            value: enhancedSummary.pendingOrders, 
+            linkHref: '/customer/orders?status=pending',
+            icon: <ShoppingCartIcon className="w-6 h-20 text-yellow-500" />
+        },
+        {
+            title: 'Pesanan Selesai',
+            value: enhancedSummary.completedOrders, 
+            linkHref: '/customer/orders?status=completed',
+            icon: <CheckSign className="w-6 h-20 text-green-500" /> // Menggunakan CheckSign untuk Selesai
+        },
+    ], [enhancedSummary]);
 
   return (
-    // Kontainer yang sebelumnya hanya "space-y-10"
-    // Sekarang kita implementasikan tata letak 2 kolom di dalamnya
+
     <div className="space-y-10">
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-4xl">
             Dari dasbor akun Anda, Anda dapat dengan mudah memeriksa dan melihat Pesanan Terbaru, mengelola Alamat Pengiriman dan Penagihan serta mengedit Kata Sandi dan Detail Akun Anda.
         </p>
         
         {/* Kontainer untuk 2 Section Info Akun dan Alamat */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* 1. SECTION: Informasi Akun */}
            <DashboardCard
@@ -132,10 +170,13 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                 </div>
             </DashboardCard>
 
+        {/* ✅ SECTION 3: Ringkasan Pesanan (KOLOM 3 - STACKED) */}
+                <div className="lg:col-span-1 flex flex-col space-y-4">
+                    {orderSummaryCards.map((card, index) => (
+                        <SummaryListCard key={index} {...card} />
+                    ))}
+                </div>
+            </div>
         </div>
-
-        {/* Anda bisa menambahkan area lain di sini (misalnya Pesanan Terbaru, dll) */}
-
-    </div>
   );
 }
