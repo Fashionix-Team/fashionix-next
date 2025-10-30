@@ -1,11 +1,15 @@
-const DollerIcon = () => {
+import clsx from "clsx";
+import { SVGProps } from "react";
+
+const DollerIcon = ({ className, ...props }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      className="fill-white stroke-neutral-900 dark:fill-neutral-900 dark:stroke-neutral-300"
+      className={clsx(
+        "fill-white stroke-neutral-900 dark:fill-neutral-900 dark:stroke-neutral-300",
+        className,
+      )}
       fill="none"
-      height="60"
       viewBox="0 0 60 60"
-      width="60"
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect height="59" rx="29.5" width="59" x="0.5" y="0.5" />

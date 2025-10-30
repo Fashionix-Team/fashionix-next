@@ -1,7 +1,9 @@
-export const HeartIcon = () => {
+import clsx from "clsx";
+
+export const HeartIcon = ({ className = "" }) => {
   return (
     <svg
-      className="size-6"
+      className={clsx("size-6", className)}
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
