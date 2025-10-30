@@ -1,3 +1,5 @@
+import Home from "@/components/home";
+
 export const revalidate = 60;
 export const dynamic = "auto";
 export const metadata = {
@@ -11,5 +13,5 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  return <div>Welcome to Bagisto Commerce!</div>;
+  return <Home />
 }

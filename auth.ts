@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { bagistoFetch } from "@/lib/bagisto";
 import { CustomerLogin } from "@/lib/bagisto/mutations/customer-login";
 import { isObject } from "@/lib/type-guards";
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -41,6 +42,7 @@ export const authOptions: NextAuthOptions = {
             const customerInfo = res?.body?.data?.customerLogin;
 
             return {
+              id: customerInfo.customer.id,
               firstname: customerInfo.customer.firstName,
               lastname: customerInfo.customer.lastName,
               name: customerInfo.customer.name,
@@ -62,20 +64,30 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     jwt: async ({ token, user }) => {
+      // `user` object is only available on the first sign-in.
       if (isObject(user) && user.token) {
         token.accessToken = user.token as string;
+        token.id = user.id as string;
         token.role = "customer";
+        token.email = user.email as string;
+        token.name = user.name as string;
+        token.firstName = user.firstname as string;
+        token.lastName = user.lastname as string;
       }
 
       return token;
     },
     async session({ session, token }) {
+      // Pass the data from the token to the session object
       return {
         ...session,
         user: {
           ...session.user,
+          id: token.id as string,
           accessToken: token.accessToken as string,
-          role: token.role,
+          role: token.role as string,
+          firstName: token.firstName as string,
+          lastName: token.lastName as string,
         },
         error: token.error,
       };
