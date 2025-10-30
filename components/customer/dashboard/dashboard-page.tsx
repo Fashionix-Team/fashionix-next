@@ -28,7 +28,7 @@ interface DashboardContentProps {
  user: DashboardUser; 
  summary: {
     totalOrders: number;
-    pendingOrders: number;
+    PENDINGOrders: number;
     defaultAddress: string;
     totalWishlist: number;
    };
@@ -39,9 +39,10 @@ interface LatestOrder {
     id: string;
     orderId: string;
     date: string;
-    status: 'Pending' | 'In Progress' | 'Completed' | 'Canceled';
+    status: 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'CANCELED';
     total: string;
     link: string;
+    productCount: number;
 }
 
 // Komponen Card yang dapat digunakan kembali untuk konsistensi visual
@@ -55,9 +56,9 @@ const DashboardCard = ({ title, children, linkHref, linkText }: { title: string,
         </div>
         <Link 
             href={linkHref}
-            className="w-50 flex justify-center text-blue-600 dark:text-blue-400 hover:text-white dark:hover:text-white 
-                       border border-blue-600 dark:border-blue-400 
-                       hover:bg-blue-600 dark:hover:bg-blue-400 
+            className="w-50 flex justify-center text-blue-400 dark:text-blue-400 hover:text-white dark:hover:text-white 
+                       border border-blue-400 dark:border-blue-400 
+                       hover:bg-blue-400 dark:hover:bg-blue-400 
                        text-sm font-medium mt-4 items-center 
                        px-4 py-2 rounded-lg transition duration-200 ease-in-out" // Tambahkan padding & rounded-lg
         >
@@ -67,109 +68,165 @@ const DashboardCard = ({ title, children, linkHref, linkText }: { title: string,
 );
 
 // ✅ Komponen Kartu Ringkasan
-const SummaryListCard = ({ title, value, linkHref, icon }: { title: string, value: string | number, linkHref: string, icon: React.ReactNode }) => (
+const SummaryListCard = ({ title, value, linkHref, icon, bgColor }: { title: string, value: string | number, linkHref: string, icon: React.ReactNode, bgColor: string }) => (
     <Link 
         href={linkHref} 
-        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 flex items-center justify-between hover:shadow-lg transition duration-200"
+        className={`${bgColor} p-6 rounded-lg shadow-md flex items-center justify-between hover:shadow-lg transition duration-200`}
     >
         <div className="flex items-center space-x-3">
-            <div className="text-blue-600 dark:text-blue-400">{icon}</div>
+            <div className="text-blue-400 dark:text-blue-400">{icon}</div>
             <p className="text-base font-medium text-gray-700 dark:text-gray-300">{title}</p>
         </div>
         <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
     </Link>
 );
 
-// ✅ KOMPONEN BARU: Menampilkan Daftar Pesanan Terbaru
+// ✅ KOMPONEN BARU: Menampilkan Daftar Pesanan Terbaru (SESUAI GAMBAR)
 const LatestOrdersSection = () => {
-    // Data Dummy untuk Pesanan
+    // Data Dummy untuk Pesanan (SESUAI GAMBAR)
     const latestOrders: LatestOrder[] = useMemo(() => [
-        { id: '1', orderId: '#1001', date: '25 Okt 2025', status: 'In Progress', total: 'Rp 450.000', link: '/customer/orders/1001' },
-        { id: '2', orderId: '#1000', date: '20 Okt 2025', status: 'Completed', total: 'Rp 210.000', link: '/customer/orders/1000' },
-        { id: '3', orderId: '#0999', date: '15 Okt 2025', status: 'Pending', total: 'Rp 60.000', link: '/customer/orders/0999' },
+        { 
+            id: '1', 
+            orderId: '#96459761', 
+            date: 'Dec 30, 2019 05:18', 
+            status: 'IN PROGRESS', 
+            total: '$1,500', 
+            productCount: 5,
+            link: '/customer/orders/96459761' 
+        },
+        { 
+            id: '2', 
+            orderId: '#96459760', 
+            date: 'Dec 29, 2019 12:45', 
+            status: 'COMPLETED', 
+            total: '$850', 
+            productCount: 3,
+            link: '/customer/orders/96459760' 
+        },
+        { 
+            id: '3', 
+            orderId: '#96459759', 
+            date: 'Dec 28, 2019 09:30', 
+            status: 'CANCELED', 
+            total: '$320', 
+            productCount: 2,
+            link: '/customer/orders/96459759' 
+        },
+        { 
+            id: '4', 
+            orderId: '#96459758', 
+            date: 'Dec 27, 2019 16:20', 
+            status: 'COMPLETED', 
+            total: '$1,200', 
+            productCount: 4,
+            link: '/customer/orders/96459758' 
+        },
     ], []);
 
-    // Fungsi untuk mendapatkan warna status
+    // Fungsi untuk mendapatkan warna status (SESUAI GAMBAR)
     const getStatusColor = (status: LatestOrder['status']) => {
         switch (status) {
-            case 'Completed': return 'text-green-600 bg-green-100 dark:bg-green-800';
-            case 'Pending': return 'text-yellow-600 bg-yellow-100 dark:bg-yellow-800';
-            case 'In Progress': return 'text-blue-600 bg-blue-100 dark:bg-blue-800';
-            default: return 'text-gray-600 bg-gray-100 dark:bg-gray-700';
+            case 'COMPLETED': return 'text-green-400';
+            case 'PENDING': return 'text-yellow-400';
+            case 'IN PROGRESS': return 'text-orange-400';
+            case 'CANCELED': return 'text-red-400';
+            default: return 'text-gray-800';
         }
     };
 
     return (
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
-            <div className="flex justify-between items-center mb-4 border-b pb-2 dark:border-gray-700">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Pesanan Terbaru</h2>
-                <Link 
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
+            {/* Header Section */}
+            <div className="flex justify-between px-6 py-4 items-center mb-2 pb-2 dark:border-gray-700">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">PESANAN TERBARU</h2>
+                    <Link 
                     href="/customer/orders" 
-                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 text-sm font-medium inline-flex items-center"
+                    className="text-orange-400 dark:text-blue-400 hover:text-blue-700 text-sm font-medium inline-flex items-center"
                 >
-                    Lihat Semua Pesanan
-                    <RightArrow className="w-4 h-4 ml-1.5" />
+                    Lihat Semua
                 </Link>
+
             </div>
 
-            {/* Header Tabel */}
-            <div className="hidden md:grid grid-cols-6 text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider pb-2 border-b dark:border-gray-700">
-                <p className="col-span-2">ID Pesanan</p>
-                <p>Status</p>
-                <p>Tanggal</p>
-                <p className="text-right">Total</p>
-                <p className="text-right">Tindakan</p>
-            </div>
+            {/* Table */}
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    {/* Table Header */}
+                    <thead className="bg-gray-200 dark:bg-gray-900">
+                        <tr>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                ID Pesanan
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Status
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Tanggal
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Total
+                            </th>
+                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                Tindakan
+                            </th>
+                        </tr>
+                    </thead>
 
-            {/* Isi Tabel */}
-            <div className="divide-y dark:divide-gray-700">
-                {latestOrders.map((order) => (
-                    <div
-                        key={order.id}
-                        className="grid grid-cols-2 md:grid-cols-6 items-center py-4"
-                    >
-                        {/* Nomor Pesanan & Link */}
-                        <div className="col-span-2 text-gray-900 dark:text-white font-medium flex items-center">
-                            <Link href={order.link} className="flex items-center hover:text-blue-600 transition">
-                                <ShoppingCartIcon className="w-4 h-4 mr-2" />
-                                {order.orderId}
-                            </Link>
-                        </div>
+                    {/* Table Body */}
+                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        {latestOrders.map((order) => (
+                            <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-750">
+                                {/* Order ID */}
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                        <div className="flex-shrink-0 h-5 w-5 text-gray-400">
+                                            <ShoppingCartIcon />
+                                        </div>
+                                        <div className="ml-4">
+                                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                                                {order.orderId}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
 
-                        {/* Status */}
-                        <div className="text-sm">
-                            <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.status)}`}> 
-                                {order.status}
-                            </span>
-                        </div>
-                        
-                        {/* Tanggal */}
-                        <p className="text-sm text-gray-600 dark:text-gray-400 hidden md:block"> 
-                            {order.date}
-                        </p>
-                        
-                        {/* Total */}
-                        <p className="text-sm font-semibold text-right text-gray-900 dark:text-white"> 
-                            {order.total}
-                        </p>
+                                {/* Status */}
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                                        {order.status}
+                                    </span>
+                                </td>
 
-                        {/* Tindakan */}
-                        <div className="text-right hidden md:block">
-                            <Link 
-                                href={order.link}
-                                className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline text-sm font-medium"
-                            >
-                                Lihat Detail
-                                <RightArrow className="w-3 h-3 ml-1" />
-                            </Link>
-                        </div>
-                    </div>
-                ))}
+                                {/* Date */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                    {order.date}
+                                </td>
+
+                                {/* Total */}
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                                    {order.total} ({order.productCount} Products)
+                                </td>
+
+                                {/* Action */}
+                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <Link 
+                                        href={order.link}
+                                        className="text-blue-400 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                    >
+                                        Lihat Detail
+                                    </Link>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
             
             {/* Jika tidak ada pesanan */}
             {latestOrders.length === 0 && (
-                <p className="py-4 text-center text-gray-500 dark:text-gray-400">Anda belum memiliki pesanan.</p>
+                <div className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
+                    Anda belum memiliki pesanan.
+                </div>
             )}
         </div>
     );
@@ -179,7 +236,7 @@ const LatestOrdersSection = () => {
 export default function DashboardContent({ user, summary }: DashboardContentProps) {
   const enhancedSummary = useMemo(() => ({
         ...summary,
-        completedOrders: summary.totalOrders - summary.pendingOrders > 0 ? summary.totalOrders - summary.pendingOrders : 0, // Data dummy
+        COMPLETEDOrders: summary.totalOrders - summary.PENDINGOrders > 0 ? summary.totalOrders - summary.PENDINGOrders : 0, // Data dummy
     }), [summary]);
 
     // Data untuk 3 Kartu Ringkasan Pesanan
@@ -188,19 +245,22 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
             title: 'Total Pesanan',
             value: enhancedSummary.totalOrders, 
             linkHref: '/customer/orders',
-            icon: <ShoppingCartIcon className="w-6 h-20" />
+            icon: <ShoppingCartIcon className="w-6 h-20" />,
+            bgColor: 'bg-blue-100'
         },
         {
             title: 'Pesanan Tertunda',
-            value: enhancedSummary.pendingOrders, 
-            linkHref: '/customer/orders?status=pending',
-            icon: <ShoppingCartIcon className="w-6 h-20 text-yellow-500" />
+            value: enhancedSummary.PENDINGOrders, 
+            linkHref: '/customer/orders?status=PENDING',
+            icon: <ShoppingCartIcon className="w-6 h-20 text-yellow-500" />,
+            bgColor: "bg-orange-100"
         },
         {
             title: 'Pesanan Selesai',
-            value: enhancedSummary.completedOrders, 
-            linkHref: '/customer/orders?status=completed',
-            icon: <CheckSign className="w-6 h-20 text-green-500" /> // Menggunakan CheckSign untuk Selesai
+            value: enhancedSummary.COMPLETEDOrders, 
+            linkHref: '/customer/orders?status=COMPLETED',
+            icon: <CheckSign className="w-6 h-20 text-green-500" />,
+            bgColor: "bg-green-100"
         },
     ], [enhancedSummary]);
 
@@ -216,14 +276,14 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
             
             {/* 1. SECTION: Informasi Akun */}
            <DashboardCard
-                title="Informasi Akun"
+                title="INFO AKUN"
                 linkHref="/customer/account"
                 linkText="Edit Akun"
             >
                 <div className="space-y-4">
                     
                     {/* 1. Baris: Foto & Nama Lengkap */}
-                    <div className="flex items-center space-x-4 pb-2 border-b dark:border-gray-700">
+                    <div className="flex items-center space-x-4 pb-2">
                         {/* Foto Profil (Placeholder Circle/Avatar) */}
                         <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                             {/* Ikon User Placeholder */}
@@ -262,21 +322,41 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
 
             {/* 2. SECTION: Alamat Default */}
             <DashboardCard
-                title="Alamat"
+                title="ALAMAT"
                 linkHref="/customer/addresses"
                 linkText="Edit Alamat"
             >
                 <div className="space-y-2">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">
+                                {user.firstName} {user.lastName || ''}
+                            </p>
+
                     <p className="text-gray-700 dark:text-gray-300 flex items-start">
                         <MapIcon className="w-5 h-5 mr-3 text-gray-500 flex-shrink-0 mt-1" />
                         <span>
                             {summary.defaultAddress || 'Belum ada alamat default'}
                         </span>
                     </p>
+
+                    <p className="text-gray-700 dark:text-gray-300 flex items-center">
+                        {/* Ikon Telepon */}
+                        <EarphoneIcon className="w-5 h-5 mr-3 text-gray-500" />
+                        <span>
+                            {user.phone || 'Telepon tidak tersedia'}
+                        </span>
+                    </p>
+
+                    <p className="text-gray-700 dark:text-gray-300 flex items-center">
+                        {/* Ikon Email */}
+                        <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <span>
+                            {user.email || 'Email tidak tersedia'}
+                        </span>
+                    </p>
                 </div>
             </DashboardCard>
 
-        {/* ✅ SECTION 3: Ringkasan Pesanan (KOLOM 3 - STACKED) */}
+        {/* ✅ SECTION 3: Ringkasan Pesanan*/}
                 <div className="lg:col-span-1 flex flex-col space-y-4">
                     {orderSummaryCards.map((card, index) => (
                         <SummaryListCard key={index} {...card} />
