@@ -1,4 +1,3 @@
-// components/customer/dashboard/dashboard-page.tsx
 'use client';
 
 import Link from "next/link"; 
@@ -9,8 +8,11 @@ import { MapIcon } from "@/components/icons/map-icon";
 import  RightArrow  from "@/components/icons/right-arrow"; // Asumsi ikon panah ada di sini
 import  EarphoneIcon from "@/components/icons/service/earphone-icon";
 import { ShoppingCartIcon } from "@/components/icons/shopping-cart";
+import { RocketIcon } from "@/components/icons/roket";
 import CheckSign from "@/components/icons/check-sign";
 import { LeftArrow } from "@/components/icons/service/left-arrow";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import { CubeIcon } from "@/components/icons/cube";
 
 // Interface tetap sama
 interface DashboardUser {
@@ -245,21 +247,21 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
             title: 'Total Pesanan',
             value: enhancedSummary.totalOrders, 
             linkHref: '/customer/orders',
-            icon: <ShoppingCartIcon className="w-6 h-20" />,
+            icon: <RocketIcon className="w-6 h-20" />,
             bgColor: 'bg-blue-100'
         },
         {
             title: 'Pesanan Tertunda',
             value: enhancedSummary.PENDINGOrders, 
             linkHref: '/customer/orders?status=PENDING',
-            icon: <ShoppingCartIcon className="w-6 h-20 text-yellow-500" />,
+            icon: <EnvelopeIcon className="w-6 h-20 text-yellow-500" />,
             bgColor: "bg-orange-100"
         },
         {
             title: 'Pesanan Selesai',
             value: enhancedSummary.COMPLETEDOrders, 
             linkHref: '/customer/orders?status=COMPLETED',
-            icon: <CheckSign className="w-6 h-20 text-green-500" />,
+            icon: <CubeIcon className="w-6 h-20 text-green-500" />,
             bgColor: "bg-green-100"
         },
     ], [enhancedSummary]);
