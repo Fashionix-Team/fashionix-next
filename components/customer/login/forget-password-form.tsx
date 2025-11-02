@@ -19,11 +19,6 @@ export default function ForgetPasswordForm() {
             )}>
                 
                 <div className="font-outfit text-center">
-                    
-                    <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 mb-3">
-                        <LockClosedIcon className="h-5 w-5 text-blue-600" /> 
-                    </div>
-
                     <h2 className="text-2xl font-bold text-gray-900"> 
                         Lupa Kata Sandi
                     </h2>
@@ -54,7 +49,6 @@ export default function ForgetPasswordForm() {
                         className="bg-orange-500 hover:bg-orange-600" 
                         title="KIRIM KODE"
                         type="submit"
-                        arrow={true} 
                     />
 
                     {/* Link Masuk dan Daftar */}
