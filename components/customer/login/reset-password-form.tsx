@@ -17,15 +17,12 @@ export default function ResetPasswordForm() {
                 "gap-y-8"
             )}> 
                 <div className="font-outfit text-center">
-                    <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 mb-3">
-                        <LockClosedIcon className="h-5 w-5 text-blue-600" />
-                    </div>
-
                     <h2 className="text-2xl font-bold text-gray-900"> 
                         Atur Ulang Kata Sandi
                     </h2>
                     <p className="mt-1 text-sm font-normal text-gray-500">
-                        Buat kata sandi baru untuk akun Anda.
+                        Duis sagittis molestie tellus, at eleifend sapien pellque quis
+                        . Fusce lorem nunc, fringilla sit amet nunc.
                     </p>
                 </div>
 
@@ -34,33 +31,23 @@ export default function ResetPasswordForm() {
                     className="flex flex-col gap-y-4"
                 >
                     <div className="flex flex-col gap-y-3">
-                        
-                        <PasswordInput
-                            label="Kata Sandi Baru"
-                            labelPlacement="outside"
-                            name="password"
-                            placeholder="Minimal 8 karakter"
-                        />
+                    <form>
+                        <label htmlFor="password">Kata Sandi Baru</label>
+                        <PasswordInput id="password" placeholder="  8+ karakter" name="password" />
+                    </form>
 
-                        <PasswordInput
-                            label="Konfirmasi Kata Sandi"
-                            labelPlacement="outside"
-                            name="passwordConfirmation"
-                            placeholder="Ulangi kata sandi baru"
-                        />
+                    <form>
+                        <label htmlFor="konfirmasi">Konfirmasi Sandi Baru</label>
+                        <PasswordInput id="konfirmasi" name="konfirmasi" />
+                    </form> 
                     </div>
 
                     <div className="flex flex-col gap-y-2 pt-2">
                         <Button
                             className="bg-orange-600 hover:bg-orange-700" 
-                            title="Selesaikan Reset Kata Sandi"
+                            title="ATUR ULANG KATA SANDI"
                             type="submit"
                         />
-                        <span className="font-outfit text-center text-sm">
-                            <Link className="font-medium text-gray-600 hover:text-blue-600 transition" href="/customer/login">
-                                Batalkan dan Kembali ke Login
-                            </Link>
-                        </span>
                     </div>
                 </form>
             </div>
