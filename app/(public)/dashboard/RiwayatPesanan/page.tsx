@@ -1,7 +1,9 @@
-// app/dashboard/RiwayatPesanan/RiwayatPesananpage.tsx
+// app/dashboard/RiwayatPesanan/page.tsx
 
 import Link from 'next/link';
 import React from 'react';
+// Impor ikon untuk panah paginasi
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 // --- Data Dummy (ganti dengan data asli dari API) ---
 const mockOrders = [
@@ -13,21 +15,21 @@ const mockOrders = [
 ];
 // ----------------------------------------------------
 
-// Komponen kecil untuk Status Badge
+// Komponen kecil untuk Status Badge (Tidak berubah)
 const StatusBadge = ({ status }: { status: string }) => {
     let classes = '';
     switch (status.toUpperCase()) {
         case 'IN PROGRESS':
-            classes = 'bg-yellow-100 text-yellow-700';
+            classes = 'text-yellow-500';
             break;
         case 'COMPLETED':
-            classes = 'bg-green-100 text-green-700';
+            classes = 'text-green-500';
             break;
         case 'CANCELED':
-            classes = 'bg-red-100 text-red-700';
+            classes = 'text-red-500';
             break;
         default:
-            classes = 'bg-gray-100 text-gray-700';
+            classes = 'bg-gray-100 text-gray-600';
     }
     return (
         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${classes}`}>
@@ -36,26 +38,82 @@ const StatusBadge = ({ status }: { status: string }) => {
     );
 };
 
-// Komponen Paginasi Sederhana
+// Komponen Paginasi
 const Pagination = () => (
-    <nav className="flex justify-between items-center mt-6" aria-label="Pagination">
-        <div className="text-sm text-gray-500">
-            {/* Teks info (opsional) */}
-        </div>
-        <ul className="flex items-center space-x-1">
+    <nav className="flex justify-center items-center mt-6" aria-label="Pagination">
+        <ul className="flex items-center space-x-2">
+            {/* Tombol Panah Kiri */}
             <li>
-                <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-100">
-                    &larr; {/* Panah Kiri */}
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-orange-500 border border-orange-500 bg-white hover:bg-orange-50 transition-colors"
+                >
+                    <span className="sr-only">Previous</span>
+                    <ChevronLeftIcon className="h-5 w-5" />
                 </a>
             </li>
-            <li><a href="#" aria-current="page" className="px-4 py-2 text-white bg-blue-600 border border-blue-600 rounded-md">01</a></li>
-            <li><a href="#" className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100">02</a></li>
-            <li><a href="#" className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100">03</a></li>
-            <li><a href="#" className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100">04</a></li>
-            <li><a href="#" className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100">05</a></li>
+            
+            {/* Halaman Aktif */}
             <li>
-                <a href="#" className="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-md hover:bg-gray-100">
-                    &rarr; {/* Panah Kanan */}
+                <a 
+                    href="#" 
+                    aria-current="page" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-sm font-medium text-white bg-orange-500 border border-orange-500"
+                >
+                    01
+                </a>
+            </li>
+            
+            {/* Halaman Tidak Aktif */}
+            <li>
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                    02
+                </a>
+            </li>
+            <li>
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                    03
+                </a>
+            </li>
+            <li>
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                    04
+                </a>
+            </li>
+            <li>
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                    05
+                </a>
+            </li>
+            <li>
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                    06
+                </a>
+            </li>
+            
+            {/* Tombol Panah Kanan */}
+            <li>
+                <a 
+                    href="#" 
+                    className="flex items-center justify-center h-9 w-9 rounded-full text-orange-500 border border-orange-500 bg-white hover:bg-orange-50 transition-colors"
+                >
+                    <span className="sr-only">Next</span>
+                    <ChevronRightIcon className="h-5 w-5" />
                 </a>
             </li>
         </ul>
@@ -65,7 +123,7 @@ const Pagination = () => (
 export default function RiwayatPesananPage() {
     return (
         <div className="p-4 md:p-8 bg-gray-50 min-h-screen">
-            {/* Breadcrumbs */}
+            {/* Breadcrumbs (Tidak berubah) */}
             <nav className="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
                 <ol className="list-none p-0 inline-flex space-x-2">
                     <li><a href="#" className="text-blue-600 hover:underline">Beranda</a></li>
@@ -76,16 +134,18 @@ export default function RiwayatPesananPage() {
                 </ol>
             </nav>
 
-            {/* Kontainer Utama */}
+            {/* Kontainer Utama (Tidak berubah) */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 
-                {/* Header Tabel */}
+                {/* Header Tabel (Tidak berubah) */}
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-xl font-semibold text-gray-800">Pesanan Terbaru</h2>
-                    <a href="#" className="text-sm text-blue-600 hover:underline">Lihat Semua</a>
+                        <a href="#" className="text-sm text-orange-500 font-medium hover:text-orange-600">
+                            Lihat Semua &rarr;
+                        </a>
                 </div>
 
-                {/* Tabel Pesanan */}
+                {/* Tabel Pesanan (Tidak berubah) */}
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
