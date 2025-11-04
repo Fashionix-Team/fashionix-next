@@ -1,11 +1,7 @@
 import { getServerSession } from 'next-auth';
-// Pastikan path ini benar. Jika auth.ts mengekspor getAuthOptions, gunakan ini.
 import { authOptions } from '@/auth';
-
-// UBAH: Sesuaikan path impor komponen DashboardContent
 import DashboardContent from '@/components/customer/dashboard/dashboard-page'; 
 
-// Data Dummy untuk Ringkasan Dashboard (Ganti dengan data fetching aktual)
 const dummySummary = {
   totalOrders: 5,
   PENDINGOrders: 1,
@@ -19,10 +15,8 @@ export const metadata = {
 };
 
 export default async function DashboardPage() {
-  // UBAH: Panggil fungsi getAuthOptions()
   const session = await getServerSession(authOptions);
 
-  // Untuk pengembangan: Buat pengguna dummy jika tidak ada sesi login
   const dummyUser = {
     id: 'dummy-user-123',
     name: 'Rafly',
@@ -31,14 +25,11 @@ export default async function DashboardPage() {
     lastName: 'User',
     role: 'customer',
     accessToken: 'dummy-token',
-    phone: '081234567890' // Tambahkan properti phone jika diperlukan
+    phone: '081234567890'
   };
 
-  // Gunakan pengguna dari sesi jika ada, jika tidak, gunakan pengguna dummy
   const user = session?.user || dummyUser;
 
-  // Di sini Anda mungkin akan melakukan fetching data ringkasan dashboard
-  // const summaryData = await getDashboardSummary(session.user.id);
   const summaryData = dummySummary;
 
   return (

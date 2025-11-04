@@ -2,15 +2,10 @@
 
 import Link from "next/link"; 
 import { useMemo } from "react";
-// Impor ikon yang dibutuhkan (EditIcon, MapIcon, RightArrowIcon)
-import { EditIcon } from "@/components/icons/edit-icon"; 
 import { MapIcon } from "@/components/icons/map-icon";
-import  RightArrow  from "@/components/icons/right-arrow"; // Asumsi ikon panah ada di sini
 import  EarphoneIcon from "@/components/icons/service/earphone-icon";
 import { ShoppingCartIcon } from "@/components/icons/shopping-cart";
 import { RocketIcon } from "@/components/icons/roket";
-import CheckSign from "@/components/icons/check-sign";
-import { LeftArrow } from "@/components/icons/service/left-arrow";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { CubeIcon } from "@/components/icons/cube";
 
@@ -23,7 +18,7 @@ interface DashboardUser {
   lastName: string;
   accessToken?: string;
   role?: string;
-phone?: number;
+phone?: string;
 }
 
 interface DashboardContentProps {
@@ -277,14 +272,13 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* 1. SECTION: Informasi Akun */}
-           <DashboardCard
-                title="INFO AKUN"
-                linkHref="/customer/account"
-                linkText="Edit Akun"
-            >
+            <DashboardCard
+                title="INFO AKUN"
+                linkHref="/customer/account"
+                linkText="Edit Akun"
+            >
                 <div className="space-y-4">
                     
-                    {/* 1. Baris: Foto & Nama Lengkap */}
                     <div className="flex items-center space-x-4 pb-2">
                         {/* Foto Profil (Placeholder Circle/Avatar) */}
                         <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
