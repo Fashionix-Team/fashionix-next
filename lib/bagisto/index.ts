@@ -18,6 +18,7 @@ import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
 import { getCustomerAddressQuery } from "./queries/checkout";
+import { getDashboardSummaryQuery } from "./queries/customer/dashboard-summary";
 import {
   getCollectionProductQuery,
   getCollectionProductsQuery,
@@ -671,6 +672,22 @@ export async function getCollectionProducts({
   }
 
   return reshapeProducts(res.body.data.allProducts.data);
+}
+
+export async function getDashboardSummary(): Promise<any> {
+  const res = await bagistoFetch<any>({
+    query: getDashboardSummaryQuery,
+    tags: [TAGS.cart],
+    cache: "no-store",
+  });
+
+  const summary = res.body.data?.customerDashboardSummary;
+
+  if (!isObject(summary)) {
+    return null;
+  }
+
+  return summary;
 }
 
 export async function getAllProductUrls(): Promise<Product[]> {

@@ -229,6 +229,26 @@ const LatestOrdersSection = () => {
         </div>
     );
 };
+// Komponen untuk menampilkan info kontak (email & telepon)
+const ContactInfo = ({ email, phone }: { email?: string | null, phone?: number | string | null }) => (
+    <>
+        <p className="text-gray-700 dark:text-gray-300 flex items-center">
+            {/* Ikon Email */}
+            <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+            <span>
+                {email || 'Email tidak tersedia'}
+            </span>
+        </p>
+
+        <p className="text-gray-700 dark:text-gray-300 flex items-center">
+            {/* Ikon Telepon */}
+            <EarphoneIcon className="w-5 h-5 mr-3 text-gray-500" />
+            <span>
+                {phone || 'Telepon tidak tersedia'}
+            </span>
+        </p>
+    </>
+);
 
 
 export default function DashboardContent({ user, summary }: DashboardContentProps) {
@@ -298,22 +318,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                     </div>
 
                     {/* 2. Baris: Email */}
-                    <p className="text-gray-700 dark:text-gray-300 flex items-center">
-                        {/* Ikon Email */}
-                        <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <span>
-                            {user.email || 'Email tidak tersedia'}
-                        </span>
-                    </p>
-
-                    {/* 3. Baris: Telepon */}
-                    <p className="text-gray-700 dark:text-gray-300 flex items-center">
-                        {/* Ikon Telepon */}
-                        <EarphoneIcon className="w-5 h-5 mr-3 text-gray-500" />
-                        <span>
-                            {user.phone || 'Telepon tidak tersedia'}
-                        </span>
-                    </p>
+                    <ContactInfo email={user.email} phone={user.phone} />
                 </div>
             </DashboardCard>
 
@@ -323,7 +328,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                 linkHref="/customer/addresses"
                 linkText="Edit Alamat"
             >
-                <div className="space-y-2">
+                <div className="space-y-4">
                     <p className="text-lg font-semibold text-gray-900 dark:text-white">
                                 {user.firstName} {user.lastName || ''}
                             </p>
@@ -335,21 +340,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                         </span>
                     </p>
 
-                    <p className="text-gray-700 dark:text-gray-300 flex items-center">
-                        {/* Ikon Telepon */}
-                        <EarphoneIcon className="w-5 h-5 mr-3 text-gray-500" />
-                        <span>
-                            {user.phone || 'Telepon tidak tersedia'}
-                        </span>
-                    </p>
-
-                    <p className="text-gray-700 dark:text-gray-300 flex items-center">
-                        {/* Ikon Email */}
-                        <svg className="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <span>
-                            {user.email || 'Email tidak tersedia'}
-                        </span>
-                    </p>
+                    <ContactInfo email={user.email} phone={user.phone} />
                 </div>
             </DashboardCard>
 

@@ -1,13 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/auth';
 import DashboardContent from '@/components/customer/dashboard/dashboard-page'; 
-
-const dummySummary = {
-  totalOrders: 5,
-  PENDINGOrders: 1,
-  defaultAddress: 'Jl. Contoh No. 123, Jakarta, 12345',
-  totalWishlist: 8,
-};
+import { getDashboardSummary } from '@/lib/bagisto';
 
 export const metadata = {
   title: 'Dashboard Pelanggan',
@@ -30,7 +24,15 @@ export default async function DashboardPage() {
 
   const user = session?.user || dummyUser;
 
-  const summaryData = dummySummary;
+  const summaryResult = await getDashboardSummary();
+
+  //Data fallback jika API gagal atau tidak mengembalikan data
+  const summaryData = summaryResult ? {
+    totalOrders: summaryResult.totalOrders || 0,
+    pendingOrders: summaryResult.pendingOrders || 0,
+    defaultAddress: summaryResult.defaultAddress?.address || 'Alamat belum diatur',
+    totalWishlist: summaryResult.totalWishlist || 0,
+  } : { totalOrders: 0, pendingOrders: 0, defaultAddress: 'Gagal memuat alamat', totalWishlist: 0 };
 
   return (
     <div className="container mx-auto px-4 py-10 lg:py-16">
