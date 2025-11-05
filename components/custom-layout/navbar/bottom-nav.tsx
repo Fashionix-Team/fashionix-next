@@ -14,103 +14,6 @@ function BottomNav({ categories = [] }: BottomNavProps) {
             {/* Left: Categories + main nav */}
             <div className="flex items-center gap-6 py-3">
               <CategoryMegaMenu categories={categories} />
-
-              {/* Main nav */}
-              <nav aria-label="secondary" className="text-[#5F6C72]">
-                <ul className="flex items-center gap-6">
-                  <li>
-                    <a href="track-order.html" className="group inline-flex items-center gap-2">
-                      <span className="inline-block">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path d="M5.25 21.75H18.75" stroke="#5F6C72" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path
-                            d="M12 12.75C13.6569 12.75 15 11.4069 15 9.75C15 8.09315 13.6569 6.75 12 6.75C10.3431 6.75 9 8.09315 9 9.75C9 11.4069 10.3431 12.75 12 12.75Z"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M19.5 9.75C19.5 16.5 12 21.75 12 21.75C12 21.75 4.5 16.5 4.5 9.75C4.5 7.76088 5.29018 5.85322 6.6967 4.4467C8.10322 3.04018 10.0109 2.25 12 2.25C13.9891 2.25 15.8968 3.04018 17.3033 4.4467C18.7098 5.85322 19.5 7.76088 19.5 9.75V9.75Z"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                      <span className="text-sm">Track Order</span>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="compare.html" className="group inline-flex items-center gap-2">
-                      <span className="inline-block">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path d="M7.48125 9.34668H2.98125V4.84668" stroke="#5F6C72" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path
-                            d="M17.8312 6.16885C17.0659 5.40236 16.1569 4.79429 15.1563 4.37941C14.1557 3.96453 13.0832 3.75098 12 3.75098C10.9168 3.75098 9.84425 3.96453 8.84367 4.37941C7.84309 4.79429 6.93412 5.40236 6.16875 6.16885L2.98125 9.34698"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path d="M16.5188 14.6533H21.0188V19.1533" stroke="#5F6C72" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path
-                            d="M6.16875 17.8314C6.93412 18.5979 7.84309 19.206 8.84367 19.6209C9.84425 20.0358 10.9168 20.2493 12 20.2493C13.0832 20.2493 14.1557 20.0358 15.1563 19.6209C16.1569 19.206 17.0659 18.5979 17.8312 17.8314L21.0187 14.6533"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                      <span className="text-sm">Compare</span>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="support.html" className="group inline-flex items-center gap-2">
-                      <span className="inline-block">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path
-                            d="M21.1406 12.7503H18.1406C17.7428 12.7503 17.3613 12.9083 17.08 13.1897C16.7987 13.471 16.6406 13.8525 16.6406 14.2503V18.0003C16.6406 18.3981 16.7987 18.7797 17.08 19.061C17.3613 19.3423 17.7428 19.5003 18.1406 19.5003H19.6406C20.0384 19.5003 20.42 19.3423 20.7013 19.061C20.9826 18.7797 21.1406 18.3981 21.1406 18.0003V12.7503ZM21.1406 12.7503C21.1407 11.5621 20.9054 10.3856 20.4484 9.28875C19.9915 8.1919 19.3218 7.1964 18.4781 6.35969C17.6344 5.52297 16.6334 4.86161 15.5328 4.41375C14.4322 3.96589 13.2538 3.74041 12.0656 3.75031C10.8782 3.74165 9.70083 3.96805 8.60132 4.41647C7.5018 4.86488 6.50189 5.52645 5.6592 6.36304C4.81651 7.19963 4.1477 8.19471 3.69131 9.29094C3.23492 10.3872 2.99997 11.5629 3 12.7503V18.0003C3 18.3981 3.15804 18.7797 3.43934 19.061C3.72064 19.3423 4.10218 19.5003 4.5 19.5003H6C6.39782 19.5003 6.77936 19.3423 7.06066 19.061C7.34196 18.7797 7.5 18.3981 7.5 18.0003V14.2503C7.5 13.8525 7.34196 13.471 7.06066 13.1897C6.77936 12.9083 6.39782 12.7503 6 12.7503H3"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </span>
-                      <span className="text-sm">Customer Support</span>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="#" className="group inline-flex items-center gap-2">
-                      <span className="inline-block">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path
-                            d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path d="M11.25 11.25H12V16.5H12.75" stroke="#5F6C72" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          <path
-                            d="M12.1875 7.875C12.1875 8.08211 12.0196 8.25 11.8125 8.25C11.6054 8.25 11.4375 8.08211 11.4375 7.875C11.4375 7.66789 11.6054 7.5 11.8125 7.5C12.0196 7.5 12.1875 7.66789 12.1875 7.875Z"
-                            fill="#191C1F"
-                            stroke="#5F6C72"
-                            strokeWidth="1.5"
-                          />
-                        </svg>
-                      </span>
-                      <span className="text-sm">Need Help</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
             </div>
 
             {/* Right: Tell */}
@@ -140,7 +43,7 @@ function BottomNav({ categories = [] }: BottomNavProps) {
                   />
                 </svg>
               </span>
-              <div className="text-sm font-semibold">+1-202-555-0104</div>
+              <div className="text-sm font-semibold">+62-123-4567-8910</div>
             </div>
           </div>
         </div>
