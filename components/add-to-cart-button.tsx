@@ -3,7 +3,7 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { useAddProduct } from "./hooks/use-add-to-cart";
-import { ShoppingCartIcon } from "./icons/shopping-cart";
+import ShoppingCartIcon from "./icons/shopping-cart";
 import LoadingDots from "./loading-dots";
 
 export default function AddToCartButton({
