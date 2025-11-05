@@ -1,12 +1,7 @@
 {
-  "name": "next-app-template",
+  "name": "fashionix",
   "private": true,
-  "packageManager": "pnpm@9.0.5",
   "version": "2.3.0",
-  "engines": {
-    "node": ">=18",
-    "pnpm": ">=8"
-  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
