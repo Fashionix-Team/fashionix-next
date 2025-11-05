@@ -8,7 +8,7 @@ import DashboardContent from '@/components/customer/dashboard/dashboard-page';
 // Data Dummy untuk Ringkasan Dashboard (Ganti dengan data fetching aktual)
 const dummySummary = {
   totalOrders: 5,
-  pendingOrders: 1,
+  PENDINGOrders: 1,
   defaultAddress: 'Jl. Contoh No. 123, Jakarta, 12345',
   totalWishlist: 8,
 };

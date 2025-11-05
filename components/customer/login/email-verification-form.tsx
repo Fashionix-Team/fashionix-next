@@ -19,11 +19,6 @@ export default function EmailVerificationForm() {
             )}>
                 
                 <div className="font-outfit text-center">
-                    {/* Placeholder Ikon Verifikasi (Anda bisa menggantinya dengan ikon email atau verifikasi) */}
-                    <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 mb-3">
-                        <LockClosedIcon className="h-5 w-5 text-blue-600" /> 
-                    </div>
-
                     <h2 className="text-2xl font-bold text-gray-900"> 
                         Verifikasi Alamat Email Anda
                     </h2>
@@ -50,15 +45,9 @@ export default function EmailVerificationForm() {
                                 Kirim Ulang Kode
                             </button>
                         </div>
-                        
-                        <PasswordInput
-                            type="text" 
-                            name="verificationCode"
-                            placeholder="Contoh: 123456"
-                            size="lg"
-                            className="text-center tracking-widest" 
-                        />
-
+                        <form>
+                            <PasswordInput id="verfikasi" name="verifikasi" />
+                        </form>
                     </div>
 
                     <div className="flex flex-col gap-y-2 pt-2">
@@ -67,12 +56,6 @@ export default function EmailVerificationForm() {
                             title="VERIFIKASI SAYA"
                             type="submit"
                         />
-                        
-                        <span className="font-outfit text-center text-sm mt-2">
-                            <Link className="font-medium text-gray-600 hover:text-blue-600 transition" href="/customer/login">
-                                Batalkan dan Kembali ke Login
-                            </Link>
-                        </span>
                     </div>
                 </form>
             </div>
