@@ -2,33 +2,34 @@
 
 import Link from "next/link"; 
 import { useMemo } from "react";
+
 import { MapIcon } from "@/components/icons/map-icon";
 import  EarphoneIcon from "@/components/icons/service/earphone-icon";
-import { ShoppingCartIcon } from "@/components/icons/shopping-cart";
+import ShoppingCartIcon from "@/components/icons/shopping-cart"; 
 import { RocketIcon } from "@/components/icons/roket";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { CubeIcon } from "@/components/icons/cube";
 
 // Interface tetap sama
 interface DashboardUser {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  firstName: string;
-  lastName: string;
-  accessToken?: string;
-  role?: string;
-phone?: string;
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  firstName: string;
+  lastName: string;
+  accessToken?: string;
+  role?: string;
+phone?: number;
 }
 
 interface DashboardContentProps {
- user: DashboardUser; 
- summary: {
-    totalOrders: number;
-    PENDINGOrders: number;
-    defaultAddress: string;
-    totalWishlist: number;
-   };
+ user: DashboardUser; 
+ summary: {
+    totalOrders: number;
+    pendingOrders: number;
+    defaultAddress: string;
+    totalWishlist: number;
+   };
 }
 
 // Interface Pesanan Terbaru
@@ -52,15 +53,15 @@ const DashboardCard = ({ title, children, linkHref, linkText }: { title: string,
             {children}
         </div>
         <Link 
-            href={linkHref}
-            className="w-50 flex justify-center text-blue-400 dark:text-blue-400 hover:text-white dark:hover:text-white 
-                       border border-blue-400 dark:border-blue-400 
-                       hover:bg-blue-400 dark:hover:bg-blue-400 
+            href={linkHref}
+            className="w-50 flex justify-center text-blue-600 dark:text-blue-400 hover:text-white dark:hover:text-white 
+                       border border-blue-600 dark:border-blue-400 
+                       hover:bg-blue-600 dark:hover:bg-blue-400 
                        text-sm font-medium mt-4 items-center 
                        px-4 py-2 rounded-lg transition duration-200 ease-in-out" // Tambahkan padding & rounded-lg
-        >
-            {linkText}
-        </Link>
+        >
+            {linkText}
+        </Link>
     </div>
 );
 
@@ -233,7 +234,7 @@ const LatestOrdersSection = () => {
 export default function DashboardContent({ user, summary }: DashboardContentProps) {
   const enhancedSummary = useMemo(() => ({
         ...summary,
-        COMPLETEDOrders: summary.totalOrders - summary.PENDINGOrders > 0 ? summary.totalOrders - summary.PENDINGOrders : 0, // Data dummy
+        COMPLETEDOrders: summary.totalOrders - summary.pendingOrders > 0 ? summary.totalOrders - summary.pendingOrders : 0, // Data dummy
     }), [summary]);
 
     // Data untuk 3 Kartu Ringkasan Pesanan
@@ -247,7 +248,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
         },
         {
             title: 'Pesanan Tertunda',
-            value: enhancedSummary.PENDINGOrders, 
+            value: enhancedSummary.pendingOrders, 
             linkHref: '/customer/orders?status=PENDING',
             icon: <EnvelopeIcon className="w-6 h-20 text-yellow-500" />,
             bgColor: "bg-orange-100"
@@ -272,8 +273,8 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             
             {/* 1. SECTION: Informasi Akun */}
-            <DashboardCard
-                title="INFO AKUN"
+           <DashboardCard
+                title="Informasi Akun"
                 linkHref="/customer/account"
                 linkText="Edit Akun"
             >
@@ -314,7 +315,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                         </span>
                     </p>
                 </div>
-            </DashboardCard>
+            </DashboardCard>
 
             {/* 2. SECTION: Alamat Default */}
             <DashboardCard
@@ -358,7 +359,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                         <SummaryListCard key={index} {...card} />
                     ))}
                 </div>
-            </div>
+            </div>
         <LatestOrdersSection />
     </div>
   );

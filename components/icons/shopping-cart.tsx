@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-export const ShoppingCartIcon = ({ className = "" }) => {
+const ShoppingCartIcon = ({ className = "" }) => {
   return (
     <svg
       className={clsx("size-6", className)}
@@ -18,3 +18,5 @@ export const ShoppingCartIcon = ({ className = "" }) => {
     </svg>
   );
 };
+
+export default ShoppingCartIcon;
