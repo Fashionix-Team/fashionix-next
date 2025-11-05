@@ -119,7 +119,7 @@ export default function DetailPesananPage({ params }: DetailPesananPageProps) {
                         <li><span>&gt;</span></li>
                         <li><a href="#" className="text-blue-600 hover:underline">Akun Pengguna</a></li>
                         <li><span>&gt;</span></li>
-                        <li><Link href="/dashboard/RiwayatPesanan" className="text-blue-600 hover:underline">Dasboard</Link></li>
+                        <li><Link href="/dashboard/RiwayatPesanan" className="text-blue-600 hover:underline">Riwayat Pesanan</Link></li>
                         <li><span>&gt;</span></li>
                         <li className="text-gray-700">Detail Pesanan</li>
                     </ol>

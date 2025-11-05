@@ -7,11 +7,11 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 // --- Data Dummy (ganti dengan data asli dari API) ---
 const mockOrders = [
-    { id: '#96459761', status: 'IN PROGRESS', date: 'Dec 30, 2019 05:18', total: '$1,500 (5 Products)' },
-    { id: '#71667167', status: 'COMPLETED', date: 'Feb 2, 2019 19:28', total: '$60 (10 Products)' },
-    { id: '#95214362', status: 'CANCELED', date: 'Mar 20, 2019 23:14', total: '$160 (3 Products)' },
-    { id: '#51749385', status: 'COMPLETED', date: 'Feb 2, 2019 19:28', total: '$2,300 (2 Products)' },
-    { id: '#67397174', status: 'COMPLETED', date: 'Dec 7, 2019 23:26', total: '$220 (1 Products)' },
+    { id: '#96459761', status: 'IN PROGRESS', date: 'Dec 30, 2019 05:18', total: 'Rp.400.000 (3 Produk)' },
+    { id: '#71667167', status: 'COMPLETED', date: 'Feb 2, 2019 19:28', total: 'Rp.1.500.000 (10 Produk)' },
+    { id: '#95214362', status: 'CANCELED', date: 'Mar 20, 2019 23:14', total: 'Rp.300.000 (3 Produk)' },
+    { id: '#51749385', status: 'COMPLETED', date: 'Feb 2, 2019 19:28', total: 'Rp.250,000 (2 Produk)' },
+    { id: '#67397174', status: 'COMPLETED', date: 'Dec 7, 2019 23:26', total: 'Rp.220.000 (1 Produk)' },
 ];
 // ----------------------------------------------------
 
@@ -130,7 +130,7 @@ export default function RiwayatPesananPage() {
                     <li><span>&gt;</span></li>
                     <li><a href="#" className="text-blue-600 hover:underline">Akun Pengguna</a></li>
                     <li><span>&gt;</span></li>
-                    <li className="text-gray-700">Dasbor</li>
+                    <li className="text-gray-700">Riwayat Pesanan</li>
                 </ol>
             </nav>
 
