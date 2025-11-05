@@ -1,5 +1,3 @@
-// components/auth/ResetPasswordForm.tsx
-
 "use client";
 
 import clsx from "clsx";
