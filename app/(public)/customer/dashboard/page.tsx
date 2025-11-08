@@ -30,9 +30,10 @@ export default async function DashboardPage() {
   const summaryData = summaryResult ? {
     totalOrders: summaryResult.totalOrders || 0,
     pendingOrders: summaryResult.pendingOrders || 0,
-    defaultAddress: summaryResult.defaultAddress?.address || 'Alamat belum diatur',
     totalWishlist: summaryResult.totalWishlist || 0,
-  } : { totalOrders: 0, pendingOrders: 0, defaultAddress: 'Gagal memuat alamat', totalWishlist: 0 };
+    defaultAddress: summaryResult.defaultAddress || 'Alamat belum diatur',
+    latestOrders: summaryResult.latestOrders || [],
+  } : { totalOrders: 0, pendingOrders: 0, defaultAddress: 'Gagal memuat alamat', totalWishlist: 0, latestOrders: [] };
 
   return (
     <div className="container mx-auto px-4 py-10 lg:py-16">

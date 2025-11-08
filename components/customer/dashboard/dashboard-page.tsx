@@ -29,6 +29,7 @@ interface DashboardContentProps {
     pendingOrders: number;
     defaultAddress: string;
     totalWishlist: number;
+    latestOrders: LatestOrder[];
    };
 }
 
@@ -80,47 +81,7 @@ const SummaryListCard = ({ title, value, linkHref, icon, bgColor }: { title: str
 );
 
 // ✅ KOMPONEN BARU: Menampilkan Daftar Pesanan Terbaru (SESUAI GAMBAR)
-const LatestOrdersSection = () => {
-    // Data Dummy untuk Pesanan (SESUAI GAMBAR)
-    const latestOrders: LatestOrder[] = useMemo(() => [
-        { 
-            id: '1', 
-            orderId: '#96459761', 
-            date: 'Dec 30, 2019 05:18', 
-            status: 'IN PROGRESS', 
-            total: '$1,500', 
-            productCount: 5,
-            link: '/customer/orders/96459761' 
-        },
-        { 
-            id: '2', 
-            orderId: '#96459760', 
-            date: 'Dec 29, 2019 12:45', 
-            status: 'COMPLETED', 
-            total: '$850', 
-            productCount: 3,
-            link: '/customer/orders/96459760' 
-        },
-        { 
-            id: '3', 
-            orderId: '#96459759', 
-            date: 'Dec 28, 2019 09:30', 
-            status: 'CANCELED', 
-            total: '$320', 
-            productCount: 2,
-            link: '/customer/orders/96459759' 
-        },
-        { 
-            id: '4', 
-            orderId: '#96459758', 
-            date: 'Dec 27, 2019 16:20', 
-            status: 'COMPLETED', 
-            total: '$1,200', 
-            productCount: 4,
-            link: '/customer/orders/96459758' 
-        },
-    ], []);
-
+const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) => {
     // Fungsi untuk mendapatkan warna status (SESUAI GAMBAR)
     const getStatusColor = (status: LatestOrder['status']) => {
         switch (status) {
@@ -351,7 +312,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                     ))}
                 </div>
             </div>
-        <LatestOrdersSection />
+        <LatestOrdersSection latestOrders={summary.latestOrders} />
     </div>
   );
 }
