@@ -19,7 +19,7 @@ interface DashboardUser {
   lastName: string;
   accessToken?: string;
   role?: string;
-phone?: number;
+phone?: string;
 }
 
 interface DashboardContentProps {
