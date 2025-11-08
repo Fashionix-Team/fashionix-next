@@ -21,16 +21,22 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
       });
 
-      if (result?.error) {
-        setError('Email atau password salah');
+      const data = await res.json();
+
+      if (!data.success) {
+        setError(data.message || 'Email atau password salah');
         return;
       }
+
+      // Store token
+      localStorage.setItem('token', data.accessToken);
+      localStorage.setItem('user', JSON.stringify(data.customer));
 
       router.push('/success/login');
       router.refresh();
@@ -42,7 +48,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-12">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg">
         {/* Tabs */}
         <div className="flex border-b">

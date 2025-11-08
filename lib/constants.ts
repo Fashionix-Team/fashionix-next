@@ -1,3 +1,10 @@
+export const BAGISTO_API_URL = 'http://localhost:8000/api';
+
+// Export function to get API URL
+export function getApiUrl(endpoint: string): string {
+  return `${BAGISTO_API_URL}${endpoint}`;
+}
+
 export const CACHE_KEY = {
   homeTheme: "collection-homepage",
   headerMenus: "header-menus",

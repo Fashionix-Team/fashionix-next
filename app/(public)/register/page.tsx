@@ -9,7 +9,8 @@ export default function RegisterPage() {
   const pathname = usePathname();
   const isRegister = pathname === '/register';
 
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -27,19 +28,45 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
-      });
-
-      if (res.ok) {
-        router.push('/login');
+      if (password !== confirmPassword) {
+        setError('Password dan konfirmasi password tidak sama');
         return;
       }
 
-      const text = await res.text().catch(() => null);
-      setError(text || 'Registration failed. Please try again.');
+      setLoading(true);
+      setError('');
+      console.log('Mengirim data registrasi...');
+
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password
+        })
+      });
+
+      const data = await response.json();
+      console.log('Response from server:', data);
+
+      if (!data.success) {
+        setError(data.message || 'Registrasi gagal');
+        return;
+      }
+
+      // Save auth data
+      if (data.token && data.customer) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('customer', JSON.stringify(data.customer));
+      }
+
+      // Store token and user data
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.customer));
+
+      router.push('/success/register');
     } catch (err) {
       setError('Terjadi kesalahan. Silakan coba lagi.');
     } finally {
@@ -68,17 +95,31 @@ export default function RegisterPage() {
 
         <div className="p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm text-gray-700">Nama Lengkap</label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full rounded border border-gray-200 bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm text-gray-700">Nama Depan</label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  required
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="mt-1 block w-full rounded border border-gray-200 bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-700">Nama Belakang</label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  required
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="mt-1 block w-full rounded border border-gray-200 bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none"
+                />
+              </div>
             </div>
 
             <div>

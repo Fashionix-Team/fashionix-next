@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { fetchHandler } from '@/lib/fetch-handler';
+
+export async function POST(req: NextRequest) {
+  try {
+    const data = await req.json();
+    const { first_name, last_name, email, password } = data;
+
+    // Validasi input
+    if (!first_name || !last_name || !email || !password) {
+      return NextResponse.json(
+        { success: false, message: 'Semua field harus diisi' },
+        { status: 400 }
+      );
+    }
+
+    // Format data untuk Bagisto API
+    const registerData = {
+      first_name,
+      last_name,
+      email,
+      password,
+      password_confirmation: password,
+      channel: 'default'
+    };
+
+    console.log('Mengirim data ke Bagisto:', registerData);
+
+    // Kirim request ke Bagisto API
+    const response = await fetchHandler({
+      url: '/shop/customers/register',
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: registerData
+    });
+
+    console.log('Respon dari Bagisto:', response);
+
+    // Handle error
+    if (!response.data || response.error) {
+      const errorMessage = response.error?.message || 'Registrasi gagal';
+      console.error('Error dari Bagisto:', errorMessage);
+      
+      return NextResponse.json(
+        { success: false, message: errorMessage },
+        { status: 400 }
+      );
+    }
+
+    // Get data from response
+    const responseData = {
+      success: true,
+      message: 'Registrasi berhasil',
+      token: response.data.token || '',
+      customer: response.data.customer || response.data.data || null
+    };
+
+    return NextResponse.json(responseData);
+    
+  } catch (error) {
+    console.error('Register error:', error);
+    return NextResponse.json(
+      { success: false, message: 'Terjadi kesalahan saat registrasi' },
+      { status: 500 }
+    );
+  }
+}
