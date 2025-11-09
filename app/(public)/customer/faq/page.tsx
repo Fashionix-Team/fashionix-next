@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+
+import { useState } from "react";
 
 interface FAQ {
   id: number;
@@ -41,42 +42,22 @@ const faqs: FAQ[] = [
   },
 ];
 
-const FAQPage: React.FC = () => {
+const FAQPage = () => {
   const [activeId, setActiveId] = useState<number | null>(2);
 
   return (
-    <div className="bg-gray-150 min-h-screen">
-      {/* 🔹 BAGIAN FILTER & BREADCRUMB */}
-      <section className="bg-white-100% border-b border-gray-200 py-3 px-8 flex flex-col md:flex-row items-start md:items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <select className="border border-gray-300 rounded-md p-2 text-sm">
-            <option>Semua Kategori</option>
-            <option>Pakaian Wanita</option>
-            <option>Pakaian Pria</option>
-            <option>Aksesoris</option>
-          </select>
-          <div className="flex items-center text-sm text-gray-600">
-            <span className="mr-2">Butuh Bantuan</span>
-            <span
-              className="inline-flex items-center justify-center w-5 h-5 rounded-full border text-xs font-bold text-gray-500 cursor-pointer"
-              title="Informasi Bantuan"
-            >
-              i
-            </span>
-          </div>
+    <div className="bg-gray-150 min-h-screen">      
+      <section>
+        {/* 🔹 Breadcrumb */}
+        <div className="bg-gray-100% text-sm text-gray-600 py-3 px-6 flex items-center gap-2">
+          <span className="text-gray-500">🏠</span>
+          <span>Beranda</span>
+          <span className="text-gray-400">›</span>
+          <span>Halaman</span>
+          <span className="text-gray-400">›</span>
+          <span className="text-blue-500 font-medium">FAQs</span>
         </div>
-    </section>
-    <section>
-      {/* 🔹 Breadcrumb */}
-      <div className="bg-gray-100% text-sm text-gray-600 py-3 px-6 flex items-center gap-2">
-        <span className="text-gray-500">🏠</span>
-        <span>Beranda</span>
-        <span className="text-gray-400">›</span>
-        <span>Halaman</span>
-        <span className="text-gray-400">›</span>
-        <span className="text-blue-500 font-medium">FAQs</span>
-      </div>
-    </section>
+      </section>
 
       {/* 🔹 Main FAQ Section */}
       <div className="py-12 px-4 md:px-12">
