@@ -37,7 +37,7 @@ interface DashboardContentProps {
 interface LatestOrder {
     id: string;
     orderId: string;
-    date: string;
+    date: Date;
     status: 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'CANCELED';
     total: string;
     link: string;
@@ -158,7 +158,7 @@ const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) 
 
                                 {/* Date */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                    {order.date}
+                                    {order.date.toLocaleDateString()}
                                 </td>
 
                                 {/* Total */}
@@ -312,7 +312,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                     ))}
                 </div>
             </div>
-        <LatestOrdersSection latestOrders={summary.latestOrders} />
+        <LatestOrdersSection latestOrders={summary.latestOrders || []} />
     </div>
   );
 }

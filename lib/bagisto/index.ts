@@ -170,7 +170,7 @@ export async function bagistoFetch<T>({
     }
 
     throw {
-      error: e,
+      error: e instanceof Error ? e.message : JSON.stringify(e),
       query,
     };
   }
@@ -681,37 +681,13 @@ export async function getDashboardSummary(): Promise<any> {
     cache: "no-store",
   });
 
-  const customerData = res.body.data?.customer;
+  const summary = res.body.data?.customerDashboardSummary;
 
-  if (!isObject(customerData)) {
+   if (!isObject(summary)) {
+
     return null;
   }
-
-  const allOrders = customerData.allOrders?.data || [];
-  // Use the length of the fetched orders as the total for consistency
-  const totalOrders = allOrders.length; 
-  const pendingOrders = allOrders.filter(
-    (order: { status: string }) => order.status === "pending"
-  ).length;
-  const totalWishlist = customerData.wishlists?.data?.length || 0;
-  const defaultAddress = customerData.addresses?.data?.[0]?.address || 'Alamat belum diatur';
-  const latestOrders = allOrders.map((order: any) => ({ // This now correctly processes only the fetched orders
-    id: order.id,
-    orderId: `#${order.incrementId}`,
-    date: new Date(order.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }),
-    status: order.status.toUpperCase(),
-    total: order.grandTotal,
-    productCount: order.itemsCount,
-    link: `/customer/orders/${order.id}`
-  }));
-
-  return {
-    totalOrders,
-    pendingOrders,
-    totalWishlist,
-    defaultAddress,
-    latestOrders,
-  };
+  return summary;
 }
 
 export async function getAllProductUrls(): Promise<Product[]> {

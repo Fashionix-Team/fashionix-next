@@ -1,26 +1,20 @@
 export const getDashboardSummaryQuery = /* GraphQL */ `
   query customerDashboardSummary {
-    customer {
-      id
-      allOrders {
-        data(input: { limit: 5, page: 1, sort: "id-desc" }) {
-          id
-          status
-          grandTotal
-          createdAt
-          itemsCount
-          incrementId
-        }
+     customerDashboardSummary {
+      totalOrders
+      pendingOrders
+      totalWishlist
+      defaultAddress {
+        address
       }
-      wishlists {
-        data {
-          id
-        }
-      }
-      addresses {
-        data {
-          address
-        }
+      latestOrders {
+        id
+        orderId: id
+        date: createdAt
+        status
+        total: grandTotal
+        link: id
+        productCount: totalQtyOrdered
       }
     }
   }

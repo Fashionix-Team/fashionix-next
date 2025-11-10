@@ -24,16 +24,24 @@ export default async function DashboardPage() {
 
   const user = session?.user || dummyUser;
 
-  const summaryResult = await getDashboardSummary();
+  let summaryResult;
+  try {
+    summaryResult = await getDashboardSummary();
+  } catch (error) {
+    console.error("Failed to fetch dashboard summary:", error);
+    summaryResult = null;
+  }
 
   //Data fallback jika API gagal atau tidak mengembalikan data
-  const summaryData = summaryResult ? {
-    totalOrders: summaryResult.totalOrders || 0,
-    pendingOrders: summaryResult.pendingOrders || 0,
-    totalWishlist: summaryResult.totalWishlist || 0,
-    defaultAddress: summaryResult.defaultAddress || 'Alamat belum diatur',
-    latestOrders: summaryResult.latestOrders || [],
-  } : { totalOrders: 0, pendingOrders: 0, defaultAddress: 'Gagal memuat alamat', totalWishlist: 0, latestOrders: [] };
+  const summaryData = summaryResult
+    ? {
+        totalOrders: summaryResult.totalOrders || 0,
+        pendingOrders: summaryResult.pendingOrders || 0,
+        defaultAddress: summaryResult.defaultAddress?.address || 'Alamat belum diatur',
+        totalWishlist: summaryResult.totalWishlist || 0,
+        latestOrders: summaryResult.latestOrders || []
+      }
+    : { totalOrders: 0, pendingOrders: 0, defaultAddress: 'Gagal memuat alamat', totalWishlist: 0, latestOrders: [] };
 
   return (
     <div className="container mx-auto px-4 py-10 lg:py-16">

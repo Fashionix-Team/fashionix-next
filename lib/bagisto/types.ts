@@ -12,6 +12,16 @@ export type Cart = Omit<BagistoCart, "lines"> & {
   lines: CartItem[];
 };
 
+export type LatestOrder = {
+  id: string;
+  orderId: string;
+  date: string;
+  status: 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'CANCELED';
+  total: string;
+  link: string;
+  productCount: number;
+};
+
 export interface ProductTypes {
   id: number;
   name: string;
