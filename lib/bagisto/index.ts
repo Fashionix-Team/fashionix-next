@@ -168,11 +168,17 @@ export async function bagistoFetch<T>({
         query,
       };
     }
+    
+    let errorMessage = "An unknown fetch error occurred";
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    } else if (typeof e === 'object' && e !== null) {
+      errorMessage = JSON.stringify(e);
+    } else if (e) {
+      errorMessage = String(e);
+    }
 
-    throw {
-      error: e instanceof Error ? e.message : JSON.stringify(e),
-      query,
-    };
+    throw new Error(`API Fetch Error for query "${query.substring(0, 50)}...": ${errorMessage}`);
   }
 }
 

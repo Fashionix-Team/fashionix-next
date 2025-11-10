@@ -26,7 +26,9 @@ export default async function DashboardPage() {
 
   let summaryResult;
   try {
-    summaryResult = await getDashboardSummary();
+    if (session?.user?.accessToken) {
+      summaryResult = await getDashboardSummary();
+    }
   } catch (error) {
     console.error("Failed to fetch dashboard summary:", error);
     summaryResult = null;
