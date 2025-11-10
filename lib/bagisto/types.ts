@@ -420,6 +420,7 @@ export type BagistoCollectionMenus = {
   logoUrl?: string;
   name: string;
   slug: string;
+  children?: BagistoCollectionMenus[];
 };
 
 export type BagistoProduct = {
