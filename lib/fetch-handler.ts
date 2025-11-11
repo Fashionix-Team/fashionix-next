@@ -1,76 +1,54 @@
-// import hanya sekali
-import { BAGISTO_API_URL } from "./constants";
-
-// HTTP Methods yang didukung
 type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-// Interface untuk opsi request
-interface FetchOptions {
-  url: string;
+interface FetchHandlerOptions<TBody = unknown> {
+  url: string; // API route, e.g., "addToCart"
   method?: Method;
-  body?: any;
+  body?: TBody;
   headers?: Record<string, string>;
   contentType?: boolean;
 }
 
-// Interface untuk response API
-interface ApiResponse<T = any> {
-  success: boolean;
-  data: T | null;
-  error?: {
-    message: string;
-    status?: number;
-  } | null;
-}
-
-// Fungsi utama untuk request API
-export async function fetchHandler<T = any>({
+export async function fetchHandler({
   url,
   method = "GET",
   body,
   headers = {},
   contentType = true,
-}: FetchOptions): Promise<ApiResponse<T>> {
-  const fullUrl = `${BAGISTO_API_URL}${url}`;
-
-  const defaultHeaders: Record<string, string> = {
-    Accept: "application/json",
-    ...(contentType ? { "Content-Type": "application/json" } : {}),
-    ...headers,
-  };
-
+}: FetchHandlerOptions): Promise<any> {
   try {
-    const response = await fetch(fullUrl, {
+    const defaultHeaders: Record<string, string> = {
+      ...(contentType ? { "Content-Type": "application/json" } : {}),
+      ...headers,
+    };
+
+    const response = await fetch(`/api/${url}`, {
       method,
       headers: defaultHeaders,
       body: body ? JSON.stringify(body) : undefined,
-      credentials: "include",
     });
 
-    const data = await response.json();
+    const result = await response.json();
 
     if (!response.ok) {
       return {
-        success: false,
         data: null,
         error: {
-          message: data.message || "Request failed",
-          status: response.status,
+          status: response?.status,
+          message: result?.error || "Something went wrong",
         },
       };
     }
 
     return {
-      success: true,
-      data,
-      error: null,
+      ...result,
     };
-  } catch (error) {
+  } catch (err) {
+    const error = err instanceof Error ? err.message : "Unknown error";
+
     return {
-      success: false,
       data: null,
       error: {
-        message: error instanceof Error ? error.message : "Unknown error occurred",
+        message: error,
       },
     };
   }
