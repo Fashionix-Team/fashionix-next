@@ -89,8 +89,6 @@ import { getProductsUrlQuery } from "./queries/product/product-urls";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
-import { CustomerEmailVerification } from "./mutations/customer/email-verification";
-
 const domain = process.env.BAGISTO_STORE_DOMAIN || "";
 
 const endpoint = `${domain}${BAGISTO_GRAPHQL_API_ENDPOINT}`;
