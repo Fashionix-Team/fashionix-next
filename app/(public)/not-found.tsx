@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function NotFoundSection() {
@@ -14,11 +15,13 @@ export default function NotFoundSection() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center min-h-screen bg-white px-4 font-sans">
-      <img
-        src="https://cdn-icons-png.flaticon.com/512/7486/7486758.png"
+    <div className="flex flex-col items-center justify-center text-center bg-white px-4 font-sans my-10">
+      <Image
+        src="/image/404.png"
         alt="Error"
         className="w-72 mb-6"
+        width={288}
+        height={288}
       />
       <h2 className="text-2xl md:text-3xl font-semibold text-gray-500 mb-2">
         404, Halaman Tidak Ditemukan
