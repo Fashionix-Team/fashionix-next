@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Accordion, AccordionItem } from "@heroui/accordion";
 
 interface FAQ {
   id: number;
@@ -11,53 +11,40 @@ interface FAQ {
 const faqs: FAQ[] = [
   {
     id: 1,
-    question: "Suspendisse ultrices pharetra libero sed interdum.",
+    question: "Bagaimana cara mengetahui status pesanan saya?",
     answer:
-      "Nunc malesuada sodales nisi, vitae egestas lacus laoreet in. Morbi aliquet pulvinar orci non volutpat.",
+      "Anda dapat memantau status pesanan melalui menu 'Dashboard' di akun Anda. Informasi akan diperbarui secara otomatis mulai dari pesanan dibuat hingga pengiriman.",
   },
   {
     id: 2,
-    question: "Fusce molestie condimentum facilisis.",
+    question: "Produk apa saja yang tersedia?",
     answer:
-      "Donec aliquam ullamcorper gravida. Integer id malesuada risus. Sed molestie accumsan orci, eu tempor felis pretium id.",
+      "Kami menyediakan berbagai kategori fashion seperti kemeja, sepatu, jaket dan lainnya. Anda dapat melihat lebih lengkap pada dashboard, klik 'kategori'",
   },
   {
     id: 3,
-    question: "Quisque quis nunc quis urna tempor lobortis vel non orci.",
+    question: "Berapa lama waktu pengiriman pesanan?",
     answer:
-      "Vivamus vel sem non tortor aliquet varius vitae non nulla. Ut imperdiet turpis nec lorem mattis fermentum.",
+      "Waktu pengiriman tergantung lokasi tujuan dan jasa ekspedisi yang digunakan. Biasanya berkisar antara 1–7 hari kerja.",
   },
   {
     id: 4,
     question:
-      "Donec rutrum ultrices ante nec malesuada. In accumsan eget nisi a rhoncus.",
+      "Bagaimana jika lupa password?",
     answer:
-      "Ut mattis, metus eget porta volutpat, augue elit posuere justo, in commodo massa nisi id mi.",
+      "Anda dapat mereset kata sandi dengan memasukkan email yang terdaftar, lalu masukkan kata sandi baru",
   },
   {
     id: 5,
-    question: "Nulla sed sapien maximus, faucibus massa vitae, tristique nulla.",
+    question: "Metode pembayaran apa saja yang tersedia?",
     answer:
-      "Sed vel orci id erat egestas aliquam. Mauris ac felis sit amet enim convallis facilisis.",
+      "Kami menyediakan berbagai metode pembayaran melalui e-wallet dan pembayaran di tempat (COD)",
   },
 ];
 
 const FAQPage = () => {
-  const [activeId, setActiveId] = useState<number | null>(2);
-
   return (
-    <div className="bg-gray-150 min-h-screen">      
-      <section>
-        {/* 🔹 Breadcrumb */}
-        <div className="bg-gray-100% text-sm text-gray-600 py-3 px-6 flex items-center gap-2">
-          <span className="text-gray-500">🏠</span>
-          <span>Beranda</span>
-          <span className="text-gray-400">›</span>
-          <span>Halaman</span>
-          <span className="text-gray-400">›</span>
-          <span className="text-blue-500 font-medium">FAQs</span>
-        </div>
-      </section>
+    <div className="bg-gray-150 min-h-screen">
 
       {/* 🔹 Main FAQ Section */}
       <div className="py-12 px-4 md:px-12">
@@ -68,35 +55,28 @@ const FAQPage = () => {
               Frequently Asked Questions
             </h2>
 
-            <div className="space-y-4">
+            <Accordion
+              defaultExpandedKeys={["2"]}
+              selectionMode="multiple"
+              className="space-y-4"
+              itemClasses={{
+                base: "border rounded-lg border-gray-200 data-[open=true]:border-orange-400",
+                title: "font-medium text-gray-700 data-[open=true]:text-white",
+                trigger: "p-4 bg-white data-[open=true]:bg-orange-400 data-[hover=true]:bg-gray-50 data-[open=true]:data-[hover=true]:bg-orange-500",
+                content: "p-4 pt-0 bg-white text-gray-600 border-t border-gray-200",
+                indicator: "text-gray-700 data-[open=true]:text-white"
+              }}
+            >
               {faqs.map((faq) => (
-                <div
+                <AccordionItem
                   key={faq.id}
-                  className={`border rounded-lg ${
-                    activeId === faq.id ? "border-orange-400" : "border-gray-200"
-                  }`}
+                  aria-label={faq.question}
+                  title={faq.question}
                 >
-                  <button
-                    onClick={() =>
-                      setActiveId(activeId === faq.id ? null : faq.id)
-                    }
-                    className={`w-full text-left p-4 font-medium flex justify-between items-center ${
-                      activeId === faq.id
-                        ? "bg-orange-400 text-white"
-                        : "bg-white text-gray-700"
-                    }`}
-                  >
-                    {faq.question}
-                    <span>{activeId === faq.id ? "-" : "+"}</span>
-                  </button>
-                  {activeId === faq.id && (
-                    <div className="p-4 bg-white text-gray-600 border-t border-gray-200">
-                      {faq.answer}
-                    </div>
-                  )}
-                </div>
+                  {faq.answer}
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </div>
 
           {/* Right Section */}
@@ -127,7 +107,7 @@ const FAQPage = () => {
               ></textarea>
               <button
                 type="submit"
-                className="bg-orange-400 text-white py-2 px-4 rounded-md hover:bg-orange-500 transition-all"
+                className="block mx-auto bg-orange-400 text-white py-2 px-4 rounded-md hover:bg-orange-500 transition-all"
               >
                 KIRIM PESAN →
               </button>
