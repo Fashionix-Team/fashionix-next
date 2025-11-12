@@ -154,8 +154,8 @@ export default function UserMenuPopover() {
                   {...register("password", {
                     required: "Kata sandi wajib diisi",
                     minLength: {
-                      value: 2,
-                      message: "Minimal 2 karakter",
+                      value: 8,
+                      message: "Minimal 8 karakter",
                     },
                   })}
                   className="w-full rounded-md border border-black/10 bg-white px-3 py-2.5 pr-10 text-gray-700 outline-none placeholder-[#25373F]/70 focus:ring-2 focus:ring-orange-400"
