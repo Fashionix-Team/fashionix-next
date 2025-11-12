@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Accordion, AccordionItem } from "@heroui/accordion";
 
 interface FAQ {
   id: number;
@@ -43,8 +43,6 @@ const faqs: FAQ[] = [
 ];
 
 const FAQPage = () => {
-  const [activeId, setActiveId] = useState<number | null>(2);
-
   return (
     <div className="bg-gray-150 min-h-screen">
 
@@ -57,35 +55,28 @@ const FAQPage = () => {
               Frequently Asked Questions
             </h2>
 
-            <div className="space-y-4">
+            <Accordion
+              defaultExpandedKeys={["2"]}
+              selectionMode="multiple"
+              className="space-y-4"
+              itemClasses={{
+                base: "border rounded-lg border-gray-200 data-[open=true]:border-orange-400",
+                title: "font-medium text-gray-700 data-[open=true]:text-white",
+                trigger: "p-4 bg-white data-[open=true]:bg-orange-400 data-[hover=true]:bg-gray-50 data-[open=true]:data-[hover=true]:bg-orange-500",
+                content: "p-4 pt-0 bg-white text-gray-600 border-t border-gray-200",
+                indicator: "text-gray-700 data-[open=true]:text-white"
+              }}
+            >
               {faqs.map((faq) => (
-                <div
+                <AccordionItem
                   key={faq.id}
-                  className={`border rounded-lg ${
-                    activeId === faq.id ? "border-orange-400" : "border-gray-200"
-                  }`}
+                  aria-label={faq.question}
+                  title={faq.question}
                 >
-                  <button
-                    onClick={() =>
-                      setActiveId(activeId === faq.id ? null : faq.id)
-                    }
-                    className={`w-full text-left p-4 font-medium flex justify-between items-center ${
-                      activeId === faq.id
-                        ? "bg-orange-400 text-white"
-                        : "bg-white text-gray-700"
-                    }`}
-                  >
-                    {faq.question}
-                    <span>{activeId === faq.id ? "-" : "+"}</span>
-                  </button>
-                  {activeId === faq.id && (
-                    <div className="p-4 bg-white text-gray-600 border-t border-gray-200">
-                      {faq.answer}
-                    </div>
-                  )}
-                </div>
+                  {faq.answer}
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
           </div>
 
           {/* Right Section */}
