@@ -3,6 +3,9 @@ export const CustomerRegister = /* GraphQL */ `
     customerSignUp(input: $input) {
       success
       message
+      accessToken
+      tokenType
+      expiresIn
     }
   }
 `;
