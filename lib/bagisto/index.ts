@@ -88,7 +88,7 @@ import { RegisterInputs } from "@/components/customer/login/registration-form";
 import { getProductsUrlQuery } from "./queries/product/product-urls";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
-
+import { ResetPasswordMutation } from "./mutations/reset-password";
 const domain = process.env.BAGISTO_STORE_DOMAIN || "";
 
 const endpoint = `${domain}${BAGISTO_GRAPHQL_API_ENDPOINT}`;
@@ -477,6 +477,30 @@ export async function recoverUserLogin(input: any): Promise<any> {
       },
       cache: "no-store",
     });
+  } catch (error) {
+    return error;
+  }
+}
+
+export async function resetUserPassword({
+  email,
+  password,
+  password_confirmation,
+  token,
+}: {
+  email: string;
+  password: string;
+  password_confirmation: string;
+  token: string;
+}): Promise<any> {
+  try {
+    const res = await bagistoFetch<any>({
+      query: ResetPasswordMutation,
+      variables: { email, password, password_confirmation, token },
+      cache: "no-store",
+    });
+
+    return res.body.data.resetPassword;
   } catch (error) {
     return error;
   }
