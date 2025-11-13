@@ -1,13 +1,12 @@
-// components/customer/login/forget-password-form.tsx
-
 "use client";
 
 import Link from "next/link";
 import clsx from "clsx";
+import { useFormState } from "react-dom"; // Import useFormState
 import { Button } from "./loading-button";
 import InputText from "@/components/checkout/cart/input";
-import forgotPasswordAction from "@/lib/forgot-password-action";
-import { useFormState } from "react-dom";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
+import { forgotPasswordAction } from "../lib/action"; 
 
 // Definisikan state awal untuk useFormState
 const initialState = {
@@ -46,7 +45,7 @@ export default function ForgetPasswordForm() {
                             Alamat Email
                         </label>
                         <InputText
-                            label="Email"
+                            label="Alamat Email"
                             typeName="email"
                             name="emailOrPhone" // Pastikan name sesuai dengan yang diambil di action
                             placeholder="Masukkan email atau nomor ponsel"
