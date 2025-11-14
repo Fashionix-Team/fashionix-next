@@ -1,0 +1,5105 @@
+type Query {
+  order(id: ID): Order
+  orderInvoice(id: ID): Invoice
+  orderShipment(id: ID): Shipment
+  orderRefund(id: ID): Refund
+  orderItem(id: ID, input: FilterOrderItemInput): OrderItem
+  invoice(id: ID): Invoice
+  invoiceItem(id: ID, input: FilterInvoiceItemInput!): InvoiceItem
+  shipment(id: ID): Shipment
+  shipmentItem(id: ID, input: FilterShipmentItemInput!): ShipmentItem
+  refund(id: ID): Refund
+  refundItem(id: ID, input: FilterRefundItemInput!): RefundItem
+  transaction(id: ID): Transaction
+  getCustomerCart(id: ID): Cart
+  products(input: FilterProductsInput): ProductPaginatorResponse!
+  product(id: ID): Product
+  category(id: ID): Category
+  attribute(id: ID): Attribute
+  attributeOption(id: ID): AttributeOption
+  attributeTranslation(id: ID): AttributeTranslation
+  attributeOptionTranslation(id: ID): AttributeOptionTranslation
+  filterableAttributes: [Attribute!]
+  attributeGroup(id: ID): AttributeGroup
+  attributeFamily(id: ID): AttributeFamily
+  customer(id: ID): Customer
+  customerAddress(id: ID): Address
+  customerGroup(id: ID): CustomerGroup
+  review(id: ID): Review
+  gdpr(id: ID): GDPRRequest
+  cmsPage(id: ID): CmsPage
+  cartRule(id: ID): CartRule
+  catalogRule(id: ID): CatalogRule
+  campaign(id: ID): Campaign
+  emailTemplate(id: ID): EmailTemplate
+  event(id: ID): Event
+  getSubscriber(id: ID): Subscriber
+  searchSynonym(id: ID!): SearchSynonym
+  searchTerm(id: ID!): SearchTerm
+  sitemap(id: ID): Sitemap
+  urlRewrite(id: ID!): urlRewrite
+  channel(id: ID): Channel
+  currency(id: ID): Currency
+  exchangeRate(id: ID): ExchangeRate
+  inventorySource(id: ID): InventorySource
+  locale(id: ID): Locale
+  pushNotification(id: ID): PushNotification
+  role(id: ID): Role
+  getAclPermissions: [AclPermissions]
+  taxCategory(id: ID): TaxCategory
+  taxRate(id: ID): TaxRate
+  theme(id: ID): Theme
+  user(id: ID): User
+  coreConfig(code: String!): CoreConfig
+  countries: [Country!]
+  country(id: ID!): Country
+  countrieStates(input: FilterCountryStateInput): [CountryState!]
+  countrieState(id: ID!): CountryState
+  getDefaultChannel: Channel
+  themeCustomization: [ShopTheme!]
+  homeCategories(getCategoryTree: Boolean, input: [FilterHomeCategoriesInput]): [Category!]
+  allProducts(input: [FilterHomeCategoriesInput]): ProductPaginatorResponse!
+  getFilterAttribute(categorySlug: String!): FilterAttribute
+  learnMoreAndCustomize: [LearnMoreAndCustomizeCookie]
+  cartDetail: Cart
+  cartItems: [CartItem!]
+  getSlots(id: ID!, date: String!): [AvailableBootkingSlot]
+  cartPayment(id: ID): CartPayment
+  checkoutAddresses: CheckoutAddresses
+  paymentMethods(input: PaymentMethodsInput!): PaymentMethods
+  shippingMethods: ShippingMethods
+  paypalStandard: PaypalStandardResponse
+  accountInfo: Customer
+  address(id: ID): Address
+  compareProduct(id: ID): CompareProduct
+  downloadableLinkPurchase(id: ID): DownloadableLinkPurchased
+  gdprRequest(id: ID!): GDPRDataRequest
+  viewGdprData: GdprViewResponse
+  orderDetail(id: ID!): Order
+  viewInvoice(id: ID): Invoice
+  viewShipment(id: ID): Shipment
+  viewRefund(id: ID): Refund
+  reviewDetail(id: ID): Review
+  wishlist(id: ID): Wishlist
+  orders(
+    input: FilterOrderInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): OrderPaginator!
+  orderInvoices(
+    input: FilterOrderInvoiceInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): InvoicePaginator!
+  orderShipments(
+    input: FilterOrderShipmentInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ShipmentPaginator!
+  orderRefunds(
+    input: FilterOrderRefundInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): RefundPaginator!
+  orderItems(
+    input: FilterOrderItemInput!
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): OrderItemPaginator!
+  invoices(
+    input: FilterInvoiceInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): InvoicePaginator!
+  invoiceItems(
+    input: FilterInvoiceItemInput!
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): InvoiceItemPaginator!
+  shipments(
+    input: FilterShipmentInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ShipmentPaginator!
+  shipmentItems(
+    input: FilterShipmentItemInput!
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ShipmentItemPaginator!
+  refunds(
+    input: FilterRefundInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): RefundPaginator!
+  refundItems(
+    input: FilterRefundItemInput!
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): RefundItemPaginator!
+  transactions(
+    input: FilterTransactionInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): TransactionPaginator!
+  categories(
+    input: FilterCategoryListInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CategoryPaginator!
+  attributes(
+    input: FilterAttributesInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AttributePaginator!
+  attributeOptions(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AttributeOptionPaginator!
+  attributeTranslations(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AttributeTranslationPaginator!
+  attributeOptionTranslations(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AttributeOptionTranslationPaginator!
+  attributeGroups(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AttributeGroupPaginator!
+  attributeFamilies(
+    input: FilterAttributeFamiliesInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AttributeFamilyPaginator!
+  customers(
+    input: FilterCustomerInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CustomerPaginator!
+  customerAddresses(
+    input: FilterCustomerAddressInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AddressPaginator!
+  customerGroups(
+    input: FilterCustomerGroupInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CustomerGroupPaginator!
+  reviews(
+    input: FilterReviewInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ReviewPaginator!
+  gdprList(
+    input: FilterGDPRRequestInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): GDPRRequestPaginator!
+  cmsPages(
+    input: FilterCmsPageInput
+
+    "Limits number of fetched items."
+    first: Int! = 2
+
+    "The offset from which items are returned."
+    page: Int
+  ): CmsPagePaginator!
+  cartRules(
+    input: FilterCartRulesInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CartRulePaginator!
+  catalogRules(
+    input: FilterCatalogRulesInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CatalogRulePaginator!
+  campaigns(
+    input: FilterCampaignInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CampaignPaginator!
+  emailTemplates(
+    input: FilterEmailTemplateInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): EmailTemplatePaginator!
+  events(
+    input: FilterEventInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): EventPaginator!
+  getSubscribers(
+    input: FilterSubscriberInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): SubscriberPaginator!
+  searchSynonyms(
+    input: FilterSearchTermInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): SearchSynonymPaginator!
+  searchTerms(
+    input: FilterSearchTermInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): SearchTermPaginator!
+  sitemaps(
+    input: FilterSiteMapInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): SitemapPaginator!
+  urlRewrites(
+    input: FilterUrlRewriteInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): urlRewritePaginator!
+  channels(
+    input: FilterChannelInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ChannelPaginator!
+  currencies(
+    input: FilterCurrencyInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CurrencyPaginator!
+  exchangeRates(
+    input: FilterExchangeRateInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ExchangeRatePaginator!
+  inventorySources(
+    input: FilterInventorySourceInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): InventorySourcePaginator!
+  locales(
+    input: FilterLocaleInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): LocalePaginator!
+  pushNotifications(
+    input: FilterNotificationInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): PushNotificationPaginator!
+  roles(
+    input: FilterRoleInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): RolePaginator!
+  taxCategories(
+    input: FilterTaxCategoryInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): TaxCategoryPaginator!
+  taxRates(
+    input: FilterTaxRateInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): TaxRatePaginator!
+  themes(
+    input: FilterThemesInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ThemePaginator!
+  users(
+    input: FilterUserInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): UserPaginator!
+  coreConfigs(
+    input: FilterCoreConfigInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CoreConfigPaginator!
+  cartPayments(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CartPaymentPaginator!
+  addresses(
+    input: FilterCustomerAddressInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): AddressPaginator!
+  compareProducts(
+    input: FilterCompareProductsInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CompareProductPaginator!
+  downloadableLinkPurchases(
+    input: FilterDownloadablePurchaseInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): DownloadableLinkPurchasedPaginator!
+  gdprRequests(
+    input: FilterCustomerGdprRequestInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): GDPRDataRequestPaginator!
+  ordersList(
+    input: FilterCustomerOrderInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): OrderPaginator!
+  viewInvoices(
+    input: OrderInvoiceInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): InvoicePaginator!
+  viewShipments(
+    input: OrderShipmentInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ShipmentPaginator!
+  viewRefunds(
+    input: OrderRefundInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): RefundPaginator!
+  reviewsList(
+    input: FilterReviewInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): ReviewPaginator!
+  wishlists(
+    input: FilterWislistInput
+
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): WishlistPaginator!
+}
+
+type Mutation {
+  cancelOrder(id: ID!): CancelOrderResponse
+  adminReorder(id: ID!): OrderResponse
+  createInvoice(input: CreateInvoiceInput!): InvoiceResponse
+  createShipment(input: CreateShipmentInput!): ShipmentResponse
+  createRefund(input: CreateRefundInput!): RefundResponse
+  createTransaction(input: CreateTransactionInput!): TransactionResponse
+  createCustomerCart(customerId: ID!): CartItemResponse
+  addCartItem(id: ID!, input: AddItemToCartInput!): CartItemResponse
+  deleteCustomerCartItem(id: ID!): CartItemResponse
+  updateCustomerCartItem(input: UpdateCartItemInput!): CartItemResponse
+  storeAddress(id: ID!, input: StoreAddressInput!): ShippingMethodsResponse
+  storeShippingMethod(id: ID!, shippingMethod: String!): ShippingMethodsResponse
+  storePaymentMethod(id: ID!, method: String!): PaymentResponse
+  storeCoupon(id: ID!, code: String!): CartItemResponse
+  deleteCoupon(id: ID!): CartItemResponse
+  storeOrder(id: ID!): NewOrderResponse
+  createProduct(input: CreateProductInput!): ProductResponse
+  updateProduct(id: ID!, input: UpdateProductInput!): ProductResponse
+  deleteProduct(id: ID!): StatusResponse
+  createCategory(input: CreateCategoryInput!): CategoryResponse
+  updateCategory(id: ID!, input: CreateCategoryInput!): CategoryResponse
+  deleteCategory(id: ID!): StatusResponse
+  createAttribute(input: CreateAttributeInput!): AttributeResponse
+  updateAttribute(id: ID!, input: CreateAttributeInput!): AttributeResponse
+  deleteAttribute(id: ID!): StatusResponse
+  createAttributeGroup(input: CreateAttributeGroupInput!): AttributeGroupResponse
+  updateAttributeGroup(id: ID!, input: CreateAttributeGroupInput!): AttributeGroupResponse
+  deleteAttributeGroup(id: ID!): StatusResponse
+  createAttributeFamily(input: CreateAttributeFamilyInput): AttributeFamilyResponse
+  updateAttributeFamily(id: ID!, input: CreateAttributeFamilyInput): AttributeFamilyResponse
+  deleteAttributeFamily(id: ID!): StatusResponse
+  createCustomer(input: CreateCustomerInput!): CustomerResponse
+  updateCustomer(id: ID!, input: CreateCustomerInput!): CustomerResponse
+  storeNotes(id: ID!, input: CreateCustomerNoteInput!): NoteResponse
+  deleteCustomer(id: ID!): StatusResponse
+  createOrder(customerId: ID!): OrderResponse
+  createCustomerAddress(input: CreateCustomerAddressInput!): AddressResponse
+  updateCustomerAddress(id: ID!, input: CreateCustomerAddressInput!): AddressResponse
+  setAsDefaultAddress(id: ID!, customerId: ID!): AddressResponse
+  deleteCustomerAddress(id: ID!): StatusResponse
+  createCustomerGroup(input: CreateCustomerGroupInput!): CustomerGroupResponse
+  updateCustomerGroup(id: ID!, input: CreateCustomerGroupInput!): CustomerGroupResponse
+  deleteCustomerGroup(id: ID!): StatusResponse
+  updateReview(id: ID!, status: ReviewStatus!): ReviewResponse
+  adminDeleteReview(id: ID!): StatusResponse
+  updateGdprRequest(id: ID!, input: GdprRequestInputs!): GDPRRequestResponse
+  deleteGdprRequest(id: ID!): StatusResponse
+  createCmsPage(input: CreateCmsPageInput!): CmsPageResponse
+  updateCmsPage(id: ID!, input: CreateCmsPageInput!): CmsPageResponse
+  deleteCmsPage(id: ID!): StatusResponse
+  createCartRule(input: CreateCartRuleInput!): CartRuleResponse
+  updateCartRule(id: ID!, input: UpdateCartRuleInput!): CartRuleResponse
+  deleteCartRule(id: ID!): StatusResponse
+  createCatalogRule(input: CreateCatalogRuleInput!): CatalogRuleResponse
+  updateCatalogRule(id: ID!, input: CreateCatalogRuleInput!): CatalogRuleResponse
+  deleteCatalogRule(id: ID!): StatusResponse
+  createCampaign(input: CreateCampaignInput!): CampaignResponse
+  updateCampaign(id: ID!, input: CreateCampaignInput!): CampaignResponse
+  deleteCampaign(id: ID!): StatusResponse
+  createEmailTemplate(input: CreateEmailTemplateInput!): EmailTemplateResponse
+  updateEmailTemplate(id: ID!, input: CreateEmailTemplateInput!): EmailTemplateResponse
+  deleteEmailTemplate(id: ID!): StatusResponse
+  createEvent(input: CreateEventInput!): EventResponse
+  updateEvent(id: ID!, input: CreateEventInput!): EventResponse
+  deleteEvent(id: ID!): StatusResponse
+  unSubscribe(id: ID!): SubscriberResponse
+  deleteSubscriber(id: ID!): StatusResponse
+  createSearchSynonym(input: SearchSynonymInput!): SearchSynonymResponse
+  updateSearchSynonym(id: ID!, input: SearchSynonymInput!): SearchSynonymResponse
+  deleteSearchSynonym(id: ID!): StatusResponse
+  createSearchTerm(input: CreateSearchTermInput!): SearchTermResponse
+  updateSearchTerm(id: ID!, input: UpdateSearchTermInput!): SearchTermResponse
+  deleteSearchTerm(id: ID!): StatusResponse
+  createSiteMap(input: CreateSiteMapInput!): SitemapResponse
+  updateSiteMap(id: ID!, input: CreateSiteMapInput!): SitemapResponse
+  deleteSiteMap(id: ID!): StatusResponse
+  createUrlRewrite(input: UrlRewriteInput!): UrlRewriteResponse
+  updateUrlRewrite(id: ID!, input: UrlRewriteInput!): UrlRewriteResponse
+  deleteUrlRewrite(id: ID!): StatusResponse
+  createChannel(input: CreateChannelInput!): ChannelResponse
+  updateChannel(id: ID!, input: CreateChannelInput!): ChannelResponse
+  deleteChannel(id: ID!): StatusResponse
+  createCurrency(input: CreateCurrencyInput!): CurrencyResponse
+  updateCurrency(id: ID!, input: CreateCurrencyInput!): CurrencyResponse
+  deleteCurrency(id: ID!): StatusResponse
+  createExchangeRate(input: CreateExchangeRateInput!): ExchangeRateResponse
+  updateExchangeRate(id: ID!, input: CreateExchangeRateInput!): ExchangeRateResponse
+  deleteExchangeRate(id: ID!): StatusResponse
+  updateExchangeRates: StatusResponse
+  createInventorySource(input: createInventorySourceInput!): InventorySourceResponse
+  updateInventorySource(id: ID!, input: createInventorySourceInput!): InventorySourceResponse
+  deleteInventorySource(id: ID!): StatusResponse
+  createLocale(input: CreateLocaleInput!): LocaleResponse
+  updateLocale(id: ID!, input: CreateLocaleInput!): LocaleResponse
+  deleteLocale(id: ID!): StatusResponse
+  createPushNotification(input: CreatePushNotificationInput!): PushNotificationResponse
+  updatePushNotification(id: ID!, input: CreatePushNotificationInput!): PushNotificationResponse
+  deletePushNotification(id: ID!): StatusResponse
+  sendPushNotification(id: ID!): StatusResponse
+  createRole(input: CreateRoleInput!): RoleResponse
+  updateRole(id: ID!, input: CreateRoleInput!): RoleResponse
+  deleteRole(id: ID!): StatusResponse
+  createTaxCategory(input: createTaxCategoryInput!): TaxCategoryResponse
+  updateTaxCategory(id: ID!, input: createTaxCategoryInput!): TaxCategoryResponse
+  deleteTaxCategory(id: ID!): StatusResponse
+  createTaxRate(input: createTaxRateInput!): TaxRateResponse
+  updateTaxRate(id: ID!, input: createTaxRateInput!): TaxRateResponse
+  deleteTaxRate(id: ID!): StatusResponse
+  createTheme(input: CreateThemeInput!): ThemeResponse
+  updateTheme(id: ID!, input: UpdateThemeInput!): ThemeResponse
+  deleteTheme(id: ID!): StatusResponse
+  userLogin(input: LoginInput!): LoginResponse
+  userLogout: StatusResponse
+  createUser(input: CreateUserInput!): UserResponse
+  updateUser(id: ID!, input: CreateUserInput!): UserResponse
+  deleteUser(id: ID!): StatusResponse
+  updateCustomScript(input: CustomScriptInput!): CustomScriptResponse
+  contactUs(input: ContactUsInput!): StatusResponse
+  downloadSample(input: DownloadSampleInput!): DownloadSampleResponse
+  subscribe(email: String!): StatusResponse
+  addItemToCart(input: AddItemToCartInput!): CartItemResponse
+  updateItemToCart(input: UpdateItemToCartInput!): CartItemResponse
+  removeCartItem(id: ID!): CartItemResponse
+  removeAllCartItem: StatusResponse
+  moveToWishlist(id: ID!): CartItemResponse
+  applyCoupon(input: ApplyCouponInput!): CouponResponse
+  removeCoupon: CouponResponse
+  placeOrder(isPaymentCompleted: Boolean = false, error: Boolean = true, message: String, transactionId: String, paymentStatus: String, paymentMethod: String, paymentType: String, orderID: String): PlacedOrderResponse
+  saveCheckoutAddresses(input: SaveShippingAddressInput!): ShippingMethodsResponse
+  savePayment(input: savePaymentMethodInput!): PaymentResponse
+  saveShipping(input: saveShippingMethodInput!): ShippingResponse
+  paypalStandardSuccess: paypalStandardSuccessResponse
+  paypalStandardCancel: paypalStandardCancelResponse
+  paypalStandardIpn(input: PaypalIpnInput!): paypalStandardIpnResponse
+  updateAccount(input: UpdateAccountInput!): CustomerResponse
+  deleteAccount(password: String!): StatusResponse
+  createAddress(input: AddressInput!): AddressResponse
+  updateAddress(id: ID!, input: AddressInput!): AddressResponse
+  setDefaultAddress(id: ID!): AddressResponse
+  deleteAddress(id: ID!): StatusResponse
+  addToCompare(productId: ID!): CompareProductResponse
+  removeFromCompareProduct(productId: ID!): StatusResponse
+  removeAllCompareProducts: StatusResponse
+  downloadLink(id: ID!): DownloadLinkResponse
+  forgotPassword(email: String!): StatusResponse
+  createGdprRequest(input: GdprRequestInput!): GdprRequestResponse
+  revokeGdprRequest(id: ID!): GdprRequestResponse
+  downloadGdprData: GdprDownloadResponse
+  cancelCustomerOrder(id: ID!): CancelOrderResponse
+  reorder(id: ID!): CartItemResponse
+  customerSignUp(input: SignUpInput!): CustomerLoginResponse
+  customerSocialSignIn(input: SocialSignInInput!): CustomerLoginResponse
+  createReview(input: CreateReviewInput!): CreateReviewResponse
+  deleteReview(id: ID!): DeleteReviewResponse
+  deleteAllReview: StatusResponse
+  customerLogin(input: LoginInput!): CustomerLoginResponse
+  customerLogout: StatusResponse
+  addToWishlist(productId: ID!): WishlistResponse
+  removeFromWishlist(productId: ID!): WishlistResponse
+  moveToCart(id: ID!, quantity: Int!): WishlistResponse
+  removeAllWishlists: StatusResponse
+}
+
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date
+
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime
+
+"Can be used as an argument to upload files using https:\/\/github.com\/jaydenseric\/graphql-multipart-request-spec"
+scalar Upload
+
+scalar JSON
+
+input FilterOrderInput {
+  id: Int
+  baseSubTotal: Float
+  baseGrandTotal: Float
+  orderDate: String
+  channelName: String
+  status: String
+  billedTo: String
+  shippedTo: String
+}
+
+input FilterOrderInvoiceInput {
+  orderId: Int!
+  id: Int
+  invoiceDate: String
+  customerName: String
+  status: String
+  amount: Float
+}
+
+input FilterOrderShipmentInput {
+  orderId: Int!
+  id: Int
+  shipmentDate: String
+  carrierTitle: String
+  trackingNumber: String
+  totalQty: Int
+}
+
+input FilterOrderRefundInput {
+  orderId: Int!
+  id: Int
+  refundDate: String
+  customerName: String
+  status: String
+  refunded: Float
+}
+
+type Order {
+  id: Int!
+  incrementId: String
+  status: String
+  statusLabel: String
+  channelName: String
+  isGuest: Int
+  customerEmail: String
+  customerFirstName: String
+  customerLastName: String
+  shippingMethod: String
+  shippingTitle: String
+  shippingDescription: String
+  couponCode: String
+  isGift: Int
+  totalItemCount: Int
+  totalQtyOrdered: Int
+  baseCurrencyCode: String
+  channelCurrencyCode: String
+  orderCurrencyCode: String
+  grandTotal: Float
+  baseGrandTotal: Float
+  grandTotalInvoiced: Float
+  baseGrandTotalInvoiced: Float
+  grandTotalRefunded: Float
+  baseGrandTotalRefunded: Float
+  subTotal: Float
+  baseSubTotal: Float
+  subTotalInvoiced: Float
+  baseSubTotalInvoiced: Float
+  subTotalRefunded: Float
+  baseSubTotalRefunded: Float
+  discountPercent: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  discountInvoiced: Float
+  baseDiscountInvoiced: Float
+  discountRefunded: Float
+  baseDiscountRefunded: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  taxAmountInvoiced: Float
+  baseTaxAmountInvoiced: Float
+  taxAmountRefunded: Float
+  baseTaxAmountRefunded: Float
+  shippingAmount: Float
+  baseShippingAmount: Float
+  shippingInvoiced: Float
+  baseShippingInvoiced: Float
+  shippingRefunded: Float
+  baseShippingRefunded: Float
+  shippingDiscountAmount: Float
+  baseShippingDiscountAmount: Float
+  shippingTaxAmount: Float
+  baseShippingTaxAmount: Float
+  shippingTaxRefunded: Float
+  baseShippingTaxRefunded: Float
+  subTotalInclTax: Float
+  baseSubTotalInclTax: Float
+  shippingAmountInclTax: Float
+  baseShippingAmountInclTax: Float
+  customerId: Int
+  customerType: String
+  channelId: Int
+  channelType: String
+  cartId: ID
+  appliedCartRuleIds: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  formattedPrice: FormattedPrice
+  items: [OrderItem!]
+  comments: [OrderComment]
+  downloadableLinkPurchased: [DownloadableLinkPurchased]
+  shipments: [Shipment]
+  invoices: [Invoice]
+  refunds: [Refund!]
+  customer: Customer
+  addresses: [Address!]
+  payment: OrderPayment
+  billingAddress: Address!
+  shippingAddress: Address
+  channel: Channel
+}
+
+type OrderComment {
+  id: ID!
+  orderId: ID!
+  comment: String
+  customerNotified: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order!
+}
+
+type OrderPayment {
+  id: ID!
+  orderId: ID
+  method: String!
+  methodTitle: String
+  additional: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type CancelOrderResponse {
+  success: Boolean
+  message: String
+  order: Order
+}
+
+type OrderResponse {
+  success: Boolean
+  jumpToSection: String
+  cart: Cart
+  customerAddresses: Address
+}
+
+input FilterOrderItemInput {
+  orderId: Int
+  id: Int
+  sku: String
+  type: String
+  name: String
+  weight: Float
+  totalWeight: Float
+  qtyOrdered: Float
+  qtyShipped: Float
+  qtyInvoiced: Float
+  qtyCanceled: Float
+  qtyRefunded: Float
+  price: Float
+}
+
+type OrderItem {
+  id: ID!
+  sku: String!
+  type: String
+  name: String
+  couponCode: String
+  weight: Float!
+  totalWeight: Float
+  qtyOrdered: Int
+  qtyShipped: Int
+  qtyInvoiced: Int
+  qtyCanceled: Int
+  qtyRefunded: Int
+  price: Float!
+  basePrice: Float!
+  total: Float!
+  baseTotal: Float!
+  totalInvoiced: Float!
+  baseTotalInvoiced: Float!
+  amountRefunded: Float!
+  baseAmountRefunded: Float!
+  discountPercent: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  discountInvoiced: Float
+  baseDiscountInvoiced: Float
+  discountRefunded: Float
+  baseDiscountRefunded: Float
+  taxPercent: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  taxAmountInvoiced: Float
+  baseTaxAmountInvoiced: Float
+  taxAmountRefunded: Float
+  baseTaxAmountRefunded: Float
+  priceInclTax: Float
+  basePriceInclTax: Float
+  totalInclTax: Float
+  baseTotalInclTax: Float
+  formattedPrice: FormattedPrice
+  productId: ID!
+  productType: String
+  orderId: ID!
+  taxCategoryId: ID
+  parentId: ID
+  additional: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  order: Order!
+  product: Product
+  child: OrderItem
+  parent: OrderItem
+  children: [OrderItem]
+  invoiceItems: [InvoiceItem]
+  shipmentItems: [ShipmentItem]
+  refundItems: [RefundItem]
+  downloadableLinkPurchased: DownloadableLinkPurchased
+}
+
+input FilterInvoiceInput {
+  id: Int
+  orderId: Int
+  grandTotal: Float
+  invoiceDate: String
+}
+
+input FilterInvoiceItemInput {
+  invoiceId: Int!
+  id: Int
+  name: String
+  sku: String
+  qty: Int
+  price: Float
+  orderItemId: Int
+}
+
+input CreateInvoiceInput {
+  orderId: Int!
+  canCreateTransaction: Boolean!
+  invoiceData: [InvoiceDataInput!]!
+}
+
+input InvoiceDataInput {
+  orderItemId: Int!
+  quantity: Int!
+}
+
+type InvoiceResponse {
+  success: Boolean!
+  message: String
+  invoice: Invoice
+}
+
+type Invoice {
+  id: Int!
+  incrementId: String
+  state: String
+  emailSent: Int
+  totalQty: Int
+  baseCurrencyCode: String
+  channelCurrencyCode: String
+  orderCurrencyCode: String
+  subTotal: Float
+  baseSubTotal: Float
+  grandTotal: Float
+  baseGrandTotal: Float
+  shippingAmount: Float
+  baseShippingAmount: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  shippingTaxAmount: Float
+  baseShippingTaxAmount: Float
+  subTotalInclTax: Float
+  baseSubTotalInclTax: Float
+  shippingAmountInclTax: Float
+  baseShippingAmountInclTax: Float
+  formattedPrice: FormattedPrice
+  orderId: Int
+  transactionId: String
+  reminders: String
+  nextReminderAt: String
+  createdAt: String
+  updatedAt: String
+  order: Order!
+  items: [InvoiceItem!]
+  customer: Customer
+  channel: Channel
+  address: Address
+}
+
+type InvoiceItem {
+  id: ID!
+  parentId: Int
+  name: String
+  description: String
+  sku: String
+  qty: Int
+  price: Float!
+  basePrice: Float!
+  total: Float!
+  baseTotal: Float!
+  taxAmount: Float
+  baseTaxAmount: Float
+  discountPercent: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  priceInclTax: Float
+  basePriceInclTax: Float
+  totalInclTax: Float
+  baseTotalInclTax: Float
+  productId: ID!
+  productType: String
+  orderItemId: ID!
+  invoiceId: ID!
+  additional: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  formattedPrice: FormattedPrice
+  invoice: Invoice
+  orderItem: OrderItem
+  product: Product!
+  children: [InvoiceItem]
+}
+
+input FilterShipmentInput {
+  id: Int
+  totalQty: Int
+  orderId: Int
+  orderDate: String
+  shipment_date: String
+  inventorySource: String
+  shippingTo: String
+}
+
+input FilterShipmentItemInput {
+  shipmentId: ID!
+  id: Int
+  name: String
+  sku: String
+  qty: Int
+  weight: Float
+  price: Float
+  orderItemId: Int
+}
+
+input CreateShipmentInput {
+  orderId: Int!
+  carrierTitle: String!
+  trackNumber: String!
+  inventorySourceId: Int!
+  shipmentData: [ShipmentDataInput!]!
+}
+
+input ShipmentDataInput {
+  orderItemId: Int!
+  quantity: Int!
+}
+
+type ShipmentResponse {
+  success: Boolean
+  message: String
+  shipment: Shipment
+}
+
+type Shipment {
+  id: Int
+  status: String
+  totalQty: Int
+  totalWeight: Float
+  carrierCode: String
+  carrierTitle: String
+  trackNumber: String
+  emailSent: Int
+  customerId: Int
+  customerType: String
+  orderId: Int
+  orderAddressId: Int
+  inventorySourceId: Int
+  inventorySourceName: String
+  createdAt: String
+  updatedAt: String
+  order: Order!
+  items: [ShipmentItem!]
+  inventorySource: InventorySource
+  customer: Customer
+  address: Address
+}
+
+type ShipmentItem {
+  id: Int!
+  name: String
+  description: String
+  sku: String
+  qty: Int
+  weight: Float
+  price: Float
+  basePrice: Float
+  total: Float
+  baseTotal: Float
+  priceInclTax: Float
+  basePriceInclTax: Float
+  formattedPrice: FormattedPrice
+  productId: ID!
+  productType: String
+  orderItemId: ID!
+  shipmentId: ID!
+  additional: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  shipment: Shipment!
+  orderItem: OrderItem!
+  product: Product!
+}
+
+input FilterRefundInput {
+  id: Int
+  orderId: Int
+  baseGrandTotal: Float
+  refundDate: String
+  refunded: Float
+  billedTo: String
+}
+
+input FilterRefundItemInput {
+  refundId: ID!
+  id: Int
+  name: String
+  sku: String
+  qty: Int
+  price: Float
+  orderItemId: Int
+}
+
+input CreateRefundInput {
+  orderId: Int!
+  refundShipping: Int!
+  adjustmentRefund: Int!
+  adjustmentFee: Int!
+  refundData: [RefundDataInput!]
+}
+
+input RefundDataInput {
+  orderItemId: Int!
+  quantity: Int!
+}
+
+type RefundResponse {
+  success: Boolean
+  message: String
+  refund: Refund
+}
+
+type Refund {
+  id: Int!
+  incrementId: String
+  state: String
+  emailSent: Int
+  totalQty: Int
+  baseCurrencyCode: String
+  channelCurrencyCode: String
+  orderCurrencyCode: String
+  adjustmentRefund: Float
+  baseAdjustmentRefund: Float
+  adjustmentFee: Float
+  baseAdjustmentFee: Float
+  subTotal: Float
+  baseSubTotal: Float
+  grandTotal: Float
+  baseGrandTotal: Float
+  shippingAmount: Float
+  baseShippingAmount: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  discountPercent: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  shippingTaxAmount: Float
+  baseShippingTaxAmount: Float
+  subTotalInclTax: Float
+  baseSubTotalInclTax: Float
+  shippingAmountInclTax: Float
+  baseShippingAmountInclTax: Float
+  orderId: Int
+  createdAt: String
+  updatedAt: String
+  formattedPrice: FormattedPrice
+  order: Order!
+  items: [RefundItem!]
+  customer: Customer!
+  channel: Channel!
+  address: Address!
+}
+
+type RefundItem {
+  id: Int
+  parentId: Int
+  name: String
+  description: String
+  sku: String
+  qty: Int
+  price: Float
+  basePrice: Float
+  total: Float
+  baseTotal: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  discountPercent: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  priceInclTax: Float
+  basePriceInclTax: Float
+  totalInclTax: Float
+  baseTotalInclTax: Float
+  productId: Int
+  productType: String
+  orderItemId: Int
+  refundId: Int
+  additional: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  formattedPrice: FormattedPrice
+  refund: Refund!
+  orderItem: OrderItem!
+  product: Product!
+}
+
+input FilterTransactionInput {
+  id: Int
+  transactionId: String
+  status: String
+  type: String
+  paymentMethod: String
+  invoiceId: Int
+  orderId: Int
+}
+
+input CreateTransactionInput {
+  invoiceId: Int
+  paymentMethod: String
+  amount: Float
+}
+
+type TransactionResponse {
+  success: Boolean
+  message: String
+  transaction: Transaction
+}
+
+type Transaction {
+  id: Int!
+  transactionId: String
+  status: String
+  type: String
+  amount: Float
+  paymentMethod: String
+  data: String
+  invoiceId: Int
+  orderId: Int
+  createdAt: String
+  updatedAt: String
+}
+
+input UpdateCartItemInput {
+  cartItemId: ID!
+  quantity: Int!
+}
+
+input StoreAddressInput {
+  billing: CheckoutAddressInput
+  shipping: CheckoutAddressInput
+}
+
+type NewOrderResponse {
+  success: Boolean
+  message: String
+  order: Order
+}
+
+input UpdateBookingInput {
+  type: AvailableBootkingType!
+  location: String!
+  qty: Int
+  availableEveryWeek: String
+  duration: Int
+  breakTime: Int
+  sameSlotAllDays: String
+  slots: [BookingSlotsInput!]
+  availableFrom: String
+  availableTo: String
+  bookingType: BootkingType
+  tickets: [BookingTicketsInput!]
+  rentalSlot: BookingRentalInput
+  tableSlot: BookingTableInput
+}
+
+input BookingSlotsInput {
+  id: Int
+  fromDay: DaysEnum
+  from: String!
+  toDay: DaysEnum
+  to: String!
+  day: DaysEnum
+  status: String
+}
+
+input BookingTicketsInput {
+  locales: [BookingTicketsTranslationsInput!]
+  qty: Int!
+  price: Float!
+  specialPrice: Float
+  specialPriceFrom: String
+  specialPriceTo: String
+}
+
+input BookingTicketsTranslationsInput {
+  locale: String!
+  name: String!
+  description: String
+}
+
+input BookingRentalInput {
+  rentingType: RentingTypeEnum!
+  dailyPrice: Float
+  hourlyPrice: Float
+}
+
+input BookingTableInput {
+  priceType: PriceTypeEnum!
+  guestLimit: Int
+  preventSchedulingBefore: Int!
+}
+
+enum AvailableBootkingType {
+  DEFAULT
+  APPOINTMENT
+  EVENT
+  RENTAL
+  TABLE
+}
+
+enum BootkingType {
+  ONE
+  MANY
+}
+
+enum DaysEnum {
+  SUNDAY
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+}
+
+enum RentingTypeEnum {
+  DAILY_BASIS
+  HOURLY_BASIS
+  BOTH_DAILY_HOURLY_BASIS
+}
+
+enum PriceTypeEnum {
+  GUEST
+  TABLE
+}
+
+type BookingProduct {
+  id: ID!
+  type: String!
+  qty: Int
+  location: String
+  showLocation: Boolean
+  availableEveryWeek: Boolean
+  availableFrom: DateTime
+  availableTo: DateTime
+  productId: ID!
+  defaultSlot: DefaultBookingProductSlots
+  appointmentSlot: AppointmentBookingProductSlots
+  eventTickets: [TicketBookingProductSlots!]
+  rentalSlot: RentalBookingProductSlots
+  tableSlot: TableBookingProductSlots
+  product: Product!
+}
+
+type DefaultBookingProductSlots {
+  id: ID!
+  bookingType: String!
+  duration: Int
+  breakTime: Int
+  slotManyDays: [DefaultSlots]
+  slotOneDay: [[DefaultSlots]]
+  bookingProductId: ID!
+}
+
+type DefaultSlots {
+  id: String
+  to: String
+  toDay: Int
+  from: String
+  fromDay: Int
+  status: String
+}
+
+type AppointmentBookingProductSlots {
+  id: ID!
+  duration: Int
+  breakTime: Int
+  sameSlotAllDays: Boolean
+  slotManyDays: [BookingDaySlots]
+  slotOneDay: [[BookingDaySlots]]
+  bookingProductId: ID!
+}
+
+type BookingDaySlots {
+  id: String
+  to: String
+  toDay: Int
+  from: String
+  fromDay: Int
+  status: String
+  day: Int
+}
+
+type TicketBookingProductSlots {
+  id: ID!
+  price: Float!
+  qty: Int!
+  name: String!
+  description: String
+  specialPrice: Float
+  specialPriceFrom: DateTime
+  specialPriceTo: DateTime
+  translations: [BookingTicketsTranslations!]
+  bookingProductId: ID!
+}
+
+type BookingTicketsTranslations {
+  locale: String!
+  name: String!
+  description: String
+}
+
+type RentalBookingProductSlots {
+  id: ID!
+  rentingType: String!
+  dailyPrice: Float
+  hourlyPrice: Float
+  sameSlotAllDays: Boolean
+  slotManyDays: [BookingDaySlots]
+  slotOneDay: [[BookingDaySlots]]
+  bookingProductId: ID!
+}
+
+type TableBookingProductSlots {
+  id: ID!
+  priceType: String!
+  guestLimit: Int
+  duration: Int
+  breakTime: Int
+  preventSchedulingBefore: Boolean!
+  sameSlotAllDays: Boolean!
+  slotManyDays: [BookingDaySlots]
+  slotOneDay: [[BookingDaySlots]]
+  bookingProductId: ID!
+}
+
+type OrderInventory {
+  id: ID!
+  qty: Int!
+  productId: ID!
+  channelId: ID!
+  product: Product!
+  channel: Channel!
+}
+
+input CreateProductInput {
+  type: String!
+  attributeFamilyId: ID!
+  sku: String!
+  superAttributes: [SuperAttributesInput]
+}
+
+input SuperAttributesInput {
+  attributeCode: String!
+  values: [Int!]
+}
+
+input UpdateProductInput {
+  channel: String!
+  locale: String!
+  sku: String!
+  name: String!
+  productNumber: String
+  urlKey: String!
+  taxCategoryId: ID
+  new: Boolean
+  featured: Boolean
+  visibleIndividually: Boolean
+  status: Boolean
+  guestCheckout: Boolean
+  color: Int
+  size: Int
+  customAttributes: [CustomAttributeInput]
+  shortDescription: String!
+  description: String!
+  metaTitle: String
+  metaKeywords: String
+  metaDescription: String
+  price: Float!
+  cost: Float
+  specialPrice: Float
+  specialPriceFrom: String
+  specialPriceTo: String
+  length: Float
+  width: Float
+  height: Float
+  depth: Float
+  weight: Float!
+  customerGroupPrices: [CustomerGroupPriceInput]
+  inventories: [InventoriesInput!]
+  categories: [Int!]
+  channels: [Int!]
+  relatedProducts: [Int]
+  upSells: [Int]
+  crossSells: [Int]
+  images: [String]
+  videos: [String]
+  uploadType: UploadType
+  defaultVariantId: ID
+  variants: [UpdateVariantInput!]
+  links: [UpdateGroupedProductInput!]
+  downloadableLinks: [UpdateDownloadableLinksInput!]
+  downloadableSamples: [UpdateDownloadableSamplesInput!]
+  bundleOptions: [UpdateBundleOptionsInput!]
+  booking: UpdateBookingInput
+  customizableOptions: [UpdateCustomizableOptionInput!]
+}
+
+input UpdateVariantInput {
+  variantId: ID!
+  sku: String!
+  name: String!
+  color: Int
+  size: Int
+  inventories: [VariantInventoryInput!]
+  price: Float!
+  weight: Float!
+  status: Boolean!
+  images: [String]
+}
+
+input VariantInventoryInput {
+  inventorySourceId: ID!
+  qty: Int!
+}
+
+input CustomAttributeInput {
+  name: String!
+  value: String
+}
+
+input FilterProductsInput {
+  page: Int!
+  limit: Int!
+  productId: Int
+  type: String
+  sku: String
+  name: String
+  attributeFamily: Int
+  channel: String
+}
+
+input UpdateCustomizableOptionInput {
+  label: String!
+  type: UpdateCustomizableOptionInputTypeEnum!
+  isRequired: Boolean!
+  sortOrder: Int!
+  maxCharacters: Int!
+  supportedFileExtensions: String!
+  prices: [UpdateCustomizableOptionPriceInput]!
+}
+
+input UpdateCustomizableOptionPriceInput {
+  label: String
+  price: Float!
+  sortOrder: Int
+}
+
+enum UpdateCustomizableOptionInputTypeEnum {
+  TEXT
+  TEXTAREA
+  CHECKBOX
+  RADIO
+  SELECT
+  MULTISELECT
+  DATE
+  DATETIME
+  TIME
+  FILE
+}
+
+type ProductResponse {
+  success: Boolean
+  message: String
+  product: Product
+}
+
+type Product {
+  id: ID!
+  sku: String!
+  type: String!
+  parentId: ID
+  attributeFamilyId: ID!
+  productNumber: String
+  name: String
+  shortDescription: String
+  description: String
+  urlKey: String
+  shareURL: String
+  new: Boolean
+  featured: Boolean
+  status: Boolean
+  guestCheckout: Boolean
+  visibleIndividually: Boolean
+  metaTitle: String
+  metaKeywords: String
+  metaDescription: String
+  price: Float
+  specialPrice: Float
+  specialPriceFrom: String
+  specialPriceTo: String
+  weight: Float
+  createdAt: DateTime
+  updatedAt: DateTime
+  configutableData: ConfigutableProductData
+  variants: [Product]
+  parent: Product
+  attributeFamily: AttributeFamily!
+  attributeValues: [ProductAttributeValue!]
+  superAttributes: [Attribute!]
+  categories: [Category!]
+  inventories: [Inventory!]
+  channels: [Channel!]
+  images: [Image]
+  cacheBaseImage: [CacheImage]
+  cacheGalleryImages: [CacheImage]
+  videos: [Video!]
+  additionalData: [ProductAdditionalData]
+  isInWishlist: Boolean
+  isInSale: Boolean
+  isSaleable: Boolean
+  priceHtml: ProductPriceHtml
+  orderedInventories: [OrderInventory!]
+  reviews: [Review]
+  averageRating: String
+  percentageRating: [Int]
+  customizableOptions: [ProductCustomizableOption]
+  customerGroupPrices: [CustomerGroupPrice]
+  downloadableSamples: [ProductDownloadableSample]
+  downloadableLinks: [ProductDownloadableLink]
+  groupedProducts: [ProductGroupedProduct]
+  bundleOptions: [ProductBundleOption]
+  relatedProducts: [Product!]
+  upSells: [Product]
+  crossSells: [Product]
+  booking: [BookingProduct]
+  sameDaySlots: [BookingDaySlots!]
+  differentDaySlots: [BookingDaySlots!]
+}
+
+type ProductCustomizableOption {
+  id: Int!
+  label: String
+  productId: ID!
+  type: String
+  isRequired: Boolean
+  maxCharacters: String
+  supportedFileExtensions: String
+  sortOrder: Int
+  product: Product
+  translations: ProductCustomizableOptionTranslation
+  customizableOptionPrices: [ProductCustomizableOptionPrice]
+}
+
+type ProductCustomizableOptionTranslation {
+  id: Int!
+  locale: String
+  label: String
+  productCustomizableOptionId: ID!
+}
+
+type ProductCustomizableOptionPrice {
+  id: Int!
+  isDefault: Boolean
+  isUserDefined: Boolean
+  label: String
+  price: Float
+  productCustomizableOptionId: ID!
+  qty: Int
+  sortOrder: Int
+}
+
+type ProductAttributeValue {
+  id: ID!
+  productId: ID!
+  attributeId: ID!
+  locale: String
+  channel: String
+  textValue: String
+  booleanValue: Boolean
+  integerValue: Int
+  floatValue: Float
+  dateTimeValue: String
+  dateValue: String
+  jsonValue: String
+  attribute: Attribute!
+  product: Product!
+}
+
+type ProductAdditionalData {
+  id: ID
+  code: String
+  label: String
+  value: String
+  admin_name: String
+  type: String
+}
+
+type ProductPriceHtml {
+  id: ID!
+  type: String
+  minPrice: String
+  priceHtml: String
+  priceWithoutHtml: String
+  regularPrice: String
+  formattedRegularPrice: String
+  finalPrice: String
+  formattedFinalPrice: String
+  currencyCode: String
+  bundlePrice: BundlePrice
+}
+
+type BundlePrice {
+  finalPriceFrom: String
+  formattedFinalPriceFrom: String
+  regularPriceFrom: String
+  formattedRegularPriceFrom: String
+  finalPriceTo: String
+  formattedFinalPriceTo: String
+  regularPriceTo: String
+  formattedRegularPriceTo: String
+}
+
+input UpdateBundleOptionsInput {
+  bundleOptionId: ID
+  locales: [BundleOptionLocaleInput!]
+  type: String!
+  isRequired: Boolean!
+  sortOrder: Int
+  products: [BundleProductInput!]
+}
+
+input BundleOptionLocaleInput {
+  code: String!
+  label: String!
+}
+
+input BundleProductInput {
+  bundleOptionProductId: ID
+  isDefault: Boolean
+  productId: ID!
+  qty: Int!
+  sortOrder: Int
+}
+
+type ProductBundleOption {
+  id: ID!
+  type: String!
+  isRequired: Boolean!
+  sortOrder: Int!
+  productId: ID!
+  product: Product!
+  bundleOptionProducts: [ProductBundleOptionProduct!]
+  translations: [BundleOptionTranslation!]
+}
+
+type ProductBundleOptionProduct {
+  id: ID!
+  qty: Int!
+  isUserDefined: Boolean!
+  sortOrder: Int
+  isDefault: Boolean!
+  productBundleOptionId: ID!
+  productId: ID!
+  product: Product!
+  bundleOption: ProductBundleOption!
+}
+
+type BundleOptionTranslation {
+  id: ID!
+  locale: String
+  label: String
+  productBundleOptionId: ID!
+}
+
+type ConfigutableProductOptions {
+  id: ID!
+  label: String
+  swatchType: String
+  swatchValue: String
+  products: [Int]
+}
+
+type ConfigutableProductAttributes {
+  id: ID!
+  code: String!
+  label: String
+  swatchType: String
+  options: [ConfigutableProductOptions!]
+}
+
+type attributeOptionIds {
+  attributeId: ID!
+  attributeCode: String!
+  attributeOptionId: ID!
+}
+
+type ConfigutableSimpleProducts {
+  id: ID!
+  attributeOptionIds: [attributeOptionIds]
+}
+
+type VariantRegularFinalPrice {
+  price: Float
+  formattedPrice: String
+}
+
+type ConfigutableVariantPrices {
+  id: ID!
+  regularPrice: VariantRegularFinalPrice
+  finalPrice: VariantRegularFinalPrice
+}
+
+type ConfigutableVariantImageUrls {
+  smallImageUrl: String
+  mediumImageUrl: String
+  largeImageUrl: String
+  originalImageUrl: String
+}
+
+type ConfigutableVariantImages {
+  id: ID!
+  images: [ConfigutableVariantImageUrls]
+}
+
+type ConfigutableVariantVideos {
+  id: ID!
+  videos: [String]
+}
+
+type ConfigutableRegularPrice {
+  formattedPrice: String
+  price: Float
+}
+
+type ConfigutableProductData {
+  attributes: [ConfigutableProductAttributes!]
+  index: [ConfigutableSimpleProducts!]
+  variantPrices: [ConfigutableVariantPrices]
+  variantImages: [ConfigutableVariantImages]
+  variantVideos: [ConfigutableVariantVideos]
+  chooseText: String
+  regularPrice: ConfigutableRegularPrice
+}
+
+input CustomerGroupPriceInput {
+  customerGroupId: ID
+  qty: Int!
+  valueType: String!
+  value: Float!
+}
+
+type CustomerGroupPrice {
+  id: ID!
+  qty: Int!
+  valueType: String!
+  value: Int!
+  productId: ID!
+  customerGroupId: ID
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  customerGroup: CustomerGroup
+}
+
+input UpdateDownloadableLinksInput {
+  linkProductId: ID
+  locales: [DownloadableLocaleInput!]
+  price: Float!
+  type: String!
+  file: String
+  fileName: String
+  url: String
+  sampleType: String!
+  sampleFile: String
+  sampleFileName: String
+  sampleUrl: String
+  downloads: Int!
+  sortOrder: Int!
+}
+
+input UpdateDownloadableSamplesInput {
+  sampleProductId: ID
+  locales: [DownloadableLocaleInput!]
+  type: String!
+  file: String
+  fileName: String
+  url: String
+  sortOrder: Int!
+}
+
+input DownloadableLocaleInput {
+  code: String!
+  title: String!
+}
+
+type ProductDownloadableSample {
+  id: ID!
+  url: String
+  fileUrl: String
+  file: String
+  fileName: String
+  type: String
+  sortOrder: Int
+  productId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  translations: [SampleTranslation!]
+}
+
+type SampleTranslation {
+  id: ID!
+  locale: String
+  title: String
+  productDownloadableSampleId: ID!
+}
+
+type ProductDownloadableLink {
+  id: ID!
+  title: String
+  price: Float!
+  url: String
+  fileUrl: String
+  file: String
+  fileName: String
+  type: String
+  sampleUrl: String
+  sampleFile: String
+  sampleFileUrl: String
+  sampleFileName: String
+  sampleType: String
+  sortOrder: Int
+  productId: ID!
+  downloads: Int!
+  product: Product!
+  translations: [LinkTranslation!]
+}
+
+type LinkTranslation {
+  id: ID!
+  locale: String
+  title: String
+  productDownloadableLinkId: ID!
+}
+
+input UpdateGroupedProductInput {
+  groupProductId: ID
+  associatedProductId: ID!
+  qty: Int!
+  sortOrder: Int
+}
+
+type ProductGroupedProduct {
+  id: ID!
+  qty: Int!
+  sortOrder: Int!
+  productId: ID!
+  associatedProductId: ID!
+  product: Product!
+  associatedProduct: Product!
+}
+
+type Image {
+  id: ID!
+  type: String
+  path: String
+  url: String
+  variants: [Image]
+  productId: ID
+  product: Product
+}
+
+type CacheImage {
+  smallImageUrl: String
+  mediumImageUrl: String
+  largeImageUrl: String
+  originalImageUrl: String
+}
+
+input InventoriesInput {
+  inventorySourceId: ID!
+  qty: Int!
+}
+
+type Inventory {
+  id: ID!
+  qty: Int!
+  productId: ID!
+  inventorySourceId: ID!
+  vendorId: Int!
+  inventorySource: InventorySource!
+  product: Product!
+}
+
+type Video {
+  id: ID!
+  type: String
+  path: String
+  url: String
+  productId: ID
+  product: Product
+}
+
+input CreateCategoryInput {
+  locale: String
+  name: String
+  slug: String
+  description: String
+  status: Boolean
+  position: Int
+  displayMode: String
+  logoPath: [String]
+  bannerPath: [String]
+  parentId: Int
+  metaTitle: String
+  metaDescription: String
+  metaKeywords: String
+  attributes: [String]
+}
+
+input FilterCategoryListInput {
+  id: Int
+  slug: String
+  name: String
+  status: Boolean
+  position: Int
+}
+
+type CategoryResponse {
+  success: Boolean!
+  message: String!
+  category: Category
+}
+
+type Category {
+  id: ID!
+  position: Int
+  logoPath: String
+  logoUrl: String
+  status: Boolean
+  displayMode: String!
+  lft: Int
+  rgt: Int
+  parentId: ID
+  additional: String
+  bannerPath: String
+  bannerUrl: String
+  name: String!
+  slug: String!
+  urlPath: String
+  description: String!
+  metaTitle: String
+  metaDescription: String
+  metaKeywords: String
+  localeId: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  filterableAttributes: [filterableAttributes!]
+  children: [Category!]
+}
+
+type filterableAttributes {
+  id: ID!
+  code: String!
+  adminName: String!
+  type: String!
+  validation: String
+  position: Int
+  isFilterable: Int
+  category: Category!
+  options: [AttributeOption!]
+}
+
+input CreateAttributeInput {
+  code: String!
+  type: AttributeType!
+  adminName: String!
+  isRequired: Boolean!
+  isUnique: Boolean!
+  validation: String
+  defaultValue: String
+  valuePerLocale: Boolean
+  valuePerChannel: Boolean
+  isFilterable: Boolean
+  isConfigurable: Boolean!
+  isVisibleOnFront: Boolean
+  isComparable: Boolean!
+  translations: [AttributeTranslationInput]
+  swatchType: String
+  options: [OptionInput]
+}
+
+enum AttributeType {
+  TEXT
+  TEXTAREA
+  PRICE
+  BOOLEAN
+  SELECT
+  MULTISELECT
+  DATETIME
+  DATE
+  IMAGE
+  FILE
+  CHECKBOX
+}
+
+input AttributeTranslationInput {
+  code: String!
+  name: String!
+}
+
+input OptionTranslationInput {
+  code: String!
+  label: String!
+}
+
+input OptionInput {
+  swatchValue: String
+  adminName: String!
+  isNew: String
+  isDelete: String
+  translations: [OptionTranslationInput]
+  position: String
+}
+
+input FilterAttributesInput {
+  id: ID
+  code: String
+  adminName: String
+  type: String
+  isRequired: Int
+  isUnique: Int
+  valuePerLocale: Int
+  valuePerChannel: Int
+}
+
+type AttributeResponse {
+  success: Boolean
+  message: String
+  attribute: Attribute
+}
+
+type Attribute {
+  id: ID!
+  code: String!
+  adminName: String!
+  type: String!
+  position: Int
+  defaultValue: String
+  isRequired: Boolean!
+  isUnique: Boolean!
+  validation: String
+  valuePerLocale: Boolean
+  valuePerChannel: Boolean
+  isFilterable: Boolean
+  isConfigurable: Boolean!
+  isVisibleOnFront: Boolean
+  isUserDefined: Boolean
+  swatchType: String
+  isComparable: Boolean!
+  options: [AttributeOption!]
+  translations: [AttributeTranslation!]
+}
+
+type AttributeOption {
+  id: ID!
+  adminName: String!
+  swatchValue: String
+  sortOrder: Int!
+  attributeId: ID!
+  attribute: Attribute!
+  isNew: Boolean
+  isDelete: Boolean
+  position: String
+  translations: [AttributeOptionTranslation!]
+}
+
+type AttributeOptionTranslation {
+  id: ID!
+  locale: String!
+  label: String!
+  attributeOptionId: ID!
+}
+
+type AttributeTranslation {
+  id: ID!
+  locale: String!
+  name: String!
+  attributeId: ID!
+  attribute: Attribute!
+}
+
+input CreateAttributeGroupInput {
+  id: ID
+  code: String!
+  name: String!
+  column: AttributeGroupColumn!
+  position: Int!
+  attributeFamilyId: ID
+  customAttributes: [CustomerAttributeInput]
+}
+
+enum AttributeGroupColumn {
+  MAIN
+  RIGHT_SIDE
+}
+
+input CustomerAttributeInput {
+  id: Int!
+  position: Int!
+}
+
+input CreateAttributeFamilyInput {
+  code: String!
+  name: String!
+  attributeGroups: [CreateAttributeGroupInput!]
+}
+
+input FilterAttributeFamiliesInput {
+  id: ID
+  code: String
+  name: String
+}
+
+type AttributeFamilyResponse {
+  success: Boolean
+  message: String
+  attributeFamily: AttributeFamily
+}
+
+type AttributeFamily {
+  id: ID!
+  code: String!
+  name: String!
+  status: Boolean
+  isUserDefined: Boolean
+  attributeGroups: [AttributeGroup!]
+}
+
+type AttributeGroupResponse {
+  success: Boolean
+  message: String
+  attributeGroup: AttributeGroup
+}
+
+type AttributeGroup {
+  id: ID!
+  name: String!
+  position: Int!
+  isUserDefined: Boolean
+  attributeFamilyId: ID!
+  customAttributes: [Attribute]
+}
+
+input FilterCustomerInput {
+  id: Int
+  name: String
+  gender: Gender
+  email: String
+  dateOfBirth: String
+  groupName: String
+  phone: String
+  status: Boolean
+}
+
+input CreateCustomerInput {
+  firstName: String!
+  lastName: String!
+  gender: Gender!
+  email: String!
+  dateOfBirth: String
+  customerGroupId: Int!
+  phone: String
+  status: Boolean
+  isSuspended: Boolean
+}
+
+input CreateCustomerNoteInput {
+  note: String!
+  customerNotified: Boolean
+}
+
+type CustomerResponse {
+  success: Boolean
+  message: String
+  customer: Customer
+}
+
+type Customer {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  name: String
+  gender: String
+  dateOfBirth: String
+  email: String!
+  phone: String
+  image: String
+  imageUrl: String
+  status: Boolean
+  password: String!
+  apiToken: String
+  customerGroupId: Int
+  channelId: Int
+  subscribedToNewsLetter: Boolean
+  isVerified: Boolean
+  isSuspended: Boolean
+  token: String
+  rememberToken: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  customerGroup: CustomerGroup
+  addresses: [Address]
+  defaultAddress: Address
+  invoices: [Invoice]
+  wishlist: [Wishlist]
+  isWishlistShared: Boolean
+  getWishlistSharedLink: String
+  allCarts: [Cart]
+  inactiveCarts: [Cart]
+  activeCarts: [Cart]
+  orders: [Order]
+  reviews: [Review]
+  notes: [Note]
+  subscription: Subscriber
+}
+
+type NoteResponse {
+  success: Boolean
+  message: String
+  note: Note
+}
+
+type Note {
+  id: ID
+  customerId: ID
+  note: String
+  customerNotified: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  customer: Customer
+}
+
+input FilterCustomerAddressInput {
+  id: Int
+  customerId: Int
+  firstName: String
+  lastName: String
+  gender: Gender
+  companyName: String
+  address: String
+  city: String
+  state: String
+  country: String
+  postcode: String
+  email: String
+  phone: String
+  vatId: String
+  defaultAddress: Boolean
+}
+
+input CreateCustomerAddressInput {
+  customerId: Int!
+  companyName: String
+  vatId: String
+  firstName: String!
+  lastName: String!
+  address: String!
+  city: String!
+  postcode: String!
+  country: String!
+  state: String!
+  phone: String!
+  email: String!
+  defaultAddress: Boolean
+}
+
+input FilterCustomerGroupInput {
+  id: Int
+  name: String
+  code: String
+}
+
+input CreateCustomerGroupInput {
+  name: String!
+  code: String!
+}
+
+type CustomerGroupResponse {
+  success: Boolean!
+  message: String
+  customerGroup: CustomerGroup
+}
+
+type CustomerGroup {
+  id: ID!
+  code: String!
+  name: String!
+  isUserDefined: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+  customers(
+    "Limits number of fetched items."
+    first: Int! = 10
+
+    "The offset from which items are returned."
+    page: Int
+  ): CustomerPaginator!
+}
+
+input FilterReviewInput {
+  id: Int
+  title: String
+  rating: Int
+  customerName: String
+  productName: String
+  productId: Int
+  status: String
+}
+
+enum ReviewStatus {
+  APPROVED
+  DISAPPROVED
+  PENDING
+}
+
+type ReviewResponse {
+  success: Boolean
+  message: String
+  review: Review
+}
+
+type Review {
+  id: ID!
+  name: String
+  title: String
+  rating: Int!
+  comment: String
+  status: String
+  productId: ID!
+  customerId: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  customer: Customer
+  product: Product
+  images: [ReviewAttachment]
+}
+
+type ReviewAttachment {
+  id: ID
+  reviewId: ID
+  type: String
+  mimeType: String
+  path: String
+  url: String
+  review: Review
+}
+
+input FilterGDPRRequestInput {
+  id: ID
+  customerId: ID
+  status: String
+  message: String!
+}
+
+input GdprRequestInputs {
+  status: String!
+  type: String!
+  message: String!
+}
+
+type GDPRRequestResponse {
+  success: Boolean
+  message: String
+  status: String
+}
+
+type GDPRRequest {
+  id: ID!
+  type: String
+  customerId: ID!
+  name: String
+  email: String
+  status: String
+  message: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  customer: Customer
+}
+
+input FilterCmsPageInput {
+  id: Int
+  pageTitle: String
+  urlKey: String
+}
+
+input CreateCmsPageInput {
+  layout: String
+  pageTitle: String!
+  channels: [Int!]
+  htmlContent: String
+  metaTitle: String
+  urlKey: String!
+  metaKeywords: String
+  metaDescription: String
+}
+
+type CmsPageResponse {
+  success: Boolean!
+  message: String!
+  page: CmsPage
+}
+
+type CmsPage {
+  id: ID!
+  layout: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  channels: [Channel!]
+  translations: [CmsTranslation!]
+}
+
+type CmsTranslation {
+  id: ID!
+  urlKey: String!
+  metaDescription: String
+  metaTitle: String
+  pageTitle: String
+  metaKeywords: String
+  htmlContent: String
+  locale: String!
+  cmsPageId: ID!
+}
+
+input FilterCartRulesInput {
+  id: Int
+  name: String
+  couponCode: String
+  start: String
+  end: String
+  status: Boolean
+  priority: Int
+}
+
+input CreateCartRuleInput {
+  name: String
+  description: String
+  couponType: Int
+  useAutoGeneration: Boolean
+  couponCode: String
+  usesPerCoupon: Int!
+  usagePerCustomer: Int!
+  conditionType: Boolean!
+  conditions: [ConditionInput]
+  actionType: ActionType!
+  discountAmount: Float!
+  discountQuantity: Int!
+  discountStep: Int!
+  applyToShipping: Boolean!
+  freeShipping: Boolean!
+  endOtherRules: Boolean!
+  sortOrder: Int!
+  channels: [Int!]
+  customerGroups: [Int!]
+  status: Boolean!
+  startsFrom: DateTime
+  endsTill: DateTime
+}
+
+input UpdateCartRuleInput {
+  name: String
+  description: String
+  channels: [Int!]
+  customerGroups: [Int!]
+  startsFrom: DateTime
+  endsTill: DateTime
+  status: Boolean!
+  couponType: Int
+  useAutoGeneration: Boolean
+  usagePerCustomer: Int!
+  usesPerCoupon: Int!
+  timesUsed: Int!
+  conditionType: Boolean!
+  conditions: [ConditionInput]
+  actions: String
+  endOtherRules: Boolean!
+  usesAttributeConditions: Boolean!
+  actionType: ActionType!
+  discountAmount: Float!
+  discountQuantity: Int!
+  discountStep: Int!
+  applyToShipping: Boolean!
+  freeShipping: Boolean!
+  sortOrder: Int!
+  couponCode: String
+  autogeneratedCoupons: AutoGeneratedCouponInput
+}
+
+input AutoGeneratedCouponInput {
+  couponQty: Int!
+  codeLength: Int!
+  codeFormat: CodeFormat!
+  codePrefix: String
+  codeSuffix: String
+}
+
+input ConditionInput {
+  attribute: String!
+  operator: String!
+  attributeType: String!
+  value: [String!]
+}
+
+enum ActionType {
+  PercentageProductPrice
+  FixedAmount
+  FixedAmountWholeCart
+  BuyXGetYFree
+}
+
+enum CodeFormat {
+  ALPHANUMERIC
+  ALPHABETICAL
+  NUMERIC
+}
+
+type CartRuleResponse {
+  success: Boolean!
+  message: String
+  cartRule: CartRule
+}
+
+type CartRule {
+  id: ID!
+  name: String
+  description: String
+  startsFrom: DateTime
+  endsTill: DateTime
+  status: Boolean!
+  couponType: Int
+  useAutoGeneration: Boolean!
+  usagePerCustomer: Int!
+  usesPerCoupon: Int!
+  timesUsed: Int
+  conditionType: String!
+  conditions: JSON
+  endOtherRules: Boolean!
+  usesAttributeConditions: Boolean
+  actionType: ActionType!
+  discountAmount: Float!
+  discountQuantity: Int!
+  discountStep: Int!
+  applyToShipping: Boolean!
+  freeShipping: Boolean!
+  sortOrder: Int!
+  createdAt: DateTime
+  updatedAt: DateTime
+  channels: [Channel!]
+  customerGroups: [CustomerGroup!]
+  coupons: [CartRuleCoupon]
+  coupon: CartRuleCoupon
+}
+
+type CartRuleCoupon {
+  id: ID!
+  code: String
+  usageLimit: Int!
+  usagePerCustomer: Int!
+  timesUsed: Int!
+  type: Int!
+  isPrimary: Boolean!
+  expiredAt: Date
+  cartRuleId: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  cartRule: CartRule!
+  couponUsage: [CartRuleCouponUsage]
+}
+
+type CartRuleCouponUsage {
+  id: ID!
+  timesUsed: Int!
+  cartRuleCouponId: ID!
+  customerId: ID!
+}
+
+input FilterCatalogRulesInput {
+  id: ID
+  name: String
+  start: String
+  end: String
+  status: Boolean
+  priority: Int
+}
+
+input CreateCatalogRuleInput {
+  name: String!
+  status: Boolean
+  description: String
+  channels: [Int!]
+  customerGroups: [Int!]
+  startsFrom: DateTime
+  endsTill: DateTime
+  conditionType: Int
+  sortOrder: Int
+  conditions: [CatalogRuleConditionInput]
+  actionType: String!
+  discountAmount: Float!
+  endOtherRules: Boolean!
+}
+
+input CatalogRuleConditionInput {
+  attribute: String!
+  operator: String!
+  attributeType: String!
+  value: [String]
+}
+
+type CatalogRuleResponse {
+  success: Boolean!
+  message: String!
+  catalogRule: CatalogRule
+}
+
+type CatalogRule {
+  id: ID!
+  name: String!
+  description: String
+  startsFrom: Date
+  endsTill: Date
+  status: Boolean!
+  conditionType: Boolean!
+  conditions: JSON
+  endOtherRules: Boolean!
+  actionType: String
+  discountAmount: Float!
+  sortOrder: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  channels: [Channel!]
+  customerGroups: [CustomerGroup!]
+}
+
+input FilterCampaignInput {
+  id: ID
+  name: String
+  subject: String
+  eventId: Int
+  emailTemplateId: Int
+  channelId: Int
+  customerGroupId: Int
+}
+
+input CreateCampaignInput {
+  name: String
+  subject: String
+  channelId: Int
+  customerGroupId: Int
+  eventId: Int
+  emailTemplateId: Int
+  status: Boolean
+}
+
+type CampaignResponse {
+  success: Boolean!
+  message: String!
+  campaign: Campaign
+}
+
+type Campaign {
+  id: ID!
+  name: String!
+  subject: String!
+  status: String!
+  channel: Channel
+  customerGroup: CustomerGroup
+  emailTemplate: EmailTemplate
+  event: Event
+}
+
+input FilterEmailTemplateInput {
+  id: ID
+  name: String
+}
+
+input CreateEmailTemplateInput {
+  name: String!
+  content: String!
+  status: Status!
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  DRAFT
+}
+
+type EmailTemplateResponse {
+  success: Boolean!
+  message: String!
+  emailTemplate: EmailTemplate
+}
+
+type EmailTemplate {
+  id: ID!
+  content: String!
+  name: String!
+  status: String!
+}
+
+input FilterEventInput {
+  id: ID
+  name: String
+  description: String
+  date: String
+}
+
+input CreateEventInput {
+  name: String!
+  description: String!
+  date: String
+}
+
+type EventResponse {
+  success: Boolean!
+  message: String
+  event: Event
+}
+
+type Event {
+  id: ID!
+  name: String!
+  description: String!
+  date: String
+}
+
+input FilterSubscriberInput {
+  id: ID
+  email: String
+  isSubscribed: Boolean
+}
+
+type SubscriberResponse {
+  success: Boolean
+  message: String
+  subscriber: Subscriber
+}
+
+type Subscriber {
+  id: ID!
+  email: String!
+  isSubscribed: Boolean
+  token: String
+  customerId: Int
+  channelId: Int!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input FilterSearchTermInput {
+  id: ID
+  term: String
+  results: Int
+  uses: Int
+  locale: String
+  channelID: ID
+}
+
+input SearchSynonymInput {
+  name: String!
+  terms: String!
+}
+
+type SearchSynonymResponse {
+  success: Boolean
+  message: String
+  searchSynonym: SearchSynonym
+}
+
+type SearchSynonym {
+  id: ID!
+  name: String
+  terms: String
+  createdAt: String
+  updatedAt: String
+}
+
+input CreateSearchTermInput {
+  term: String!
+  redirectUrl: String
+  locale: String
+  channelID: Int
+}
+
+input UpdateSearchTermInput {
+  term: String
+  results: Int
+  uses: Int
+  redirectUrl: String
+  locale: String
+  channelID: Int
+}
+
+type SearchTermResponse {
+  success: Boolean
+  message: String
+  searchTerm: SearchTerm
+}
+
+type SearchTerm {
+  id: ID!
+  term: String
+  results: Int
+  uses: Int
+  redirectUrl: String
+  displayInSuggestedTerms: Boolean
+  locale: String
+  channelID: ID
+}
+
+input FilterSiteMapInput {
+  fileName: String
+  path: String
+}
+
+input CreateSiteMapInput {
+  fileName: String!
+  path: String!
+}
+
+type SitemapResponse {
+  success: Boolean
+  message: String
+  sitemap: Sitemap
+}
+
+type Sitemap {
+  id: ID!
+  fileName: String!
+  path: String
+}
+
+input FilterUrlRewriteInput {
+  id: ID
+  entityType: String
+  requestPath: String
+  targetPath: String
+  redirectType: Int
+  locale: String
+}
+
+input UrlRewriteInput {
+  entityType: String!
+  requestPath: String!
+  targetPath: String!
+  redirectType: Int!
+  locale: String
+}
+
+type UrlRewriteResponse {
+  success: Boolean
+  message: String
+  urlRewrite: urlRewrite
+}
+
+type urlRewrite {
+  id: ID
+  entityType: String
+  requestPath: String
+  targetPath: String
+  redirectType: Int
+  locale: String
+  createdAt: String
+  updatedAt: String
+}
+
+input FilterChannelInput {
+  id: Int
+  code: String
+  name: String
+  hostname: String
+}
+
+input CreateChannelInput {
+  code: String!
+  name: String!
+  description: String
+  theme: String
+  hostname: String
+  defaultLocaleId: Int!
+  baseCurrencyId: Int!
+  rootCategoryId: Int!
+  locales: [String!]!
+  currencies: [String!]!
+  inventorySources: [String!]
+  logo: String
+  favicon: String
+  seoTitle: String!
+  seoDescription: String!
+  seoKeywords: String!
+  maintenanceModeText: String
+  allowedIps: String
+  isMaintenanceOn: Boolean
+}
+
+type ChannelResponse {
+  success: Boolean!
+  message: String!
+  channel: Channel
+}
+
+type Channel {
+  id: ID!
+  code: String!
+  timezone: String
+  theme: String
+  hostname: String
+  logoUrl: String
+  faviconUrl: String
+  homeSeo: HomeSeo
+  isMaintenanceOn: Boolean
+  allowedIps: String
+  rootCategoryId: Int!
+  defaultLocaleId: Int!
+  baseCurrencyId: Int!
+  createdAt: DateTime
+  updatedAt: DateTime
+  locales: [Locale!]
+  defaultLocale: Locale
+  currencies: [Currency!]
+  baseCurrency: Currency!
+  inventorySources: [InventorySource!]
+  rootCategory: Category!
+  maintenanceModeText: String
+  name: String!
+  description: String
+}
+
+type HomeSeo {
+  metaTitle: String
+  metaKeywords: String
+  metaDescription: String
+}
+
+input FilterCurrencyInput {
+  id: Int
+  name: String
+  code: String
+}
+
+input CreateCurrencyInput {
+  code: String!
+  name: String!
+  symbol: String
+  decimal: Int
+  groupSeparator: String
+  decimalSeparator: String
+  currencyPosition: currencyPosition
+}
+
+enum currencyPosition {
+  LEFT
+  LEFT_WITH_SPACE
+  RIGHT
+  RIGHT_WITH_SPACE
+}
+
+type CurrencyResponse {
+  success: Boolean
+  message: String
+  currency: Currency
+}
+
+type Currency {
+  id: ID!
+  code: String!
+  name: String!
+  symbol: String!
+  decimal: Int
+  groupSeparator: String
+  decimalSeparator: String
+  currencyPosition: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  exchangeRate: ExchangeRate
+}
+
+input FilterExchangeRateInput {
+  id: Int
+  targetCurrency: Int
+  currency: String
+  rate: Float
+}
+
+input CreateExchangeRateInput {
+  targetCurrency: Int!
+  rate: Float!
+}
+
+type ExchangeRateResponse {
+  success: Boolean
+  message: String
+  exchangeRate: ExchangeRate
+}
+
+type ExchangeRate {
+  id: ID!
+  rate: Float!
+  targetCurrency: Int!
+  createdAt: DateTime
+  updatedAt: DateTime
+  currency: Currency!
+}
+
+input FilterInventorySourceInput {
+  id: Int
+  code: String
+  name: String
+  status: Boolean
+}
+
+input createInventorySourceInput {
+  code: String
+  name: String
+  description: String
+  contactName: String
+  contactEmail: String
+  contactNumber: String
+  contactFax: String
+  country: String
+  state: String
+  city: String
+  street: String
+  postcode: String
+  priority: Int
+  latitude: String
+  longitude: String
+  status: Boolean
+}
+
+type InventorySourceResponse {
+  success: Boolean!
+  message: String
+  inventorySource: InventorySource
+}
+
+type InventorySource {
+  id: ID!
+  code: String!
+  name: String!
+  description: String
+  contactName: String!
+  contactEmail: String!
+  contactNumber: String!
+  contactFax: String
+  country: String!
+  state: String!
+  city: String!
+  street: String!
+  postcode: String!
+  priority: Int
+  latitude: String
+  longitude: String
+  status: Boolean!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input FilterLocaleInput {
+  id: Int
+  code: String
+  name: String
+  direction: String
+}
+
+input CreateLocaleInput {
+  code: String!
+  name: String!
+  direction: Direction!
+  image: String
+}
+
+enum Direction {
+  LTR
+  RTL
+}
+
+type LocaleResponse {
+  success: Boolean!
+  message: String!
+  locale: Locale
+}
+
+type Locale {
+  id: ID!
+  code: String!
+  name: String!
+  direction: String
+  logoUrl: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input FilterNotificationInput {
+  id: ID
+  type: String
+  productCategoryId: Int
+}
+
+input CreatePushNotificationInput {
+  title: String
+  content: String
+  locale: String
+  channel: String
+  channels: [String]
+  type: String
+  productCategoryId: Int
+  status: Int
+  image: String
+}
+
+type PushNotification {
+  id: ID!
+  image: String
+  imageUrl: String
+  type: String
+  status: Boolean
+  productCategoryId: Int
+  createdAt: String
+  updatedAt: String
+  translations: [PushNotificationTranslation!]
+}
+
+type PushNotificationTranslation {
+  id: ID!
+  title: String
+  content: String
+  locale: String
+  channel: String
+  pushNotificationId: Int
+}
+
+type PushNotificationResponse {
+  success: Boolean
+  message: String
+  pushNotification: PushNotification
+}
+
+input FilterRoleInput {
+  id: ID
+  name: String
+  permissionType: String
+}
+
+input CreateRoleInput {
+  name: String!
+  description: String!
+  permissionType: PermissionType!
+  permissions: [String!]
+}
+
+enum PermissionType {
+  CUSTOM
+  ALL
+}
+
+type RoleResponse {
+  success: Boolean
+  message: String
+  role: Role
+}
+
+type Role {
+  id: ID!
+  name: String!
+  description: String!
+  permissionType: String!
+  permissions: [String!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type AclPermissions {
+  key: String!
+  name: String!
+  route: String
+  sort: Int!
+}
+
+input FilterTaxCategoryInput {
+  id: Int
+  code: String
+  name: String
+}
+
+input createTaxCategoryInput {
+  code: String
+  name: String
+  description: String
+  taxrates: [Int]
+}
+
+type TaxCategoryResponse {
+  success: Boolean!
+  message: String
+  taxCategory: TaxCategory
+}
+
+type TaxCategory {
+  id: ID!
+  code: String!
+  name: String!
+  description: String!
+  taxRates: [TaxRate!]
+}
+
+input FilterTaxRateInput {
+  id: Int
+  identifier: String
+  isZip: Int
+  zipCode: String
+  zipFrom: String
+  zipTo: String
+  state: String
+  country: String
+  taxRate: Float
+}
+
+input createTaxRateInput {
+  identifier: String!
+  isZip: String
+  zipCode: String
+  zipFrom: String
+  zipTo: String
+  state: String!
+  country: String!
+  taxRate: Float!
+}
+
+type TaxRateResponse {
+  success: Boolean!
+  message: String
+  taxRate: TaxRate
+}
+
+type TaxRate {
+  id: ID!
+  identifier: String!
+  isZip: Int
+  zipCode: String
+  zipFrom: String
+  zipTo: String
+  state: String!
+  country: String!
+  taxRate: Float!
+  taxCategories: [TaxCategory]
+}
+
+input FilterThemesInput {
+  id: ID
+}
+
+input CreateThemeInput {
+  name: String
+  sortOrder: Int
+  type: ThemeType
+  channelId: ID
+  themeCode: String
+}
+
+enum ThemeType {
+  ProductCarousel
+  CategoryCarousel
+  StaticContent
+  ImageCarousel
+  FooterLinks
+  ServicesContent
+}
+
+input UpdateThemeInput {
+  name: String
+  sortOrder: Int
+  channelId: ID
+  status: Boolean
+  themeCode: String
+  options: OptionInputTheme!
+}
+
+input OptionInputTheme {
+  title: String
+  filtersInput: [FilterInput]
+}
+
+input FilterInput {
+  key: String
+  value: String
+}
+
+type ThemeResponse {
+  success: Boolean
+  message: String
+  theme: Theme
+}
+
+type Theme {
+  id: ID!
+  themeCode: String
+  type: String
+  name: String
+  sortOrder: Int
+  status: Boolean
+  channelId: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  translations: [ThemeTranslation!]
+}
+
+type ThemeTranslation {
+  id: ID!
+  themeCustomizationId: Int!
+  localeCode: String!
+  options: Options!
+}
+
+type Options {
+  title: String
+  css: String
+  html: String
+  links: [Link]
+  images: [Link]
+  filters: [FilterOption]
+  column_1: [ColumOption]
+  column_2: [ColumOption]
+  column_3: [ColumOption]
+  services: [ServiceContent]
+}
+
+type Link {
+  title: String
+  link: String
+  image: String
+  imageUrl: String
+  url: String
+  slug: String
+  type: String
+  id: ID
+}
+
+type ColumOption {
+  url: String
+  title: String
+  sortOrder: String
+}
+
+type ServiceContent {
+  title: String
+  description: String
+  serviceIcon: String
+}
+
+input FilterUserInput {
+  id: Int
+  name: String
+  email: String
+  roleId: Int
+  role: String
+  status: Boolean
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  password: String
+  passwordConfirmation: String
+  roleId: Int!
+  status: Boolean
+  image: String
+}
+
+type UserResponse {
+  success: Boolean!
+  message: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String
+  apiToken: String
+  status: Boolean
+  roleId: Int!
+  image: String
+  rememberToken: String
+  createdAt: DateTime
+  updatedAt: DateTime
+  role: Role!
+}
+
+type LoginResponse {
+  success: Boolean
+  message: String
+  accessToken: String
+  tokenType: String
+  expiresIn: Int
+  user: User
+}
+
+input FilterCoreConfigInput {
+  id: ID
+  code: String
+  value: String
+  channelCode: String
+  localeCode: String
+}
+
+type CoreConfig {
+  id: ID!
+  code: String!
+  value: String!
+  channelCode: String
+  localeCode: String
+}
+
+input FilterCountryStateInput {
+  id: Int
+  defaultName: String
+  code: String
+  countryId: ID
+  countryCode: String
+}
+
+type Country {
+  id: ID!
+  code: String!
+  name: String!
+  translations: [CountryTranslation!]
+  states: [CountryState]
+}
+
+type CountryTranslation {
+  id: ID!
+  locale: String!
+  name: String
+  countryId: ID!
+}
+
+type CountryState {
+  id: ID!
+  countryCode: String!
+  code: String!
+  defaultName: String
+  countryId: ID!
+  translations: [CountryStateTranslation!]
+}
+
+type CountryStateTranslation {
+  id: ID!
+  locale: String!
+  defaultName: String
+  countryStateId: ID!
+}
+
+input CustomScriptInput {
+  css: String!
+  javascript: String!
+}
+
+type CustomScriptResponse {
+  success: Boolean
+  message: String
+  customScripts: CustomScripts
+}
+
+type CustomScripts {
+  css: String
+  javascript: String
+}
+
+input ContactUsInput {
+  name: String
+  email: String
+  contact: String
+  message: String
+}
+
+input DownloadSampleInput {
+  type: String!
+  id: ID!
+}
+
+type DownloadSampleResponse {
+  success: Boolean
+  string: String
+}
+
+input FilterHomeCategoriesInput {
+  key: String
+  value: String
+}
+
+type FilterAttribute {
+  id: ID
+  minPrice: Float
+  maxPrice: Float
+  filterAttributes: [Attribute!]
+  sortOrders: [CatalogSortOrder!]
+}
+
+type ShopTheme {
+  id: ID!
+  themeCode: String
+  type: String
+  name: String
+  sortOrder: Int
+  status: Boolean
+  channelId: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  translations: [ThemeTranslation!]
+}
+
+type CatalogSortOrder {
+  key: String
+  title: String
+  value: String
+  sort: String
+  order: String
+  position: String
+}
+
+type LearnMoreAndCustomizeCookie {
+  title: String
+  content: String
+}
+
+input AddItemToCartInput {
+  isBuyNow: Boolean
+  productId: ID!
+  quantity: Int!
+  customizableOptions: [CustomizableOptionInput!]
+  selectedConfigurableOption: Int
+  superAttribute: [ConfigurableProductInput!]
+  qty: [GroupedProductInput!]
+  links: [Int!]
+  bundleOptions: [BundledOptionsInput!]
+  booking: BookingProductInput
+}
+
+input CustomizableOptionInput {
+  id: ID!
+  value: [String]
+  file: [Upload]
+}
+
+input ConfigurableProductInput {
+  attributeId: Int!
+  attributeOptionId: Int!
+}
+
+input GroupedProductInput {
+  productId: Int!
+  quantity: Int!
+}
+
+input BundledOptionsInput {
+  bundleOptionId: Int!
+  bundleOptionProductId: [Int!]
+  qty: Int
+}
+
+input BookingProductInput {
+  date: String
+  slot: BookingSlotInput
+  dateFrom: String
+  dateTo: String
+  qty: [EventBookingInput!]
+  note: String
+  rentingType: RentingTypeEnumForCart
+}
+
+input BookingSlotInput {
+  from: Int
+  to: Int
+}
+
+input EventBookingInput {
+  ticketId: Int!
+  quantity: Int!
+}
+
+input UpdateItemToCartInput {
+  qty: [UpdateItemsQty!]
+}
+
+input UpdateItemsQty {
+  cartItemId: ID!
+  quantity: Int!
+}
+
+type CartItemResponse {
+  success: Boolean
+  message: String
+  cart: Cart
+}
+
+type Cart {
+  id: ID!
+  customerEmail: String
+  customerFirstName: String
+  customerLastName: String
+  shippingMethod: String
+  couponCode: String
+  isGift: Boolean!
+  itemsCount: Int
+  itemsQty: Int
+  exchangeRate: Float
+  globalCurrencyCode: String
+  baseCurrencyCode: String
+  channelCurrencyCode: String
+  cartCurrencyCode: String
+  grandTotal: Float
+  baseGrandTotal: Float
+  subTotal: Float
+  baseSubTotal: Float
+  taxTotal: Float
+  baseTaxTotal: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  shippingAmount: Float
+  baseShippingAmount: Float
+  shippingAmountInclTax: Float
+  baseShippingAmountInclTax: Float
+  subTotalInclTax: Float
+  baseSubTotalInclTax: Float
+  checkoutMethod: String
+  isGuest: Boolean
+  isActive: Boolean
+  appliedCartRuleIds: String
+  customerId: ID
+  channelId: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+  appliedTaxRates: [AppliedTaxRate]
+  formattedPrice: FormattedPrice
+  items: [CartItem!]
+  allItems: [CartItem!]
+  billingAddress: Address
+  shippingAddress: Address
+  selectedShippingRate: CartShippingRate
+  payment: CartPayment
+  status: Boolean
+  message: String
+}
+
+type CartItem {
+  id: ID!
+  quantity: Int!
+  sku: String
+  type: String
+  name: String
+  couponCode: String
+  weight: Float!
+  totalWeight: Float!
+  baseTotalWeight: Float!
+  price: Float!
+  basePrice: Float!
+  customPrice: Float
+  total: Float!
+  baseTotal: Float!
+  taxPercent: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  discountPercent: Float!
+  discountAmount: Float!
+  baseDiscountAmount: Float!
+  priceInclTax: Float
+  basePriceInclTax: Float
+  totalInclTax: Float
+  baseTotalInclTax: Float
+  appliedTaxRate: String
+  parentId: ID
+  productId: ID!
+  cartId: ID!
+  taxCategoryId: ID
+  appliedCartRuleIds: String
+  additional: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+  formattedPrice: FormattedPrice
+  product: Product!
+  cart: Cart
+  child: CartItem
+  parent: CartItem
+}
+
+type AppliedTaxRate {
+  taxName: String
+  totalAmount: String
+}
+
+type CartShippingRate {
+  id: ID!
+  carrier: String!
+  carrierTitle: String!
+  method: String!
+  methodTitle: String!
+  methodDescription: String
+  price: Float
+  basePrice: Float
+  discountAmount: Float
+  baseDiscountAmount: Float
+  taxPercent: Float
+  taxAmount: Float
+  baseTaxAmount: Float
+  priceInclTax: Float
+  basePriceInclTax: Float
+  appliedTaxRate: String
+  isCalculateTax: Boolean
+  cartAddressId: ID
+  createdAt: DateTime
+  updatedAt: DateTime
+  shippingAddress: Address
+  formattedPrice: FormattedPrice
+}
+
+type AvailableBootkingSlot {
+  from: String
+  to: String
+  timestamp: String
+  qty: Boolean
+  time: String
+  slots: [AvailableBootkingSlot]
+  fromTimestamp: String
+  toTimestamp: String
+}
+
+enum RentingTypeEnumForCart {
+  HOURLY
+  DAILY
+}
+
+type CartPayment {
+  id: ID!
+  method: String!
+  methodTitle: String
+  cartId: ID!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type CheckoutAddresses {
+  isGuest: Boolean
+  customer: Customer
+  addresses: [FormattedAddresses]
+  defaultCountry: String
+}
+
+type FormattedAddresses {
+  id: Int
+  address: String
+}
+
+input ApplyCouponInput {
+  code: String!
+}
+
+type CouponResponse {
+  success: Boolean!
+  message: String!
+  cart: Cart
+}
+
+input PaymentMethodsInput {
+  shippingMethod: String!
+}
+
+type PaymentMethods {
+  message: String
+  cart: Cart
+  paymentMethods: [PaymentMethod!]
+}
+
+type PaymentMethod {
+  method: String
+  methodTitle: String
+  description: String
+  sort: Int
+  image: String
+}
+
+type PlacedOrderResponse {
+  success: Boolean!
+  redirectUrl: String
+  selectedMethod: String
+  order: Order
+}
+
+input SaveShippingAddressInput {
+  billing: CheckoutAddressInput
+  shipping: CheckoutAddressInput
+}
+
+input CheckoutAddressInput {
+  companyName: String
+  firstName: String!
+  lastName: String!
+  email: String!
+  address: [String]!
+  country: String!
+  state: String!
+  city: String!
+  postcode: String!
+  phone: String!
+  useForShipping: Boolean
+  saveAddress: Boolean
+  defaultAddress: Boolean
+}
+
+type ShippingMethodsResponse {
+  message: String
+  cart: Cart
+  shippingMethods: [ShippingMethod!]
+  paymentMethods: [PaymentMethod!]
+  jumpToSection: String
+}
+
+input savePaymentMethodInput {
+  method: String!
+}
+
+type PaymentResponse {
+  message: String
+  cart: Cart
+  jumpToSection: String
+}
+
+input saveShippingMethodInput {
+  method: String!
+}
+
+type ShippingResponse {
+  message: String
+  cart: Cart
+  jumpToSection: String
+}
+
+type ShippingMethods {
+  message: String
+  cart: Cart
+  shippingMethods: [ShippingMethod!]
+}
+
+type ShippingMethod {
+  title: String
+  methods: Methods
+}
+
+type Methods {
+  code: String
+  label: String
+  price: Float
+  formattedPrice: String
+  basePrice: Float
+  formattedBasePrice: String
+}
+
+input PaypalIpnInput {
+  testIpn: Int!
+  invoice: ID!
+}
+
+type PaypalStandardResponse {
+  success: Boolean
+  message: String
+  cart: Cart
+  paypalRedirectUrl: String
+  paypalFormField: PaypalFormFieldResponse
+  jumpToSection: String
+}
+
+type PaypalFormFieldResponse {
+  business: String!
+  invoice: Int!
+  currencyCode: String!
+  paymentaction: String!
+  return: String!
+  cancelReturn: String!
+  notifyUrl: String
+  charset: String!
+  itemName: String!
+  amount: Float!
+  tax: Float!
+  shipping: Float!
+  discountAmount: Float!
+  cmd: String!
+  upload: Boolean!
+  taxCart: Float
+  discountAmountCart: Float
+  firstName: String!
+  lastName: String!
+  email: String!
+  address: String!
+  state: String!
+  country: String!
+  city: String!
+  zip: String!
+  addressOverride: Boolean!
+  paypalItem: [PaypalCartItem!]
+}
+
+type PaypalCartItem {
+  itemNumber: String!
+  itemName: String!
+  quantity: Int!
+  amount: Float!
+}
+
+type paypalStandardSuccessResponse {
+  success: Boolean
+  message: String
+  order: Order!
+  redirectUrl: String!
+}
+
+type paypalStandardCancelResponse {
+  success: Boolean
+  message: String
+  redirectUrl: String!
+}
+
+type paypalStandardIpnResponse {
+  success: Boolean
+  message: String
+  redirectUrl: String!
+}
+
+input LoginInput {
+  email: String
+  password: String
+  remember: Boolean
+  deviceToken: String
+  deviceName: String
+}
+
+type CustomerLoginResponse {
+  success: Boolean
+  message: String
+  accessToken: String
+  tokenType: String
+  expiresIn: Int
+  customer: Customer
+}
+
+type StatusResponse {
+  success: Boolean
+  message: String
+}
+
+type ProductPaginatorResponse {
+  paginatorInfo: PaginatorInfo!
+  data: [Product!]
+}
+
+type FilterOption {
+  key: String
+  value: String
+}
+
+type AddressResponse {
+  success: Boolean
+  message: String
+  address: Address
+}
+
+type Address {
+  id: ID!
+  addressType: String
+  parentAddressId: ID
+  customerId: ID
+  cartId: ID
+  orderId: ID
+  firstName: String!
+  lastName: String!
+  gender: Gender
+  companyName: String
+  address: String!
+  city: String!
+  state: String!
+  stateName: String
+  country: String!
+  countryName: String
+  postcode: String!
+  email: String
+  phone: String
+  vatId: String
+  defaultAddress: Boolean
+  useForShipping: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type FormattedPrice {
+  adjustmentFee: String
+  adjustmentRefund: String
+  amountRefunded: String
+  baseAdjustmentFee: String
+  baseAdjustmentRefund: String
+  baseAmountRefunded: String
+  baseDiscount: String
+  baseDiscountAmount: String
+  baseDiscountInvoiced: String
+  baseDiscountRefunded: String
+  baseDiscountedSubTotal: String
+  baseGrandTotal: String
+  baseGrandTotalInvoiced: String
+  baseGrandTotalRefunded: String
+  basePrice: String
+  basePriceInclTax: String
+  baseShippingAmount: String
+  baseShippingAmountInclTax: String
+  baseShippingDiscountAmount: String
+  baseShippingInvoiced: String
+  baseShippingRefunded: String
+  baseShippingTaxAmount: String
+  baseShippingTaxRefunded: String
+  baseSubTotal: String
+  baseSubTotalInclTax: String
+  baseSubTotalInvoiced: String
+  baseTaxAmount: String
+  baseTaxAmountInvoiced: String
+  baseTaxAmountRefunded: String
+  baseTaxTotal: String
+  baseTotal: String
+  baseTotalInclTax: String
+  baseTotalInvoiced: String
+  customPrice: String
+  discount: String
+  discountAmount: String
+  discountInvoiced: String
+  discountRefunded: String
+  discountedSubTotal: String
+  grandTotal: String
+  grandTotalInvoiced: String
+  grandTotalRefunded: String
+  price: String
+  priceInclTax: String
+  shippingAmount: String
+  shippingAmountInclTax: String
+  shippingDiscountAmount: String
+  shippingInvoiced: String
+  shippingRefunded: String
+  shippingTaxAmount: String
+  shippingTaxRefunded: String
+  subTotal: String
+  subTotalInclTax: String
+  subTotalInvoiced: String
+  subTotalRefunded: String
+  taxAmount: String
+  taxAmountInvoiced: String
+  taxAmountRefunded: String
+  taxTotal: String
+  total: String
+  totalInclTax: String
+  totalInvoiced: String
+}
+
+enum UploadType {
+  FILE
+  PATH
+  BASE64
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+input UpdateAccountInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
+  gender: Gender!
+  dateOfBirth: String
+  currentPassword: String
+  newPassword: String
+  newPasswordConfirmation: String
+  newsletterSubscriber: Boolean
+  image: Upload
+}
+
+input AddressInput {
+  companyName: String
+  firstName: String!
+  lastName: String!
+  email: String!
+  vatId: String
+  address: [String]!
+  country: String!
+  state: String!
+  city: String!
+  postcode: String!
+  phone: String!
+  defaultAddress: Boolean
+}
+
+type CompareProductResponse {
+  success: Boolean
+  message: String
+  compareProduct: CompareProduct
+  cart: Cart
+}
+
+input FilterCompareProductsInput {
+  id: Int
+  productId: Int
+  productName: String
+  price: Float
+}
+
+type CompareProduct {
+  id: ID!
+  productId: ID!
+  customerId: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  product: Product!
+  customer: Customer!
+  cart: Cart
+}
+
+input FilterDownloadablePurchaseInput {
+  id: Int
+  orderId: Int
+  orderItemId: Int
+  productName: String
+  name: String
+  status: DownloadLinkStatusEnum
+  downloadBought: Int
+  downloadUsed: Int
+  purchaseDate: String
+  purchaseDateFrom: String
+  purchaseDateTo: String
+}
+
+type DownloadableLinkPurchased {
+  id: ID!
+  productName: String
+  name: String
+  url: String
+  file: String
+  fileName: String
+  type: String!
+  downloadBought: Int!
+  downloadUsed: Int!
+  status: Boolean
+  customerId: ID!
+  orderId: ID!
+  orderItemId: ID!
+  downloadCanceled: Int
+  createdAt: DateTime
+  updatedAt: DateTime
+  customer: Customer
+  order: Order!
+  orderItem: OrderItem
+}
+
+type DownloadLinkResponse {
+  success: Boolean
+  string: String
+  download: DownloadableLinkPurchased
+}
+
+enum DownloadLinkStatusEnum {
+  PENDING
+  AVAILABLE
+  EXPIRED
+}
+
+input GdprRequestInput {
+  type: GdprRequestInputType!
+  message: String!
+}
+
+enum GdprRequestInputType {
+  UPDATE
+  DELETE
+}
+
+type GdprRequestResponse {
+  status: Boolean!
+  message: String
+  gdprRequest: GDPRDataRequest
+}
+
+type GdprDownloadResponse {
+  success: Boolean!
+  string: String!
+  download: DownloadInfo!
+}
+
+type DownloadInfo {
+  fileName: String!
+  extension: String!
+}
+
+type GDPRDataRequest {
+  id: ID!
+  customerId: ID
+  email: String
+  status: String
+  type: String
+  message: String
+  revokedAt: DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input FilterCustomerGdprRequestInput {
+  id: ID
+  customerId: ID
+  email: String
+  type: String
+  status: String
+  revokedAt: DateTime
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type GdprViewResponse {
+  customer: Customer
+  address: [Address]
+  order: [Order]
+}
+
+input FilterCustomerOrderInput {
+  id: Int
+  incrementId: Int
+  customerId: ID
+  subTotal: Float
+  grandTotal: Float
+  baseSubTotal: Float
+  baseGrandTotal: Float
+  orderDate: String
+  orderDateFrom: String
+  orderDateTo: String
+  channelName: String
+  status: String
+}
+
+input OrderShipmentInput {
+  id: Int
+  orderId: Int
+  shipmentDate: String
+  carrierTitle: String
+  trackNumber: String
+}
+
+input OrderInvoiceInput {
+  id: Int
+  orderId: Int
+  totalQty: Int
+  grandTotal: Float
+  baseGrandTotal: Float
+  invoiceDate: String
+}
+
+input OrderRefundInput {
+  id: Int
+  orderId: Int
+  totalQty: Int
+  adjustmentRefund: Float
+  adjustmentFee: Float
+  shippingAmount: Float
+  taxAmount: Float
+  discountAmount: Float
+  grandTotal: Float
+  baseGrandTotal: Float
+  refundDate: String
+}
+
+input SignUpInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  passwordConfirmation: String!
+  subscribedToNewsLetter: Boolean
+  agreement: Boolean
+  deviceToken: String
+  deviceName: String
+}
+
+input SocialSignInInput {
+  firstName: String
+  lastName: String
+  email: String
+  phone: String
+  signupType: SocialSignInType!
+  password: String
+  passwordConfirmation: String
+  remember: Boolean
+  deviceToken: String
+  deviceName: String
+}
+
+enum SocialSignInType {
+  TRUECALLER
+  FACEBOOK
+  TWITTER
+  GOOGLE
+  LINKEDIN
+  GITHUB
+}
+
+input CreateReviewInput {
+  name: String
+  title: String!
+  rating: Int!
+  comment: String!
+  productId: ID!
+  attachments: [Upload]
+}
+
+type CreateReviewResponse {
+  success: Boolean
+  message: String
+  review: Review
+}
+
+type DeleteReviewResponse {
+  success: Boolean
+  message: String
+  reviews: [Review]
+}
+
+input FilterWislistInput {
+  id: Int
+  productId: Int
+  productName: String
+  channelId: Int
+}
+
+type WishlistResponse {
+  success: Boolean
+  message: String
+  wishlist: [Wishlist]
+}
+
+type Wishlist {
+  id: ID!
+  channelId: ID!
+  productId: ID!
+  customerId: ID
+  additional: JSON
+  movedToCart: Boolean
+  shared: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+  product: Product!
+  channel: Channel!
+  customer: Customer
+}
+
+"Information about pagination using a fully featured paginator."
+type PaginatorInfo {
+  "Number of items in the current page."
+  count: Int!
+
+  "Index of the current page."
+  currentPage: Int!
+
+  "Index of the first item in the current page."
+  firstItem: Int
+
+  "Are there more pages after this one?"
+  hasMorePages: Boolean!
+
+  "Index of the last item in the current page."
+  lastItem: Int
+
+  "Index of the last available page."
+  lastPage: Int!
+
+  "Number of items per page."
+  perPage: Int!
+
+  "Number of total available items."
+  total: Int!
+}
+
+"A paginated list of Customer items."
+type CustomerPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Customer items."
+  data: [Customer!]!
+}
+
+"A paginated list of Order items."
+type OrderPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Order items."
+  data: [Order!]!
+}
+
+"A paginated list of Invoice items."
+type InvoicePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Invoice items."
+  data: [Invoice!]!
+}
+
+"A paginated list of Shipment items."
+type ShipmentPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Shipment items."
+  data: [Shipment!]!
+}
+
+"A paginated list of Refund items."
+type RefundPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Refund items."
+  data: [Refund!]!
+}
+
+"A paginated list of OrderItem items."
+type OrderItemPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of OrderItem items."
+  data: [OrderItem!]!
+}
+
+"A paginated list of InvoiceItem items."
+type InvoiceItemPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of InvoiceItem items."
+  data: [InvoiceItem!]!
+}
+
+"A paginated list of ShipmentItem items."
+type ShipmentItemPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of ShipmentItem items."
+  data: [ShipmentItem!]!
+}
+
+"A paginated list of RefundItem items."
+type RefundItemPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of RefundItem items."
+  data: [RefundItem!]!
+}
+
+"A paginated list of Transaction items."
+type TransactionPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Transaction items."
+  data: [Transaction!]!
+}
+
+"A paginated list of Category items."
+type CategoryPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Category items."
+  data: [Category!]!
+}
+
+"A paginated list of Attribute items."
+type AttributePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Attribute items."
+  data: [Attribute!]!
+}
+
+"A paginated list of AttributeOption items."
+type AttributeOptionPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of AttributeOption items."
+  data: [AttributeOption!]!
+}
+
+"A paginated list of AttributeTranslation items."
+type AttributeTranslationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of AttributeTranslation items."
+  data: [AttributeTranslation!]!
+}
+
+"A paginated list of AttributeOptionTranslation items."
+type AttributeOptionTranslationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of AttributeOptionTranslation items."
+  data: [AttributeOptionTranslation!]!
+}
+
+"A paginated list of AttributeGroup items."
+type AttributeGroupPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of AttributeGroup items."
+  data: [AttributeGroup!]!
+}
+
+"A paginated list of AttributeFamily items."
+type AttributeFamilyPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of AttributeFamily items."
+  data: [AttributeFamily!]!
+}
+
+"A paginated list of Address items."
+type AddressPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Address items."
+  data: [Address!]!
+}
+
+"A paginated list of CustomerGroup items."
+type CustomerGroupPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CustomerGroup items."
+  data: [CustomerGroup!]!
+}
+
+"A paginated list of Review items."
+type ReviewPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Review items."
+  data: [Review!]!
+}
+
+"A paginated list of GDPRRequest items."
+type GDPRRequestPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of GDPRRequest items."
+  data: [GDPRRequest!]!
+}
+
+"A paginated list of CmsPage items."
+type CmsPagePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CmsPage items."
+  data: [CmsPage!]!
+}
+
+"A paginated list of CartRule items."
+type CartRulePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CartRule items."
+  data: [CartRule!]!
+}
+
+"A paginated list of CatalogRule items."
+type CatalogRulePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CatalogRule items."
+  data: [CatalogRule!]!
+}
+
+"A paginated list of Campaign items."
+type CampaignPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Campaign items."
+  data: [Campaign!]!
+}
+
+"A paginated list of EmailTemplate items."
+type EmailTemplatePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of EmailTemplate items."
+  data: [EmailTemplate!]!
+}
+
+"A paginated list of Event items."
+type EventPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Event items."
+  data: [Event!]!
+}
+
+"A paginated list of Subscriber items."
+type SubscriberPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Subscriber items."
+  data: [Subscriber!]!
+}
+
+"A paginated list of SearchSynonym items."
+type SearchSynonymPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of SearchSynonym items."
+  data: [SearchSynonym!]!
+}
+
+"A paginated list of SearchTerm items."
+type SearchTermPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of SearchTerm items."
+  data: [SearchTerm!]!
+}
+
+"A paginated list of Sitemap items."
+type SitemapPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Sitemap items."
+  data: [Sitemap!]!
+}
+
+"A paginated list of urlRewrite items."
+type urlRewritePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of urlRewrite items."
+  data: [urlRewrite!]!
+}
+
+"A paginated list of Channel items."
+type ChannelPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Channel items."
+  data: [Channel!]!
+}
+
+"A paginated list of Currency items."
+type CurrencyPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Currency items."
+  data: [Currency!]!
+}
+
+"A paginated list of ExchangeRate items."
+type ExchangeRatePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of ExchangeRate items."
+  data: [ExchangeRate!]!
+}
+
+"A paginated list of InventorySource items."
+type InventorySourcePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of InventorySource items."
+  data: [InventorySource!]!
+}
+
+"A paginated list of Locale items."
+type LocalePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Locale items."
+  data: [Locale!]!
+}
+
+"A paginated list of PushNotification items."
+type PushNotificationPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of PushNotification items."
+  data: [PushNotification!]!
+}
+
+"A paginated list of Role items."
+type RolePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Role items."
+  data: [Role!]!
+}
+
+"A paginated list of TaxCategory items."
+type TaxCategoryPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of TaxCategory items."
+  data: [TaxCategory!]!
+}
+
+"A paginated list of TaxRate items."
+type TaxRatePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of TaxRate items."
+  data: [TaxRate!]!
+}
+
+"A paginated list of Theme items."
+type ThemePaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Theme items."
+  data: [Theme!]!
+}
+
+"A paginated list of User items."
+type UserPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of User items."
+  data: [User!]!
+}
+
+"A paginated list of CoreConfig items."
+type CoreConfigPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CoreConfig items."
+  data: [CoreConfig!]!
+}
+
+"A paginated list of CartPayment items."
+type CartPaymentPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CartPayment items."
+  data: [CartPayment!]!
+}
+
+"A paginated list of CompareProduct items."
+type CompareProductPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of CompareProduct items."
+  data: [CompareProduct!]!
+}
+
+"A paginated list of DownloadableLinkPurchased items."
+type DownloadableLinkPurchasedPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of DownloadableLinkPurchased items."
+  data: [DownloadableLinkPurchased!]!
+}
+
+"A paginated list of GDPRDataRequest items."
+type GDPRDataRequestPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of GDPRDataRequest items."
+  data: [GDPRDataRequest!]!
+}
+
+"A paginated list of Wishlist items."
+type WishlistPaginator {
+  "Pagination information about the list of items."
+  paginatorInfo: PaginatorInfo!
+
+  "A list of Wishlist items."
+  data: [Wishlist!]!
+}
+
+"Directions for ordering a list of records."
+enum SortOrder {
+  "Sort records in ascending order."
+  ASC
+
+  "Sort records in descending order."
+  DESC
+}
+
+"Aggregate functions when ordering by a relation without specifying a column."
+enum OrderByRelationAggregateFunction {
+  "Amount of items."
+  COUNT
+}
+
+"Aggregate functions when ordering by a relation that may specify a column."
+enum OrderByRelationWithColumnAggregateFunction {
+  "Average."
+  AVG
+
+  "Minimum."
+  MIN
+
+  "Maximum."
+  MAX
+
+  "Sum."
+  SUM
+
+  "Amount of items."
+  COUNT
+}
+
+"Allows ordering a list of records."
+input OrderByClause {
+  "The column that is used for ordering."
+  column: String!
+
+  "The direction that is used for ordering."
+  order: SortOrder!
+}
+
+"Specify if you want to include or exclude trashed results from a query."
+enum Trashed {
+  "Only return trashed results."
+  ONLY
+
+  "Return both trashed and non-trashed results."
+  WITH
+
+  "Only return non-trashed results."
+  WITHOUT
+}
+
