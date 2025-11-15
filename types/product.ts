@@ -14,4 +14,5 @@ export type Product = {
     variant: ProductBadgeVariant;
     };
     categories: TabId[];
+    urlKey?: string; // Add urlKey for Bagisto API
 };
