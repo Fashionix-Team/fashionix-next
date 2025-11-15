@@ -18,6 +18,8 @@ import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
 import { getCustomerAddressQuery } from "./queries/checkout";
+import { getDashboardSummaryQuery } from "./queries/customer/dashboard-summary";
+import { getCustomerAddressQuery, getDynamicAccountInfoQuery } from "./queries/checkout";
 import {
   getCollectionProductQuery,
   getCollectionProductsQuery,
@@ -136,6 +138,10 @@ export async function bagistoFetch<T>({
           Cookie: `${BAGISTO_SESSION}=${bagistoCartId}`,
         }),
         ...(isCookies && {...headers})
+        ...(accessToken && {
+          Authorization: `Bearer ${accessToken}`,
+        }),
+        ...(headers || {})
       },
       body: JSON.stringify({
         ...(query && { query }),
