@@ -1,32 +1,18 @@
-// app/dashboard/DetailPesanan/[id]/page.tsx
-
-// Jadikan ini Server Component (tidak perlu 'use client')
 import React, { ElementType } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
-    // Ikon untuk Order Activity
     CheckCircleIcon,
     UserIcon,
     MapPinIcon,
     BookOpenIcon,
     ClipboardDocumentCheckIcon,
-    ClipboardIcon, // Ikon default jika 'icon' tidak ditemukan
-    
-    // Ikon untuk Timeline Status
-    ClipboardDocumentListIcon,
-    ArchiveBoxIcon,
-    TruckIcon,
-    CheckBadgeIcon,
-
-    // Ikon Panah Kembali
+    ClipboardIcon,
     ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 
-// Impor fungsi "pelayan" kita
-import { getCustomerOrderDetail, CustomerOrderDetail, OrderComment, OrderItem } from '@/lib/bagisto/index';
+import { getCustomerOrderDetail, CustomerOrderDetail } from '@/lib/bagisto/index';
 
-// --- (Komponen Helper tidak berubah) ---
 const ActivityIcon = ({ iconName, completed }: { iconName: string, completed: boolean }) => {
     let IconComponent: ElementType; 
     let iconColorClass = completed ? 'text-green-600' : 'text-blue-600';
@@ -87,13 +73,13 @@ function transformOrderData(order: CustomerOrderDetail) {
         id: order.incrementId || order.id,
         placedOn: new Date(order.createdAt).toLocaleString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
         total: order.formattedPrice.grandTotal || 'Rp 0',
-        expectedDelivery: '...', // Data ini tidak ada di 'orderDetail', kita beri placeholder
+        expectedDelivery: '...',
         status: order.statusLabel || 'Unknown',
-        activities: activities.reverse(), // Balik urutannya (terbaru di atas)
+        activities: activities.reverse(),
         products: products,
         billingAddress: order.billingAddress,
         shippingAddress: order.shippingAddress,
-        notes: "Catatan tidak tersedia dari API" // Data ini tidak ada di 'orderDetail'
+        notes: "Catatan tidak tersedia dari API"
     };
 }
 

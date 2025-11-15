@@ -32,8 +32,6 @@ import { getCountryQuery, getPageQuery, getPagesQuery } from "./queries/page";
 import { getPaymentMethodsQuery } from "./queries/payment-methods";
 import { getFilterAttributesQuery } from "./queries/product/product-attributes";
 import { getProductInfoQuery } from "./queries/product/product-info";
-import { GET_CUSTOMER_ORDERS_LIST_QUERY } from './queries/order';
-import { GET_CUSTOMER_ORDER_DETAIL_QUERY } from './queries/order-detail'; // Impor query baru
 import { getShippingMethodQuery } from "./queries/shipping-method";
 import {
   BagistoAddToCartOperation,
@@ -1013,173 +1011,26 @@ export async function getProducts({
   };
 }
 
-// --- Definisi Tipe untuk getCustomerOrders ---
+// --- Export helper functions ---
+export { getCustomerOrders, getCustomerOrderDetail } from "./helpers/order";
 
-export interface CustomerOrder {
-  id: string;
-  incrementId: string | null;
-}
-export interface PaginatorInfo {
-  currentPage: number;
-  lastPage: number;
-  total: number;
-}
-
-// PERBAIKAN ERROR 2 & 3:
-// Tipe 'T' yang benar untuk 'bagistoFetch' adalah *seluruh* body JSON,
-// yang memiliki pembungkus 'data'.
-export interface GetCustomerOrdersResponse {
-  data: { // <-- 'data' adalah pembungkus JSON
-    ordersList: {
-      data: CustomerOrder[];
-      paginatorInfo: PaginatorInfo;
-    };
-  };
-}
-
-// ATAU definisikan langsung di file ini jika Anda belum punya
-export interface FilterCustomerOrderInput {
-  status?: string;
-  // tambahkan properti filter lain jika ada
-}
+// --- Export order types ---
+export type {
+  CustomerOrder,
+  PaginatorInfo,
+  GetCustomerOrdersResponse,
+  FilterCustomerOrderInput,
+  OrderAddress,
+  OrderItemProduct,
+  OrderItem,
+  OrderComment,
+  CustomerOrderDetail,
+  GetCustomerOrderDetailResponse,
+} from "./types/order";
 
 // --- Selesai Definisi Tipe ---
 
-// Fungsi getCustomerOrders dengan perbaikan tipe
-export async function getCustomerOrders(
-  page: number = 1, 
-  limit: number = 10,
-  input: FilterCustomerOrderInput | null = null
-): Promise<GetCustomerOrdersResponse['data']['ordersList']> { // Janji dikembalikan 'ordersList'
-  
-  try {
-    // Memanggil 'bagistoFetch'
-    const { body } = await bagistoFetch<GetCustomerOrdersResponse>({ // Tipe 'T' sudah benar
-      query: GET_CUSTOMER_ORDERS_LIST_QUERY,
-      
-      // PERBAIKAN ERROR 1:
-      // Gunakan 'as any' untuk bypass error tipe 'ExtractVariables'
-      variables: {
-        first: limit,
-        page: page,
-        input: input
-      } as any, // <-- Perbaikan di sini
 
-      tags: ["orders"],
-      cache: 'no-store'
-    });
-
-    // PERBAIKAN ERROR 2 (sudah benar sekarang):
-    // 'body' memiliki 'data', dan 'data' memiliki 'ordersList'
-    if (!body || !body.data?.ordersList) {
-      throw new Error("Gagal mengambil data pesanan.");
-    }
-
-    // PERBAIKAN ERROR 3 (sudah benar sekarang):
-    // 'body.data.ordersList' cocok dengan janji 'Promise' fungsi
-    return body.data.ordersList;
-
-  } catch (error : any) {
-    console.error("Error fetching customer orders:", error.message || error);
-    
-    // PERBAIKAN ERROR 3 (di blok 'catch'):
-    // Kembalikan objek kosong yang sesuai dengan janji 'Promise'
-    return {
-      data: [],
-      paginatorInfo: {
-        currentPage: 1,
-        lastPage: 1,
-        total: 0
-      }
-    };
-  }
-}
-//Selesai
-
-// --- Definisikan Tipe Data untuk Detail Pesanan ---
-// (Anda bisa pindahkan ini ke 'types.ts' jika mau)
-export interface OrderAddress {
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  postcode: string;
-  phone: string;
-  email: string;
-}
-export interface OrderItemProduct {
-  categories: { name: string }[];
-  images: { id: string; url: string }[];
-}
-export interface OrderItem {
-  id: string;
-  name: string;
-  qtyOrdered: number;
-  formattedPrice: {
-    price: string | null;
-    total: string | null;
-  };
-  product: OrderItemProduct;
-}
-export interface OrderComment {
-  id: string;
-  comment: string;
-  createdAt: string;
-}
-export interface CustomerOrderDetail {
-  id: string;
-  incrementId: string | null;
-  statusLabel: string | null;
-  createdAt: string;
-  formattedPrice: {
-    grandTotal: string | null;
-  };
-  billingAddress: OrderAddress;
-  shippingAddress: OrderAddress;
-  items: OrderItem[];
-  comments: OrderComment[];
-}
-export interface GetCustomerOrderDetailResponse {
-  data: {
-    orderDetail: CustomerOrderDetail;
-  };
-}
-// --- Selesai Definisi Tipe ---
-
-/**
- * 2. Fungsi untuk pemanggilan query Detail Pesanan
- * Mengambil detail satu pesanan berdasarkan ID.
- */
-export async function getCustomerOrderDetail(
-  id: string
-): Promise<CustomerOrderDetail | null> { // Mengembalikan satu pesanan
-  
-  try {
-    const { body } = await bagistoFetch<GetCustomerOrderDetailResponse>({
-      query: GET_CUSTOMER_ORDER_DETAIL_QUERY,
-      variables: {
-        id: id // Berikan ID ke query
-      } as any, // 'as any' untuk bypass error 'ExtractVariables'
-      cache: 'no-store' // Data detail pesanan tidak boleh di-cache
-    });
-
-    if (!body || !body.data?.orderDetail) {
-      throw new Error("Gagal mengambil data detail pesanan.");
-    }
-
-    return body.data.orderDetail;
-
-  } catch (error: any) {
-    console.error("Error fetching customer order detail:", error.message || error);
-    // Jika backend error (misal 'Serialization'), kita akan melempar error
-    // agar halaman Next.js bisa menampilkannya.
-    throw new Error(error.message || "Gagal memuat detail pesanan.");
-  }
-}
-
-//Selesai
 
 export async function getFilterAttributes({
   categorySlug,

@@ -1,4 +1,4 @@
-export const GET_CUSTOMER_ORDERS_LIST_QUERY = /* GraphQL */ `
+export const getCustomerOrdersListQuery = /* GraphQL */ `
   query GetCustomerOrdersList(
     $first: Int!
     $page: Int
@@ -7,7 +7,15 @@ export const GET_CUSTOMER_ORDERS_LIST_QUERY = /* GraphQL */ `
     ordersList(first: $first, page: $page, input: $input) {
       data {
         id
-        incrementId # Hanya minta ID
+        incrementId
+        status
+        statusLabel
+        createdAt
+        grandTotal
+        formattedPrice {
+          grandTotal
+        }
+        totalQtyOrdered
       }
       paginatorInfo {
         currentPage
