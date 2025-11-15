@@ -12,6 +12,16 @@ export type Cart = Omit<BagistoCart, "lines"> & {
   lines: CartItem[];
 };
 
+export type LatestOrder = {
+  id: string;
+  orderId: string;
+  date: string;
+  status: string; 
+  total: number; 
+  link: string;
+  productCount: number;
+};
+
 export interface ProductTypes {
   id: number;
   name: string;
@@ -576,13 +586,72 @@ export type BagistoCartOperation = {
     cartId: string;
   };
 };
+export type CustomerAddressDetailTypes = {
+  id?: string;
+  addressType?: string;
+  parentAddressId?: string;
+  customerId?: string;
+  cartId?: string;
+  orderId?: string;
+  firstName?: string;
+  lastName?: string;
+  gender?: string;
+  companyName?: string;
+  address?: string | string[];
+  city?: string;
+  state?: string;
+  stateName?: string;
+  country?: string;
+  countryName?: string;
+  postcode?: string;
+  email?: string;
+  phone?: string;
+  vatId?: string;
+  defaultAddress?: boolean;
+  useForShipping?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type CustomerDataTypes = {
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  name?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  email?: string;
+  phone?: string;
+  image?: string;
+  imageUrl?: string;
+  status?: string;
+  password?: string;
+  apiToken?: string;
+  customerGroupId?: string;
+  channelId?: string;
+  subscribedToNewsLetter?: boolean;
+  isVerified?: boolean;
+  isSuspended?: boolean;
+  token?: string;
+  rememberToken?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  isWishlistShared?: boolean;
+  getWishlistSharedLink?: string;
+  defaultAddress?: CustomerAddressDetailTypes;
+  addresses?: CustomerAddressDetailTypes[];
+};
+
 export type BagistoAddressDataTypes = {
   data: {
     checkoutAddresses: {
       isGuest: boolean;
-      customer: {
-        addresses?: AddressDataTypes[];
-      };
+      defaultCountry?: string;
+      addresses?: {
+        id: string;
+        address: string;
+      }[];
+      customer?: CustomerDataTypes;
     };
   };
 };
