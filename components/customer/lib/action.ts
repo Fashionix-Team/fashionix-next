@@ -178,9 +178,9 @@ export async function forgotPasswordAction(
         success: false,
     };
 
-  } catch (e: any) {
+  } catch (e: unknown) {
     // Menangani error umum
-    const errorMessage = e.message || "Terjadi kesalahan yang tidak diketahui saat mengirim permintaan.";
+    const errorMessage = e instanceof Error ? e.message : "Terjadi kesalahan yang tidak diketahui saat mengirim permintaan.";
     return {
       message: errorMessage,
       success: false,
