@@ -25,21 +25,21 @@ Fashionix adalah ekosistem e-commerce yang dirancang untuk brand fashion digital
 - HeroUI dan Tailwind CSS 4 untuk sistem desain yang elegan dan responsif.
 - TanStack Query serta GraphQL Request untuk pengambilan data yang tangguh dan tersinkron.
 - Redux Toolkit untuk state management lintas halaman, termasuk keranjang dan preferensi pelanggan.
-- PNPM sebagai package manager ringan yang efisien untuk monorepo dan workspace tim.
+- Bun sebagai package manager ringan yang efisien untuk monorepo dan workspace tim.
 
 ## &#x1F680; Cara Pakai Fashionix
 
 ### &#x2705; System Requirements
 
 - Node.js 18 atau lebih baru
-- pnpm 8 atau lebih baru
+- bun 1 atau lebih baru
 
 ### &#x1F4E6; Clone dan Install
 
 ```bash
 git clone https://github.com/your-org/fashionix-next.git
 cd fashionix-next
-pnpm install
+bun install
 ```
 
 > Ganti `your-org` dengan organisasi atau akun GitHub kamu.
@@ -70,7 +70,7 @@ Isi variabel berikut agar koneksi ke layanan Fashionix berjalan mulus:
 ### &#x1F9EA; Jalankan Mode Pengembangan
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 Buka `http://localhost:3000` lalu jelajahi pengalaman katalog dan checkout real-time.
@@ -78,19 +78,19 @@ Buka `http://localhost:3000` lalu jelajahi pengalaman katalog dan checkout real-
 ### &#x1F3D7; Build untuk Production
 
 ```bash
-pnpm build
+bun run build
 ```
 
 ### &#x1F6A2; Start Server Production
 
 ```bash
-pnpm start
+bun run start
 ```
 
 Tambahan opsional untuk menjaga kualitas sebelum rilis:
 
 ```bash
-pnpm lint
+bun run lint
 ```
 
 Selamat berkreasi dengan Fashionix! &#x1F389;

@@ -1,3 +1,4 @@
+import RatingStars from "@/components/product/rating-starts";
 import type { RelatedProducts } from "@/lib/bagisto/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -150,6 +151,13 @@ export default async function ProductPage({
         </div>
         <div className="basis-full lg:basis-4/6">
           <ProductDescription product={product} slug={handle} />
+          <div className="mt-8 border-t pt-6">
+            <h2 className="text-xl font-semibold mb-4">Beri Rating Produk Ini</h2>
+            <RatingStars criteria="Kualitas Bahan" />
+            <RatingStars criteria="Desain" />
+            <RatingStars criteria="Kenyamanan" />
+            <RatingStars criteria="Harga" />
+        </div>
         </div>
       </div>
 

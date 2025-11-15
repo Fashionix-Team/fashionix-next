@@ -1,12 +1,7 @@
 {
-  "name": "next-app-template",
+  "name": "fashionix",
   "private": true,
-  "packageManager": "pnpm@9.0.5",
   "version": "2.3.0",
-  "engines": {
-    "node": ">=18",
-    "pnpm": ">=8"
-  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -15,6 +10,9 @@
     "test": "pnpm lint && pnpm prettier:check"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
     "@heroicons/react": "^2.2.0",
     "@heroui/accordion": "^2.2.21",
     "@heroui/alert": "^2.2.24",
