@@ -45,7 +45,6 @@ export default function ForgetPasswordForm() {
                             Alamat Email
                         </label>
                         <InputText
-                            label="Alamat Email"
                             typeName="email"
                             name="emailOrPhone" // Pastikan name sesuai dengan yang diambil di action
                             placeholder="Masukkan email atau nomor ponsel"
