@@ -5,7 +5,6 @@ import clsx from "clsx";
 import { useFormState } from "react-dom"; // Import useFormState
 import { Button } from "./loading-button";
 import InputText from "@/components/checkout/cart/input";
-import { LockClosedIcon } from "@heroicons/react/24/outline";
 import { forgotPasswordAction } from "../lib/action"; 
 
 // Definisikan state awal untuk useFormState
