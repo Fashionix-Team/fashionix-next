@@ -1,25 +1,31 @@
-// components/auth/ForgetPasswordForm.tsx
-
 "use client";
 
 import Link from "next/link";
 import clsx from "clsx";
-import { Button } from "./loading-button"; 
-import InputText from "@/components/checkout/cart/input"; 
-import { LockClosedIcon } from "@heroicons/react/24/outline"; 
+import { useFormState } from "react-dom"; // Import useFormState
+import { Button } from "./loading-button";
+import InputText from "@/components/checkout/cart/input";
+import { forgotPasswordAction } from "../lib/action"; 
 
+// Definisikan state awal untuk useFormState
+const initialState = {
+    message: "",
+    success: false,
+};
 
 export default function ForgetPasswordForm() {
-    
+    // Hubungkan action dengan state form
+    const [state, formAction] = useFormState(forgotPasswordAction, initialState);
+
     return (
         <div className="flex w-full items-center justify-center py-10">
             <div className={clsx(
-                "relative flex w-full max-w-md flex-col bg-white p-8 rounded-xl shadow-xl", 
+                "relative flex w-full max-w-md flex-col bg-white p-8 rounded-xl shadow-xl",
                 "gap-y-8"
             )}>
-                
+
                 <div className="font-outfit text-center">
-                    <h2 className="text-2xl font-bold text-gray-900"> 
+                    <h2 className="text-2xl font-bold text-gray-900">
                         Lupa Kata Sandi
                     </h2>
                     <p className="mt-1 text-sm font-normal text-gray-500 px-4">
@@ -30,6 +36,7 @@ export default function ForgetPasswordForm() {
                 <form
                     noValidate
                     className="flex flex-col gap-y-6"
+                    action={formAction} // Gunakan formAction sebagai handler
                 >
                     {/* Input Alamat Email/Nomor Ponsel */}
                     <div className="flex flex-col gap-y-2">
@@ -38,17 +45,28 @@ export default function ForgetPasswordForm() {
                         </label>
                         <InputText
                             typeName="email"
-                            name="emailOrPhone"
+                            name="emailOrPhone" // Pastikan name sesuai dengan yang diambil di action
                             placeholder="Masukkan email atau nomor ponsel"
                             size="lg"
                         />
                     </div>
 
+                    {/* Tampilkan pesan feedback dari Server Action */}
+                    {state.message && (
+                        <p className={clsx(
+                            "text-sm font-medium text-center p-2 rounded",
+                            state.success ? "text-green-600 bg-green-100" : "text-red-600 bg-red-100"
+                        )}>
+                            {state.message}
+                        </p>
+                    )}
+
                     {/* Tombol Kirim Kode */}
                     <Button
-                        className="bg-orange-500 hover:bg-orange-600" 
+                        className="bg-orange-500 hover:bg-orange-600"
                         title="KIRIM KODE"
                         type="submit"
+                        // Komponen Button Anda kemungkinan sudah menangani status loading
                     />
 
                     {/* Link Masuk dan Daftar */}
