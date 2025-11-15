@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 export default function QuickViewPreview() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
@@ -44,8 +45,11 @@ export default function QuickViewPreview() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {products.map((product) => (
           <div key={product.id} className="bg-white p-4 rounded shadow">
-            <img
+            <Image
               src={product.images[0]}
+              alt={product.title}
+              width={300}
+              height={160}
               className="w-full h-40 object-contain mb-4"
             />
 
@@ -90,17 +94,23 @@ export default function QuickViewPreview() {
               
               {/* LEFT SIDE - Images */}
               <div>
-                <img
+                <Image
                   src={activeImage}
+                  alt={selectedProduct.title}
+                  width={600}
+                  height={320}
                   className="w-full h-80 object-contain border rounded-md mb-4"
                 />
 
                 {/* Thumbnails */}
                 <div className="flex gap-3 overflow-x-auto">
                   {selectedProduct.images.map((img: string, index: number) => (
-                    <img
+                    <Image
                       key={index}
                       src={img}
+                      alt={`${selectedProduct.title} - ${index + 1}`}
+                      width={80}
+                      height={80}
                       onClick={() => setActiveImage(img)}
                       className={`h-20 w-20 object-cover border rounded cursor-pointer ${
                         activeImage === img ? "border-orange-500" : "border-gray-300"
