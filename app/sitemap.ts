@@ -44,7 +44,7 @@ export async function getHomeCategories(): Promise<any[]> {
 
 
 export async function getProducts(): Promise<PaginatedProducts> {
-  let input = [{ key: "limit", value: "48", }, {key:"page" , value: "1"}];
+  const input = [{ key: "limit", value: "48", }, {key:"page" , value: "1"}];
 
   const res = await bagistoFetchNoSession<BagistoCollectionProductsOperation>({
     query: getCollectionProductsQuery,
@@ -81,7 +81,7 @@ export async function getPages(): Promise<Page> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const routesMap = [""].map((route) => ({
+  const routesMap = ["", "/customer/account", "/customer/account/addresses"].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date().toISOString(),
   }));
