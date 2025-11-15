@@ -7,6 +7,7 @@ import { cn } from "@heroui/react";
 import ProductCard from "./product-card";
 import ProductActions, { IconButton } from "./product-actions";
 import Link from "next/link";
+import QuickViewModal from "./quick-view-modal";
 
 function WishlistIcon() {
   return (
@@ -90,11 +91,23 @@ export default function ProductsTabs({ title, products }: {
   products: Product[];
 }) {
   const [activeTab, setActiveTab] = useState<TabId>("all");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filtered = useMemo(() => {
     const next = products.filter((p) => p.categories.includes(activeTab));
     return next.length ? next : products;
   }, [activeTab, products]);
+
+  const handleQuickView = (product: Product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -151,15 +164,26 @@ export default function ProductsTabs({ title, products }: {
                   <IconButton ariaLabel="Add to cart">
                     <CartIcon />
                   </IconButton>
-                  <IconButton ariaLabel="Quick view">
+                  <button
+                    onClick={() => handleQuickView(product)}
+                    aria-label="Quick view"
+                    className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-gray-900 transition hover:bg-orange-400 hover:text-white"
+                  >
                     <ViewIcon />
-                  </IconButton>
+                  </button>
                 </ProductActions>
               }
             />
           ))}
         </div>
       </div>
+
+      {/* Quick View Modal */}
+      <QuickViewModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        product={selectedProduct}
+      />
     </div>
   );
 }
