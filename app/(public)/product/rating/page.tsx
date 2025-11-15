@@ -1,153 +1,138 @@
 "use client";
-import { useState } from "react";
-import RatingStars from "@/components/product/rating-starts"; // pastikan path-nya benar
 
-export default function ShopeeStyleRating() {
-  const categories = ["Kualitas Bahan", "Desain", "Kenyamanan", "Harga"];
-  const [overall, setOverall] = useState(0);
-  const [ratings, setRatings] = useState(
-    categories.map((c) => ({ name: c, rating: 0, comment: "" }))
-  );
-  const [review, setReview] = useState("");
-  const [images, setImages] = useState<File[]>([]);
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-  const handleStarClick = (index: number, value: number) => {
-    setRatings((prev) => {
-      const updated = [...prev];
-      updated[index].rating = value;
-      return updated;
+// Komponen utama
+export default function RatingModal() {
+  const [rating, setRating] = useState<number>(0);
+  const [hover, setHover] = useState<number>(0);
+  const [feedback, setFeedback] = useState<string>("");
+
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (rating === 0) {
+    alert("Silakan beri penilaian dulu!");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/rating", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        rating,
+        feedback,
+        productId: 123, // contoh saja
+      }),
     });
-  };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    setImages([...images, ...Array.from(e.target.files)]);
-  };
+    const data = await res.json();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({
-      overall,
-      ratings,
-      review,
-      images: images.map((i) => i.name),
-    });
-    alert("Terima kasih atas ulasanmu!");
-  };
+    if (res.ok) {
+      alert("Ulasan berhasil dikirim!");
+      setRating(0);
+      setFeedback("");
+    } else {
+      alert("Gagal: " + data.error);
+    }
+  } catch (err) {
+    alert("Terjadi kesalahan server.");
+  }
+};
+
 
   return (
-    <div className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-semibold mb-6 text-center">
-        Beri Penilaian Produk
-      </h1>
-
-      {/* Rating keseluruhan */}
-      <div className="text-center mb-8">
-        <p className="text-lg mb-2 font-medium">Penilaian Keseluruhan</p>
-        <div className="flex justify-center space-x-2">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button key={star} onClick={() => setOverall(star)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill={star <= overall ? "#facc15" : "#e5e7eb"}
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-10 h-10 transition-transform hover:scale-110"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442a.563.563 0 01.321.987l-4.204 3.573a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.726-2.774a.562.562 0 00-.586 0l-4.726 2.774a.562.562 0 01-.84-.61l1.285-5.385a.563.563 0 00-.182-.557l-4.204-3.573a.563.563 0 01.321-.987l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
-                />
-              </svg>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Rating per kategori */}
-      <div className="space-y-6 mb-8">
-        {ratings.map((item, i) => (
-          <div key={item.name} className="border-b pb-4">
-            <p className="font-medium mb-2">{item.name}</p>
-            <div className="flex items-center space-x-1 mb-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  onClick={() => handleStarClick(i, star)}
-                  className="focus:outline-none"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill={star <= item.rating ? "#facc15" : "#e5e7eb"}
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442a.563.563 0 01.321.987l-4.204 3.573a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.726-2.774a.562.562 0 00-.586 0l-4.726 2.774a.562.562 0 01-.84-.61l1.285-5.385a.563.563 0 00-.182-.557l-4.204-3.573a.563.563 0 01.321-.987l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"
-                    />
-                  </svg>
-                </button>
-              ))}
-            </div>
-            <input
-              type="text"
-              placeholder={`Tulis komentar singkat (contoh: “Terjangkau banget”)`}
-              value={item.comment}
-              onChange={(e) => {
-                const newRatings = [...ratings];
-                newRatings[i].comment = e.target.value;
-                setRatings(newRatings);
-              }}
-              className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Komentar panjang */}
-      <div className="mb-6">
-        <label className="block font-medium mb-2">Komentar Tambahan</label>
-        <textarea
-          value={review}
-          onChange={(e) => setReview(e.target.value)}
-          rows={4}
-          placeholder="Ceritakan pengalaman kamu secara lengkap..."
-          className="w-full border rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none"
-        ></textarea>
-      </div>
-
-      {/* Upload foto */}
-      <div className="mb-6">
-        <label className="block font-medium mb-2">Upload Foto Produk (opsional)</label>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleFileChange}
-          className="block w-full text-sm text-gray-700 file:mr-3 file:py-2 file:px-4 file:rounded-md file:border-0 file:bg-orange-100 file:text-orange-600 hover:file:bg-orange-200"
-        />
-        <div className="flex flex-wrap gap-2 mt-2">
-          {images.map((img, idx) => (
-            <p key={idx} className="text-xs bg-gray-100 px-2 py-1 rounded">
-              {img.name}
-            </p>
-          ))}
-        </div>
-      </div>
-
-      {/* Tombol Kirim */}
-      <button
-        onClick={handleSubmit}
-        className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg font-semibold transition"
+    <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.2 }}
+        className="bg-white w-full max-w-md rounded-xl shadow-xl p-6 relative"
       >
-        Kirim Ulasan
-      </button>
+        <h2 className="text-gray-800 font-semibold text-sm uppercase mb-4 border-b pb-2">
+          Alamat Penagihan
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          {/* Penilaian */}
+          <div className="mb-4">
+            <label className="block text-xs text-gray-600 mb-2">
+              Penilaian
+            </label>
+
+            <div className="flex items-center gap-2 border rounded px-3 py-2">
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    filled={star <= (hover || rating)}
+                    onClick={() => setRating(star)}
+                    onMouseEnter={() => setHover(star)}
+                    onMouseLeave={() => setHover(0)}
+                  />
+                ))}
+              </div>
+              <span className="ml-2 text-xs text-gray-600">
+                {rating > 0 ? `Peringkat Bintang ${rating}` : "Belum ada penilaian"}
+              </span>
+            </div>
+          </div>
+
+          {/* Umpan Balik */}
+          <div className="mb-6">
+            <label className="block text-xs text-gray-600 mb-2">
+              Umpan Balik
+            </label>
+            <textarea
+              placeholder="Tulis umpan balik Anda tentang produk dan layanan kami"
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              className="w-full h-28 border rounded p-3 text-sm text-gray-700 focus:outline-none focus:ring focus:ring-orange-400/40"
+            ></textarea>
+          </div>
+
+          {/* Tombol kirim */}
+          <button
+            type="submit"
+            className="w-full bg-orange-500 text-white font-semibold py-3 rounded-md hover:bg-orange-600 transition"
+          >
+            KIRIM ULASAN
+          </button>
+        </form>
+      </motion.div>
     </div>
   );
 }
+
+// Komponen bintang individual ⭐
+interface StarProps {
+  filled: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}
+
+const Star: React.FC<StarProps> = ({
+  filled,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+}) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill={filled ? "orange" : "none"}
+      stroke="orange"
+      strokeWidth={1.5}
+      className="w-6 h-6 cursor-pointer transition-transform hover:scale-110"
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <path d="M12 .587l3.668 7.431L24 9.748l-6 5.848L19.335 24 12 20.201 4.665 24 6 15.596 0 9.748l8.332-1.73L12 .587z" />
+    </svg>
+  );
+};
