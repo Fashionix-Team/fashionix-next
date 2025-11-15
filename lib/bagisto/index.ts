@@ -17,7 +17,6 @@ import { addShippingMethodMutation } from "./mutations/shipping-method";
 import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
-import { getCustomerAddressQuery } from "./queries/checkout";
 import { getDashboardSummaryQuery } from "./queries/customer/dashboard-summary";
 import { getCustomerAddressQuery, getDynamicAccountInfoQuery } from "./queries/checkout";
 import {
@@ -137,7 +136,7 @@ export async function bagistoFetch<T>({
         ...(bagistoCartId && {
           Cookie: `${BAGISTO_SESSION}=${bagistoCartId}`,
         }),
-        ...(isCookies && {...headers})
+        ...(isCookies && {...headers}),
         ...(accessToken && {
           Authorization: `Bearer ${accessToken}`,
         }),
