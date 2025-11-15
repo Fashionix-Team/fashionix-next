@@ -17,7 +17,7 @@ import { addShippingMethodMutation } from "./mutations/shipping-method";
 import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
-import { getCustomerAddressQuery } from "./queries/checkout";
+import { getCustomerAddressQuery, getAccountInfoQuery, getCustomerAddressesQuery } from "./queries/checkout";
 import {
   getCollectionProductQuery,
   getCollectionProductsQuery,
@@ -135,7 +135,7 @@ export async function bagistoFetch<T>({
         ...(bagistoCartId && {
           Cookie: `${BAGISTO_SESSION}=${bagistoCartId}`,
         }),
-        ...(isCookies && {...headers})
+        ...(headers || {})
       },
       body: JSON.stringify({
         ...(query && { query }),
@@ -557,6 +557,29 @@ export async function getCheckoutAddress() {
         addresses: [],
       },
     };
+  }
+}
+
+export async function getAccountInfo() {
+  try {
+    // Use GetAccountInfo query with proper query name to avoid Bagisto cache bug
+    const accountRes = await bagistoFetch<{ data: { accountInfo: any } }>({
+      query: getAccountInfoQuery,
+      tags: [TAGS.address],
+      cache: "no-store",
+    });
+
+    console.log("[getAccountInfo] Fetched at:", new Date().toISOString());
+    console.log("[getAccountInfo] accountInfo:", JSON.stringify(accountRes.body.data?.accountInfo, null, 2));
+
+    if (!isObject(accountRes.body.data?.accountInfo)) {
+      return null;
+    }
+
+    return accountRes.body.data.accountInfo;
+  } catch (error) {
+    console.error("[getAccountInfo] Error:", error);
+    return null;
   }
 }
 

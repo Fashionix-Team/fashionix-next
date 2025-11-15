@@ -88,3 +88,100 @@ export const getCustomerAddressQuery = /* GraphQL */ `
     }
   }
 `;
+
+export const getAccountInfoQuery = /* GraphQL */ `
+  query GetAccountInfo {
+    accountInfo {
+      id
+      firstName
+      lastName
+      name
+      gender
+      dateOfBirth
+      email
+      phone
+      image
+      imageUrl
+      subscribedToNewsLetter
+      createdAt
+      updatedAt
+      defaultAddress {
+        id
+        addressType
+        customerId
+        firstName
+        lastName
+        companyName
+        address
+        city
+        state
+        stateName
+        country
+        countryName
+        postcode
+        email
+        phone
+        vatId
+        defaultAddress
+        useForShipping
+        createdAt
+        updatedAt
+      }
+      addresses {
+        id
+        addressType
+        customerId
+        firstName
+        lastName
+        companyName
+        address
+        city
+        state
+        stateName
+        country
+        countryName
+        postcode
+        email
+        phone
+        vatId
+        defaultAddress
+        useForShipping
+        createdAt
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const getCustomerAddressesQuery = /* GraphQL */ `
+  query CustomerAddresses($first: Int, $page: Int) {
+    customerAddresses(first: $first, page: $page) {
+      paginatorInfo {
+        count
+        currentPage
+        lastPage
+        total
+      }
+      data {
+        id
+        addressType
+        customerId
+        firstName
+        lastName
+        companyName
+        address
+        city
+        state
+        stateName
+        country
+        countryName
+        postcode
+        email
+        phone
+        vatId
+        defaultAddress
+        useForShipping
+      }
+    }
+  }
+`;
