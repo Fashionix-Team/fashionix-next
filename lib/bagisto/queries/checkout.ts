@@ -153,6 +153,82 @@ export const getAccountInfoQuery = /* GraphQL */ `
   }
 `;
 
+/**
+ * Generate dynamic accountInfo query with timestamp to bypass Bagisto cache bug
+ *
+ * IMPORTANT: Bagisto has a caching bug where accountInfo query returns stale cached data
+ * even after mutations. By using a unique query name with timestamp, we force Bagisto
+ * to execute a fresh query instead of returning cached results.
+ *
+ * @returns GraphQL query string with unique name based on current timestamp
+ */
+export const getDynamicAccountInfoQuery = () => {
+  const timestamp = Date.now();
+  return /* GraphQL */ `
+    query GetAccountInfo${timestamp} {
+      accountInfo {
+        id
+        firstName
+        lastName
+        name
+        gender
+        dateOfBirth
+        email
+        phone
+        image
+        imageUrl
+        subscribedToNewsLetter
+        createdAt
+        updatedAt
+        defaultAddress {
+          id
+          addressType
+          customerId
+          firstName
+          lastName
+          companyName
+          address
+          city
+          state
+          stateName
+          country
+          countryName
+          postcode
+          email
+          phone
+          vatId
+          defaultAddress
+          useForShipping
+          createdAt
+          updatedAt
+        }
+        addresses {
+          id
+          addressType
+          customerId
+          firstName
+          lastName
+          companyName
+          address
+          city
+          state
+          stateName
+          country
+          countryName
+          postcode
+          email
+          phone
+          vatId
+          defaultAddress
+          useForShipping
+          createdAt
+          updatedAt
+        }
+      }
+    }
+  `;
+};
+
 export const getCustomerAddressesQuery = /* GraphQL */ `
   query CustomerAddresses($first: Int, $page: Int) {
     customerAddresses(first: $first, page: $page) {

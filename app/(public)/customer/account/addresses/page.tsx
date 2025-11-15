@@ -19,7 +19,7 @@ export default async function AddressesPage(props: {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    redirect("/login");
+    redirect("/customer/login");
   }
 
   const searchParams = await props.searchParams;
