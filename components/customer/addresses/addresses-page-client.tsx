@@ -83,16 +83,43 @@ export default function AddressesPageClient({
 
   return (
     <>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Daftar Alamat</h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Total {addressesData.paginatorInfo.total} alamat
-          </p>
-        </div>
-        <Button color="warning" onPress={handleAddNew}>
-          + Tambah Alamat Baru
+      <div className="mb-6">
+        <Button
+          variant="flat"
+          color="default"
+          onPress={() => router.push("/customer/account")}
+          className="mb-4"
+          startContent={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+              />
+            </svg>
+          }
+        >
+          Kembali ke Pengaturan Akun
         </Button>
+
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Daftar Alamat</h1>
+            <p className="text-sm text-gray-600 mt-1">
+              Total {addressesData.paginatorInfo.total} alamat
+            </p>
+          </div>
+          <Button color="warning" onPress={handleAddNew}>
+            + Tambah Alamat Baru
+          </Button>
+        </div>
       </div>
 
       {addressesData.data.length === 0 ? (
