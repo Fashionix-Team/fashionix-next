@@ -17,6 +17,7 @@ import { addShippingMethodMutation } from "./mutations/shipping-method";
 import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
+import { getDashboardSummaryQuery } from "./queries/customer/dashboard-summary";
 import { getCustomerAddressQuery, getDynamicAccountInfoQuery } from "./queries/checkout";
 import {
   getCollectionProductQuery,
@@ -120,20 +121,23 @@ export async function bagistoFetch<T>({
       bagistoCartId = cookieStore.get(BAGISTO_SESSION)?.value ?? "";
     }
 
-    const sessions = await getServerSession(authOptions);
-    const accessToken = sessions?.user?.accessToken;
+    // Mengembalikan logika otentikasi ke pusatnya.
+    // Ini memastikan setiap request yang memerlukan otentikasi akan selalu menyertakan token.
+    const session = await getServerSession(authOptions);
+    const accessToken = session?.user?.accessToken;
 
     const result = await fetch(endpoint, {
       method: "POST",
       headers: {
+        // Gabungkan header yang masuk dengan header default.
+        // Header Authorization akan ditambahkan setelahnya, memastikan tidak tertimpa.
+        ...(isCookies && {...headers}),
         "Content-Type": "application/json",
-        // "x-locale": "en",
-        // "x-currency": "USD",
-        ...(accessToken && {
-          Authorization: `Bearer ${accessToken}`,
-        }),
         ...(bagistoCartId && {
           Cookie: `${BAGISTO_SESSION}=${bagistoCartId}`,
+        }),
+        ...(accessToken && {
+          Authorization: `Bearer ${accessToken}`,
         }),
         ...(headers || {})
       },
@@ -167,11 +171,17 @@ export async function bagistoFetch<T>({
         query,
       };
     }
+    
+    let errorMessage = "An unknown fetch error occurred";
+    if (e instanceof Error) {
+      errorMessage = e.message;
+    } else if (typeof e === 'object' && e !== null) {
+      errorMessage = JSON.stringify(e);
+    } else if (e) {
+      errorMessage = String(e);
+    }
 
-    throw {
-      error: e,
-      query,
-    };
+    throw new Error(`API Fetch Error for query "${query.substring(0, 50)}...": ${errorMessage}`);
   }
 }
 
@@ -690,11 +700,75 @@ export async function getCollectionProducts({
   });
 
   if (!res.body.data?.allProducts) {
-    // console.log(`No collection found for \`${collection}\``);
     return [];
   }
 
   return reshapeProducts(res.body.data.allProducts.data);
+}
+
+export async function getDashboardSummary(): Promise<any> {
+  const session = await getServerSession(authOptions);
+  const customerId = session?.user?.id;
+
+  if (!customerId) {
+    return null;
+  }
+
+  const res = await bagistoFetch<any>({
+    query: getDashboardSummaryQuery,
+    tags: [TAGS.cart],
+    cache: "no-store",
+    variables: {
+      input: { customerId: customerId },
+    },
+  });
+
+  const accountInfo = res.body.data?.accountInfo;
+
+  if (!isObject(accountInfo)) {
+    return null;
+  }
+
+  // Ambil data pesanan dari `ordersList.data` sesuai schema
+  const allOrders = res.body.data?.ordersList?.data || [];
+
+  // Urutkan pesanan dari yang terbaru ke terlama
+  if (Array.isArray(allOrders)) {
+    // Pastikan properti 'date' ada sebelum mengurutkan
+    allOrders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }
+
+  // Ambil 5 pesanan teratas untuk "latestOrders"
+  const latestOrders = Array.isArray(allOrders) ? allOrders.slice(0, 5) : [];
+
+  // Menghitung total pesanan dan pesanan yang tertunda dari data `allOrders`
+  let totalOrders = 0;
+  let pendingOrders = 0;
+  let completedOrders = 0;
+  if (Array.isArray(allOrders)) {
+    totalOrders = allOrders.length;
+    pendingOrders = allOrders.filter(
+      (order: { status: string }) => order.status === 'pending'
+    ).length;
+    completedOrders = allOrders.filter(
+      (order: { status: string }) => order.status === 'completed'
+    ).length;
+  }
+
+  // Menghitung total wishlist
+  const totalWishlist = Array.isArray(accountInfo.wishlist)
+    ? accountInfo.wishlist.length
+    : 0;
+  const summary = {
+    ...accountInfo,
+    latestOrders,
+    totalOrders,
+    pendingOrders,
+    completedOrders,
+    totalWishlist,
+  };
+
+  return summary;
 }
 
 export async function getAllProductUrls(): Promise<Product[]> {
@@ -753,7 +827,6 @@ export async function getCollectionReviewProducts({
   });
 
   if (!isObject(res.body.data?.allProducts)) {
-    // console.log(`No collection found for \`${collection}\``);
     return [];
   }
 
@@ -778,7 +851,6 @@ export async function getCollectionHomeProducts({
       }
     );
 
-    // Only cache if products exist and no errors
     if (
       res.body &&
       res.body.data &&
@@ -789,7 +861,6 @@ export async function getCollectionHomeProducts({
       lruCache.set(tag, BannerProduct);
       return BannerProduct;
     }
-    // Do not cache if error or no products
     return [];
   } catch (error) {
     console.error("Error fetching collection home products: line 630", error);
@@ -819,7 +890,6 @@ export async function getHomeCategories(): Promise<any[]> {
       updatedAt: new Date().toISOString(),
     },
 
-    // Collections that start with `hidden-*` need to be hidden on the search page.
     ...reshapeCollections(bagistoCollections).filter(
       (collection) => !collection.slug?.startsWith("hidden")
     ),

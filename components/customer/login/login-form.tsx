@@ -36,8 +36,7 @@ export default function LoginForm() {
 
       if (result?.ok) {
         showToast("Login Berhasil", "success");
-        router.push("/");
-        router.refresh();
+        window.location.href = "/";
       } else {
         showToast(result?.error || "Email atau password salah", "warning");
       }
