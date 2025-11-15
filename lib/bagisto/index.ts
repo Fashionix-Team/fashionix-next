@@ -570,8 +570,8 @@ export async function getAccountInfo(): Promise<CustomerDataTypes | null> {
       cache: "no-store",
     });
 
-    console.log("[getAccountInfo] Fetched at:", new Date().toISOString());
-    console.log("[getAccountInfo] accountInfo:", JSON.stringify(accountRes.body.data?.accountInfo, null, 2));
+    // console.log("[getAccountInfo] Fetched at:", new Date().toISOString());
+    // console.log("[getAccountInfo] accountInfo:", JSON.stringify(accountRes.body.data?.accountInfo, null, 2));
 
     if (!isObject(accountRes.body.data?.accountInfo)) {
       return null;
@@ -579,7 +579,7 @@ export async function getAccountInfo(): Promise<CustomerDataTypes | null> {
 
     return accountRes.body.data.accountInfo;
   } catch (error) {
-    console.error("[getAccountInfo] Error:", error);
+    // console.error("[getAccountInfo] Error:", error);
     return null;
   }
 }
