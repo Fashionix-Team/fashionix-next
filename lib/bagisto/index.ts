@@ -17,7 +17,7 @@ import { addShippingMethodMutation } from "./mutations/shipping-method";
 import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
-import { getCustomerAddressQuery, getAccountInfoQuery, getCustomerAddressesQuery, getDynamicAccountInfoQuery } from "./queries/checkout";
+import { getCustomerAddressQuery, getDynamicAccountInfoQuery } from "./queries/checkout";
 import {
   getCollectionProductQuery,
   getCollectionProductsQuery,
@@ -61,6 +61,7 @@ import {
   ChannelType,
   Collection,
   CountryArrayDataType,
+  CustomerDataTypes,
   FilterCmsPageTranslationInput,
   ImageInfo,
   Menu,
@@ -81,7 +82,6 @@ import {
   CHECKOUT,
   HIDDEN_PRODUCT_TAG,
   TAGS,
-  TOKEN,
 } from "@/lib/constants";
 import { CustomerRegister } from "./mutations/customer/customer-register";
 import { RegisterInputs } from "@/components/customer/login/registration-form";
@@ -560,11 +560,11 @@ export async function getCheckoutAddress() {
   }
 }
 
-export async function getAccountInfo() {
+export async function getAccountInfo(): Promise<CustomerDataTypes | null> {
   try {
     // WORKAROUND: Bagisto accountInfo query has caching bug
     // Use dynamic query name with timestamp to bypass Bagisto's query result cache
-    const accountRes = await bagistoFetch<{ data: { accountInfo: any } }>({
+    const accountRes = await bagistoFetch<{ data: { accountInfo: CustomerDataTypes } }>({
       query: getDynamicAccountInfoQuery(),
       tags: [TAGS.address],
       cache: "no-store",

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/auth";
 import { getAccountInfo, getCheckoutAddress } from "@/lib/bagisto";
 import AccountSettingsClient from "@/components/customer/account/account-settings-client";
+import { CustomerAddressDetailTypes } from "@/lib/bagisto/types";
 
 export const metadata = {
   title: "Pengaturan Akun",
@@ -33,8 +34,8 @@ export default async function AccountSettingPage() {
     gender?: string;
     dateOfBirth?: string;
     imageUrl?: string;
-    defaultAddress?: any;
-    addresses?: any[];
+    defaultAddress?: CustomerAddressDetailTypes;
+    addresses?: CustomerAddressDetailTypes[];
   } = {
     id: "",
     firstName: "",
@@ -63,17 +64,17 @@ export default async function AccountSettingPage() {
 
     if (accountInfo) {
       customerData = {
-        id: accountInfo.id || "",
-        firstName: accountInfo.firstName || "",
-        lastName: accountInfo.lastName || "",
-        name: accountInfo.name || "",
-        email: accountInfo.email || session.user.email || "",
-        phone: accountInfo.phone || "",
-        gender: accountInfo.gender || "",
-        dateOfBirth: accountInfo.dateOfBirth || "",
-        imageUrl: accountInfo.imageUrl || accountInfo.image || "",
+        id: accountInfo.id ?? "",
+        firstName: accountInfo.firstName ?? "",
+        lastName: accountInfo.lastName ?? "",
+        name: accountInfo.name ?? "",
+        email: accountInfo.email ?? session.user.email ?? "",
+        phone: accountInfo.phone ?? "",
+        gender: accountInfo.gender ?? "",
+        dateOfBirth: accountInfo.dateOfBirth ?? "",
+        imageUrl: accountInfo.imageUrl ?? accountInfo.image ?? "",
         defaultAddress: accountInfo.defaultAddress,
-        addresses: accountInfo.addresses || [],
+        addresses: accountInfo.addresses ?? [],
       };
     }
   } catch (error) {

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import { getAccountInfo, getCheckoutAddress } from "@/lib/bagisto";
 import AddressesPageClient from "@/components/customer/addresses/addresses-page-client";
+import { CustomerAddressDetailTypes } from "@/lib/bagisto/types";
 
 export const metadata = {
   title: "Daftar Alamat - Fashionix",
@@ -27,7 +28,7 @@ export default async function AddressesPage(props: {
   const itemsPerPage = 10;
 
   // Fetch addresses using the same approach as account page
-  let addresses: any[] = [];
+  let addresses: CustomerAddressDetailTypes[] = [];
 
   try {
     let accountInfo = await getAccountInfo();
