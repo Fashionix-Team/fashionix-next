@@ -16,8 +16,8 @@ export type LatestOrder = {
   id: string;
   orderId: string;
   date: string;
-  status: 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'CANCELED';
-  total: string;
+  status: string; 
+  total: number; 
   link: string;
   productCount: number;
 };

@@ -27,7 +27,8 @@ interface DashboardContentProps {
  summary: {
     totalOrders: number;
     pendingOrders: number;
-    defaultAddress: string;
+    completedOrders: number;
+    defaultAddress: { address: string } | null;
     totalWishlist: number;
     latestOrders: LatestOrder[];
    };
@@ -37,10 +38,10 @@ interface DashboardContentProps {
 interface LatestOrder {
     id: string;
     orderId: string;
-    date: Date;
+    date: string; // Ubah dari Date ke string
     status: 'PENDING' | 'IN PROGRESS' | 'COMPLETED' | 'CANCELED';
     total: string;
-    link: string;
+    link?: string; // Jadikan opsional karena tidak lagi digunakan secara langsung
     productCount: number;
 }
 
@@ -59,14 +60,14 @@ const DashboardCard = ({ title, children, linkHref, linkText }: { title: string,
                        border border-blue-600 dark:border-blue-400 
                        hover:bg-blue-600 dark:hover:bg-blue-400 
                        text-sm font-medium mt-4 items-center 
-                       px-4 py-2 rounded-lg transition duration-200 ease-in-out" // Tambahkan padding & rounded-lg
+                       px-4 py-2 rounded-lg transition duration-200 ease-in-out"
         >
             {linkText}
         </Link>
     </div>
 );
 
-// ✅ Komponen Kartu Ringkasan
+// Komponen Kartu Ringkasan
 const SummaryListCard = ({ title, value, linkHref, icon, bgColor }: { title: string, value: string | number, linkHref: string, icon: React.ReactNode, bgColor: string }) => (
     <Link 
         href={linkHref} 
@@ -80,9 +81,8 @@ const SummaryListCard = ({ title, value, linkHref, icon, bgColor }: { title: str
     </Link>
 );
 
-// ✅ KOMPONEN BARU: Menampilkan Daftar Pesanan Terbaru (SESUAI GAMBAR)
+// Komponen Menampilkan Daftar Pesanan Terbaru
 const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) => {
-    // Fungsi untuk mendapatkan warna status (SESUAI GAMBAR)
     const getStatusColor = (status: LatestOrder['status']) => {
         switch (status) {
             case 'COMPLETED': return 'text-green-400';
@@ -91,6 +91,15 @@ const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) 
             case 'CANCELED': return 'text-red-400';
             default: return 'text-gray-800';
         }
+    };
+
+    // Fungsi untuk memformat tanggal secara konsisten
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
     };
 
     return (
@@ -158,7 +167,7 @@ const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) 
 
                                 {/* Date */}
                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                    {order.date.toLocaleDateString()}
+                                    {formatDate(order.date)}
                                 </td>
 
                                 {/* Total */}
@@ -169,7 +178,7 @@ const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) 
                                 {/* Action */}
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <Link 
-                                        href={order.link}
+                                        href={`/customer/orders/${order.id}`}
                                         className="text-blue-400 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                                     >
                                         Lihat Detail
@@ -213,35 +222,30 @@ const ContactInfo = ({ email, phone }: { email?: string | null, phone?: number |
 
 
 export default function DashboardContent({ user, summary }: DashboardContentProps) {
-  const enhancedSummary = useMemo(() => ({
-        ...summary,
-        COMPLETEDOrders: summary.totalOrders - summary.pendingOrders > 0 ? summary.totalOrders - summary.pendingOrders : 0, // Data dummy
-    }), [summary]);
-
     // Data untuk 3 Kartu Ringkasan Pesanan
     const orderSummaryCards = useMemo(() => [
         {
             title: 'Total Pesanan',
-            value: enhancedSummary.totalOrders, 
+            value: summary.totalOrders, 
             linkHref: '/customer/orders',
             icon: <RocketIcon className="w-6 h-20" />,
             bgColor: 'bg-blue-100'
         },
         {
             title: 'Pesanan Tertunda',
-            value: enhancedSummary.pendingOrders, 
+            value: summary.pendingOrders, 
             linkHref: '/customer/orders?status=PENDING',
             icon: <EnvelopeIcon className="w-6 h-20 text-yellow-500" />,
             bgColor: "bg-orange-100"
         },
         {
             title: 'Pesanan Selesai',
-            value: enhancedSummary.COMPLETEDOrders, 
+            value: summary.completedOrders, 
             linkHref: '/customer/orders?status=COMPLETED',
             icon: <CubeIcon className="w-6 h-20 text-green-500" />,
             bgColor: "bg-green-100"
         },
-    ], [enhancedSummary]);
+    ], [summary]);
 
   return (
 
@@ -297,7 +301,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                     <p className="text-gray-700 dark:text-gray-300 flex items-start">
                         <MapIcon className="w-5 h-5 mr-3 text-gray-500 flex-shrink-0 mt-1" />
                         <span>
-                            {summary.defaultAddress || 'Belum ada alamat default'}
+                            {summary.defaultAddress?.address || 'Belum ada alamat default'}
                         </span>
                     </p>
 
@@ -305,7 +309,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
                 </div>
             </DashboardCard>
 
-        {/* ✅ SECTION 3: Ringkasan Pesanan*/}
+        {/* SECTION 3: Ringkasan Pesanan*/}
                 <div className="lg:col-span-1 flex flex-col space-y-4">
                     {orderSummaryCards.map((card, index) => (
                         <SummaryListCard key={index} {...card} />
