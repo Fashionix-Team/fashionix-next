@@ -17,8 +17,8 @@ import { addShippingMethodMutation } from "./mutations/shipping-method";
 import { UpdateAddressMutation } from "./mutations/update-address";
 import { getCartQuery } from "./queries/cart";
 import { getChannelQuery } from "./queries/channel";
-import { getCustomerAddressQuery } from "./queries/checkout";
 import { getDashboardSummaryQuery } from "./queries/customer/dashboard-summary";
+import { getCustomerAddressQuery, getDynamicAccountInfoQuery } from "./queries/checkout";
 import {
   getCollectionProductQuery,
   getCollectionProductsQuery,
@@ -62,6 +62,7 @@ import {
   ChannelType,
   Collection,
   CountryArrayDataType,
+  CustomerDataTypes,
   FilterCmsPageTranslationInput,
   ImageInfo,
   Menu,
@@ -82,7 +83,6 @@ import {
   CHECKOUT,
   HIDDEN_PRODUCT_TAG,
   TAGS,
-  TOKEN,
 } from "@/lib/constants";
 import { CustomerRegister } from "./mutations/customer/customer-register";
 import { RegisterInputs } from "@/components/customer/login/registration-form";
@@ -139,6 +139,7 @@ export async function bagistoFetch<T>({
         ...(accessToken && {
           Authorization: `Bearer ${accessToken}`,
         }),
+        ...(headers || {})
       },
       body: JSON.stringify({
         ...(query && { query }),
@@ -566,6 +567,30 @@ export async function getCheckoutAddress() {
         addresses: [],
       },
     };
+  }
+}
+
+export async function getAccountInfo(): Promise<CustomerDataTypes | null> {
+  try {
+    // WORKAROUND: Bagisto accountInfo query has caching bug
+    // Use dynamic query name with timestamp to bypass Bagisto's query result cache
+    const accountRes = await bagistoFetch<{ data: { accountInfo: CustomerDataTypes } }>({
+      query: getDynamicAccountInfoQuery(),
+      tags: [TAGS.address],
+      cache: "no-store",
+    });
+
+    // console.log("[getAccountInfo] Fetched at:", new Date().toISOString());
+    // console.log("[getAccountInfo] accountInfo:", JSON.stringify(accountRes.body.data?.accountInfo, null, 2));
+
+    if (!isObject(accountRes.body.data?.accountInfo)) {
+      return null;
+    }
+
+    return accountRes.body.data.accountInfo;
+  } catch (error) {
+    // console.error("[getAccountInfo] Error:", error);
+    return null;
   }
 }
 
