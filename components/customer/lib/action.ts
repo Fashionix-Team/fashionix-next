@@ -140,11 +140,6 @@ interface ForgotPasswordState {
 }
 
 // State awal untuk useFormState
-const initialState: ForgotPasswordState = {
-    message: "",
-    success: false,
-};
-
 export async function forgotPasswordAction(
   prevState: ForgotPasswordState,
   formData: FormData
