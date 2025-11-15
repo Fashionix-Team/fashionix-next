@@ -65,8 +65,8 @@ export default function AccountSettingsClient({
   const [editingAddress, setEditingAddress] = useState<AddressDetailType | null>(null);
 
   // Debug: Log customer data
-  console.log("[AccountSettingsClient] Customer data:", customer);
-  console.log("[AccountSettingsClient] Addresses:", customer.addresses);
+  // console.log("[AccountSettingsClient] Customer data:", customer);
+  // console.log("[AccountSettingsClient] Addresses:", customer.addresses);
 
   // Prepare customer data for form
   const customerData = {
