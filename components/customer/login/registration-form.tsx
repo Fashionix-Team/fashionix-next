@@ -1,15 +1,10 @@
 "use client";
 
-import clsx from "clsx";
-import Image from "next/image";
-import Link from "next/link";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { Button } from "./loading-button";
-import { SIGNUP_IMG } from "@/lib/constants";
-import InputText from "@/components/checkout/cart/input";
-import { createUser } from "../lib/action";
-import { useCustomToast } from "@/components/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useCustomToast } from '@/components/hooks/use-toast';
+import { createUser } from '../lib/action';
 
 export type RegisterInputs = {
   firstName: string;
@@ -21,183 +16,177 @@ export type RegisterInputs = {
 };
 
 export default function RegistrationForm() {
+  const { showToast } = useCustomToast();
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    watch,
   } = useForm<RegisterInputs>({
-    mode: "onSubmit",
-    reValidateMode: "onChange",
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
   });
-
-  const { showToast } = useCustomToast();
 
   const onSubmit: SubmitHandler<RegisterInputs> = async (data) => {
     if (data.password !== data.passwordConfirmation) {
-      showToast("The Passwords do not match.", "warning");
+      showToast('The Passwords do not match.', 'warning');
       return;
     }
 
     await createUser(data)
       .then((res) => {
         if (res?.success) {
-          showToast("User created successfully", "success");
-          router.replace("/customer/login");
+          showToast('User created successfully', 'success');
+          router.push('/customer/login');
         } else {
-          showToast(res?.error?.message, "warning");
+          showToast(res?.error?.message || 'Registration failed', 'warning');
         }
       })
       .catch((error) => {
-        showToast(error.message, "warning");
+        showToast(error.message || 'Terjadi kesalahan. Silakan coba lagi.', 'danger');
       });
   };
 
   return (
-    <div className="my-8 flex w-full items-center justify-between gap-0 md:gap-4 lg:my-16 xl:my-28">
-      <div className="relative flex w-full max-w-[583px] flex-col gap-y-4 lg:gap-y-12">
-        <div className="font-outfit">
-          <h2 className="py-1 text-3xl font-semibold sm:text-4xl">
-            Become User
-          </h2>
-          <p className="mt-2 text-lg font-normal text-black/[60%] dark:text-neutral-300 sm:mt-2">
-            You are new to our store, we are glad to have you as a member.
-          </p>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+      <div className="flex gap-2.5">
+        <div className="w-full">
+          <label className="block text-sm text-gray-700">Nama Depan</label>
+          <input
+            {...register('firstName', {
+              required: 'First name is required',
+            })}
+            id="firstName"
+            type="text"
+            className={`mt-1 block w-full rounded border ${
+              errors.firstName ? 'border-red-500' : 'border-gray-200'
+            } bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none`}
+            placeholder="Enter first name"
+          />
+          {errors.firstName && (
+            <p className="mt-1 text-sm text-red-500">{errors.firstName.message}</p>
+          )}
         </div>
 
-        <form
-          noValidate
-          className="flex flex-col gap-y-8 lg:gap-y-12"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex flex-col gap-y-2.5 lg:gap-[18px]">
-            <div className="flex w-full gap-2.5 lg:gap-[18px]">
-              <InputText
-                {...register("firstName", {
-                  required: "First name is required",
-                })}
-                className="w-full"
-                errorMsg={
-                  errors.firstName ? [errors.firstName.message] : undefined
-                }
-                label="First Name"
-                labelPlacement="outside"
-                name="firstName"
-                placeholder="Enter first name"
-                size="lg"
-              />
-              <InputText
-                {...register("lastName", { required: "Last name is required" })}
-                className="w-full"
-                errorMsg={
-                  errors.lastName ? [errors.lastName.message] : undefined
-                }
-                label="Last Name"
-                labelPlacement="outside"
-                name="lastName"
-                placeholder="Enter last name"
-                size="lg"
-              />
-            </div>
-
-            <InputText
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Please enter a valid email.",
-                },
-              })}
-              errorMsg={errors.email?.message}
-              label="Email"
-              labelPlacement="outside"
-              name="email"
-              placeholder="Enter email address"
-              size="lg"
-            />
-
-            <InputText
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 8,
-                  message: "Must be at least 8 characters",
-                },
-                validate: (val) => {
-                  if (!/[A-Z]/.test(val))
-                    return "Must contain at least one uppercase letter";
-                  if (!/[a-z]/.test(val))
-                    return "Must contain at least one lowercase letter";
-                  if (!/[0-9]/.test(val))
-                    return "Must contain at least one number";
-                  if (/\s/.test(val)) return "Cannot contain spaces";
-
-                  return true;
-                },
-              })}
-              label="Password"
-              labelPlacement="outside"
-              name="password"
-              placeholder="Enter password"
-              typeName="password"
-              size="lg"
-              // Only show client-side errors under password. Server password errors go under confirm password per requirement.
-              errorMsg={errors.password ? [errors.password.message] : undefined}
-            />
-
-            <InputText
-              {...register("passwordConfirmation", {
-                required: "Please confirm your password",
-              })}
-              // errorMsg={
-              //   errors.passwordConfirmation
-              //     ? [errors.passwordConfirmation.message]
-              //     : userErrors?.passwordConfirmation
-              //       ? userErrors.passwordConfirmation
-              //       : userErrors?.password // also show server password errors here
-              //         ? userErrors.password
-              //         : undefined
-              // }
-              label="Confirm Password"
-              labelPlacement="outside"
-              name="passwordConfirmation"
-              placeholder="Enter confirm password"
-              size="lg"
-              typeName="password"
-            />
-          </div>
-
-          <div className="flex flex-col gap-y-3">
-            <Button
-              disabled={isSubmitting}
-              loading={isSubmitting}
-              title="Sign Up"
-              type="submit"
-            />
-            <span className="font-outfit">
-              Already have an account?{" "}
-              <Link className="text-blue-600" href="/customer/login">
-                Sign In
-              </Link>
-            </span>
-          </div>
-        </form>
-      </div>
-
-      <div className="relative hidden aspect-[0.7] max-h-[692px] w-full max-w-[790px] sm:block md:aspect-[1.14]">
-        <Image
-          fill
-          priority
-          alt="Sign Up Image"
-          className={clsx(
-            "relative h-full w-full object-fill",
-            "transition duration-300 ease-in-out group-hover:scale-105"
+        <div className="w-full">
+          <label className="block text-sm text-gray-700">Nama Belakang</label>
+          <input
+            {...register('lastName', {
+              required: 'Last name is required',
+            })}
+            id="lastName"
+            type="text"
+            className={`mt-1 block w-full rounded border ${
+              errors.lastName ? 'border-red-500' : 'border-gray-200'
+            } bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none`}
+            placeholder="Enter last name"
+          />
+          {errors.lastName && (
+            <p className="mt-1 text-sm text-red-500">{errors.lastName.message}</p>
           )}
-          sizes="(min-width: 768px) 66vw, 100vw"
-          src={SIGNUP_IMG}
-        />
+        </div>
       </div>
-    </div>
+
+      <div>
+        <label className="block text-sm text-gray-700">Alamat Email</label>
+        <input
+          {...register('email', {
+            required: 'Email is required',
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: 'Please enter a valid email.',
+            },
+          })}
+          id="email"
+          type="email"
+          className={`mt-1 block w-full rounded border ${
+            errors.email ? 'border-red-500' : 'border-gray-200'
+          } bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none`}
+          placeholder="Enter email address"
+        />
+        {errors.email && (
+          <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm text-gray-700">Kata Sandi</label>
+        <input
+          {...register('password', {
+            required: 'Password is required',
+            minLength: {
+              value: 8,
+              message: 'Must be at least 8 characters',
+            },
+            validate: (val) => {
+              if (!/[A-Z]/.test(val))
+                return 'Must contain at least one uppercase letter';
+              if (!/[a-z]/.test(val))
+                return 'Must contain at least one lowercase letter';
+              if (!/[0-9]/.test(val))
+                return 'Must contain at least one number';
+              if (/\s/.test(val)) return 'Cannot contain spaces';
+              return true;
+            },
+          })}
+          id="password"
+          type="password"
+          className={`mt-1 block w-full rounded border ${
+            errors.password ? 'border-red-500' : 'border-gray-200'
+          } bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none`}
+          placeholder="Enter password"
+        />
+        {errors.password && (
+          <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>
+        )}
+      </div>
+
+      <div>
+        <label className="block text-sm text-gray-700">Konfirmasi Kata Sandi</label>
+        <input
+          {...register('passwordConfirmation', {
+            required: 'Please confirm your password',
+            validate: (value) => {
+              if (value !== watch('password')) {
+                return 'Passwords do not match';
+              }
+              return true;
+            },
+          })}
+          id="passwordConfirmation"
+          type="password"
+          className={`mt-1 block w-full rounded border ${
+            errors.passwordConfirmation ? 'border-red-500' : 'border-gray-200'
+          } bg-white px-3 py-2 text-gray-700 placeholder-gray-400 focus:outline-none`}
+          placeholder="Enter confirm password"
+        />
+        {errors.passwordConfirmation && (
+          <p className="mt-1 text-sm text-red-500">
+            {errors.passwordConfirmation.message}
+          </p>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full mt-2 inline-flex items-center justify-center rounded bg-orange-500 hover:bg-orange-600 text-white font-semibold px-4 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <span className="uppercase">{isSubmitting ? 'Memproses...' : 'DAFTAR'}</span>
+      </button>
+
+      <div className="flex items-center my-4">
+        <div className="flex-1 h-px bg-gray-200" />
+        <div className="px-3 text-sm text-gray-400">atau</div>
+        <div className="flex-1 h-px bg-gray-200" />
+      </div>
+
+      <button type="button" className="w-full inline-flex items-center justify-center rounded border border-gray-200 px-4 py-2 bg-white hover:bg-gray-50">
+        <img src="/image/logo/google-circle.png" alt="Google" className="w-5 h-5 mr-3" />
+        <span className="text-sm text-gray-700">Daftar dengan Google</span>
+      </button>
+    </form>
   );
 }
