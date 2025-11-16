@@ -1,7 +1,4 @@
-import BottomNav from "./bottom-nav";
-import DeskNav from "./desk-nav";
-import MobileNav from "./mobile-nav";
-import TopNav from "./top-nav";
+import NavbarWrapper from "../navbar-wrapper";
 import { getCollectionMenus } from "@/lib/bagisto";
 import type { BagistoCollectionMenus, InputData } from "@/lib/bagisto/types";
 
@@ -24,12 +21,5 @@ export default async function Navbar() {
     console.error("Failed to load navbar categories", error);
   }
 
-  return (
-    <div>
-      <TopNav />
-      <DeskNav />
-      <BottomNav categories={categories} />
-      <MobileNav categories={categories} />
-    </div>
-  );
+  return <NavbarWrapper categories={categories} />;
 }

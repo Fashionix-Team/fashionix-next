@@ -3,6 +3,7 @@
 import Image from "next/image";
 import UserMenuPopover from "./user-menu-popover";
 import CartPopover from "./cart-popover";
+import Link from "next/link";
 
 export default function DeskNav() {
 
@@ -13,7 +14,7 @@ export default function DeskNav() {
         <div className="mx-auto max-w-screen-xl px-4">
           <div className="flex items-center justify-between py-4">
             {/* Logo */}
-            <a href="index.html" className="inline-flex items-center">
+            <Link href="/" className="inline-flex items-center">
               <Image
                 src="/image/logo/logo-white.png"
                 alt="logo"
@@ -21,7 +22,7 @@ export default function DeskNav() {
                 height={32}
                 className="h-8 w-auto"
               />
-            </a>
+            </Link>
 
             {/* Search */}
             <form
