@@ -1,36 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import Image from "next/image";
 import UserMenuPopover from "./user-menu-popover";
+import CartPopover from "./cart-popover";
+import Link from "next/link";
 
 export default function DeskNav() {
-  // demo state just to make the cart & user dropdowns work
-  const [cartOpen, setCartOpen] = useState(false);
-  const [items, setItems] = useState([
-    {
-      id: "cam",
-      img: "/image/product/product-43.png",
-      name: "Canon EOS 1500D DSLR Camera Body+ 18-55 mm",
-      qty: 1,
-      price: 1500,
-    },
-    {
-      id: "phn",
-      img: "/image/product/product-44.png",
-      name: "Simple Mobile 5G LTE Galexy 12 Mini 512GB Gaming Phone",
-      qty: 2,
-      price: 269,
-    },
-  ]);
-
-  const subTotal = useMemo(
-    () => items.reduce((s, i) => s +  i.qty * i.price, 0),
-    [items]
-  );
-
-  const removeItem = (id: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== id));
-  };
 
   return (
     <div className="hidden lg:block">
@@ -39,13 +14,15 @@ export default function DeskNav() {
         <div className="mx-auto max-w-screen-xl px-4">
           <div className="flex items-center justify-between py-4">
             {/* Logo */}
-            <a href="index.html" className="inline-flex items-center">
-              <img
+            <Link href="/" className="inline-flex items-center">
+              <Image
                 src="/image/logo/logo-white.png"
                 alt="logo"
+                width={120}
+                height={32}
                 className="h-8 w-auto"
               />
-            </a>
+            </Link>
 
             {/* Search */}
             <form
@@ -88,165 +65,7 @@ export default function DeskNav() {
             {/* Widgets */}
             <div className="flex items-center gap-4">
               {/* Cart */}
-              <div className="relative">
-                <button
-                  id="showHiddenMenuOne"
-                  className="inline-flex rounded-md p-1.5 text-white/90 hover:text-white transition"
-                  onClick={() => {
-                    setCartOpen((v) => !v);
-                  }}
-                  aria-haspopup="dialog"
-                  aria-expanded={cartOpen}
-                >
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-white"
-                  >
-                    <path
-                      d="M10 29C11.1046 29 12 28.1046 12 27C12 25.8954 11.1046 25 10 25C8.89543 25 8 25.8954 8 27C8 28.1046 8.89543 29 10 29Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M23 29C24.1046 29 25 28.1046 25 27C25 25.8954 24.1046 25 23 25C21.8954 25 21 25.8954 21 27C21 28.1046 21.8954 29 23
-                                        29Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      d="M5.2875 9H27.7125L24.4125 20.55C24.2948 20.9692 24.0426 21.3381 23.6948 21.6001C23.3471 21.862 22.9229 22.0025 22.4875
-                                        22H10.5125C10.0771 22.0025 9.65293 21.862 9.30515 21.6001C8.95738 21.3381 8.70524 20.9692 8.5875 20.55L4.0625
-                                        4.725C4.0027 4.51594 3.8764 4.33207 3.70271 4.20125C3.52903 4.07042 3.31744 3.99977 3.1 4H1"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-
-                {/* badge */}
-                {items.length > 0 && (
-                  <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-orange-500 px-1.5 text-[10px] font-semibold text-white">
-                    {items.reduce((n, i) => n + i.qty, 0)}
-                  </span>
-                )}
-
-                {/* Cart popup */}
-                {cartOpen && (
-                  <div
-                    className="absolute right-0 z-50 mt-3 w-[360px] overflow-hidden rounded-xl border border-black/10 bg-white shadow-2xl"
-                    role="dialog"
-                  >
-                    <div className="border-b border-black/10 px-4 py-3">
-                      <h6 className="text-sm font-semibold text-gray-900">
-                        Shopping Cart{" "}
-                        <span className="text-gray-500">
-                          ({String(items.reduce((n, i) => n + i.qty, 0)).padStart(2, "0")})
-                        </span>
-                      </h6>
-                    </div>
-
-                    <div className="max-h-80 overflow-y-auto px-4 py-3">
-                      {items.length === 0 ? (
-                        <p className="text-sm text-gray-600">Your cart is empty.</p>
-                      ) : (
-                        items.map((it) => (
-                          <div
-                            key={it.id}
-                            className="flex items-start gap-3 py-3 border-b last:border-b-0 border-gray-100"
-                          >
-                            <img
-                              src={it.img}
-                              alt="product"
-                              className="h-14 w-14 rounded-md object-contain bg-gray-50"
-                            />
-                            <div className="min-w-0 flex-1">
-                              <p className="line-clamp-2 text-sm text-gray-800">
-                                {it.name}
-                              </p>
-                              <div className="mt-1 text-sm">
-                                <span className="text-gray-700">{it.qty} x</span>{" "}
-                                <span className="font-semibold text-gray-900">
-                                  ${it.price.toLocaleString()}
-                                </span>
-                              </div>
-                            </div>
-                            <button
-                              className="shrink-0 rounded-md p-1 hover:bg-gray-100"
-                              onClick={() => removeItem(it.id)}
-                              aria-label="Remove item"
-                            >
-                              <svg
-                                width="16"
-                                height="16"
-                                viewBox="0 0 16 16"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M12.5 3.5L3.5 12.5"
-                                  stroke="#929FA5"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                                <path
-                                  d="M12.5 12.5L3.5 3.5"
-                                  stroke="#929FA5"
-                                  strokeWidth="1.5"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              </svg>
-                            </button>
-                          </div>
-                        ))
-                      )}
-                    </div>
-
-                    <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3">
-                      <p className="text-xs text-gray-600">Sub-Total</p>
-                      <p className="text-sm font-semibold text-gray-900">
-                        ${subTotal.toLocaleString()} USD
-                      </p>
-                    </div>
-
-                    <div className="space-y-2 px-4 py-3">
-                      <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-orange-500 px-4 py-2.5 text-sm font-semibold text-[#191C1F] hover:bg-orange-400">
-                        Checkout now
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M3.625 10H17.375"
-                            stroke="#191C1F"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          ></path>
-                          <path
-                            d="M11.75 4.375L17.375 10L11.75 15.625"
-                            stroke="#191C1F"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          ></path>
-                        </svg>
-                      </button>
-                      <button className="inline-flex w-full items-center justify-center rounded-md border border-orange-500 px-4 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50">
-                        View Cart
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+              <CartPopover />
 
               {/* Wishlist */}
               <button
