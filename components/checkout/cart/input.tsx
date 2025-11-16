@@ -1,7 +1,6 @@
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { forwardRef } from "react";
-
 import { isArray } from "@/lib/type-guards";
 
 interface InputTextProps
