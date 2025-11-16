@@ -2,7 +2,7 @@
 import { FC, useState } from "react";
 import { AddressDataTypes, CountryArrayDataType } from "@/lib/bagisto/types";
 import { useQuery } from "@tanstack/react-query";
-import { fetchHandler } from "@/lib/fetch-handler";
+import { fetchHandler } from "@/lib/bagisto/fetch-handler";
 import { isArray, isObject } from "@/lib/type-guards";
 import CustomerAddress from "./customer-address";
 import AddressSkeleton from "@/components/skeleton/address-skeleton";

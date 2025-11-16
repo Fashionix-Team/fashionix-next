@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 import PaymentMethod from "./payment-method";
-import { fetchHandler } from "@/lib/fetch-handler";
+import { fetchHandler } from "@/lib/bagisto/fetch-handler";
 import { CartCheckoutPageSkeleton } from "@/components/checkout/place-holder";
 import { selectedPaymentMethodType } from "@/lib/bagisto/types";
 

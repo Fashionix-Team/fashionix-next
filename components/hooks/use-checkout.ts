@@ -7,7 +7,7 @@ import { useCustomToast } from "./use-toast";
 
 import { addItem } from "@/store/slices/cart-slice";
 import { isObject } from "@/lib/type-guards";
-import { fetchHandler } from "@/lib/fetch-handler";
+import { fetchHandler } from "@/lib/bagisto/fetch-handler";
 import { BagistoCart } from "@/lib/bagisto/types";
 import { ORDER_DETAILS, setLocalStorage } from "@/store/local-storage";
 export interface InputDataTypes {

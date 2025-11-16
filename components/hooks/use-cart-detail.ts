@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { fetchHandler } from "@/lib/fetch-handler";
+import { fetchHandler } from "@/lib/bagisto/fetch-handler";
 import { isObject } from "@/lib/type-guards";
 import { useAppDispatch } from "@/store/hooks";
 import { addItem } from "@/store/slices/cart-slice";

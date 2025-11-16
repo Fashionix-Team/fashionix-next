@@ -1,20 +1,22 @@
+// src/lib/bagisto/fetch-handler.ts
+
 type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
-interface FetchHandlerOptions<TBody = unknown> {
-  url: string; // API route, e.g., "addToCart"
+interface FetchHandlerOptions<T = unknown> {
+  url: string;               // endpoint dalam folder /api/...
   method?: Method;
-  body?: TBody;
+  body?: T;
   headers?: Record<string, string>;
   contentType?: boolean;
 }
 
 export async function fetchHandler({
   url,
-  method = "GET",
+  method = "POST",
   body,
   headers = {},
   contentType = true,
-}: FetchHandlerOptions): Promise<any> {
+}: FetchHandlerOptions) {
   try {
     const defaultHeaders: Record<string, string> = {
       ...(contentType ? { "Content-Type": "application/json" } : {}),
@@ -27,28 +29,24 @@ export async function fetchHandler({
       body: body ? JSON.stringify(body) : undefined,
     });
 
-    const result = await response.json();
+    const json = await response.json();
 
     if (!response.ok) {
       return {
         data: null,
         error: {
-          status: response?.status,
-          message: result?.error || "Something went wrong",
+          status: response.status,
+          message: json?.error || "Something went wrong",
         },
       };
     }
 
-    return {
-      ...result,
-    };
+    return json;
   } catch (err) {
-    const error = err instanceof Error ? err.message : "Unknown error";
-
     return {
       data: null,
       error: {
-        message: error,
+        message: err instanceof Error ? err.message : "Unknown error",
       },
     };
   }
