@@ -14,9 +14,10 @@ export default function NotFoundSection() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center min-h-screen bg-white px-4 font-sans">
+    <div className="flex flex-col items-center justify-center text-center min-h-[80vh] bg-white px-4 font-sans pb-30">
+
       <img
-        src="https://cdn-icons-png.flaticon.com/512/7486/7486758.png"
+        src="/image/not-found/error.png"
         alt="Error"
         className="w-72 mb-6"
       />
