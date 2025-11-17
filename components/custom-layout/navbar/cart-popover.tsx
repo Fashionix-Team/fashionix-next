@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { useCartDetail } from "@/components/hooks/use-cart-detail";
 import { useAppSelector } from "@/store/hooks";
 import type { CartItem } from "@/lib/bagisto/types";
+import { NOT_IMAGE } from "@/lib/constants";
 
 export default function CartPopover() {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,7 +118,7 @@ export default function CartPopover() {
               >
                 <div className="relative h-14 w-14 rounded-md bg-gray-50 overflow-hidden">
                   <Image
-                    src={item.product?.images?.[0]?.url || "/image/product/placeholder.png"}
+                    src={item.product?.images?.[0]?.url || NOT_IMAGE}
                     alt={item.name || "Product"}
                     fill
                     className="object-contain"
@@ -131,7 +132,7 @@ export default function CartPopover() {
                   <div className="mt-1 text-sm">
                     <span className="text-gray-700">{item.quantity} x</span>{" "}
                     <span className="font-semibold text-gray-900">
-                      ${parseFloat(item.price?.toString() || "0").toLocaleString()}
+                      Rp.{parseFloat(item.price?.toString() || "0").toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -171,7 +172,7 @@ export default function CartPopover() {
         <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3">
           <p className="text-xs text-gray-600">Sub-Total</p>
           <p className="text-sm font-semibold text-gray-900">
-            ${subTotal.toLocaleString()} {cart?.cartCurrencyCode || "USD"}
+            Rp.{subTotal.toLocaleString()} {cart?.cartCurrencyCode || "IDR"}
           </p>
         </div>
 
