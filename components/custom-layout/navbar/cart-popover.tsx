@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { useCartDetail } from "@/components/hooks/use-cart-detail";
 import { useAppSelector } from "@/store/hooks";
 import type { CartItem } from "@/lib/bagisto/types";
+import { NOT_IMAGE } from "@/lib/constants";
 
 export default function CartPopover() {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,7 +118,7 @@ export default function CartPopover() {
               >
                 <div className="relative h-14 w-14 rounded-md bg-gray-50 overflow-hidden">
                   <Image
-                    src={item.product?.images?.[0]?.url || "/image/product/placeholder.png"}
+                    src={item.product?.images?.[0]?.url || NOT_IMAGE}
                     alt={item.name || "Product"}
                     fill
                     className="object-contain"
