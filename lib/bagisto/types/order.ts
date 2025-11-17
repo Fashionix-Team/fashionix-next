@@ -36,17 +36,25 @@ export interface OrderAddress {
   id: string;
   firstName: string;
   lastName: string;
-  address: string[];
+  address: string;
   city: string;
   state: string;
   postcode: string;
   country: string;
   phone: string;
+  email: string;
 }
 
 export interface OrderItemProduct {
   name: string;
   sku: string;
+  categories: {
+    name: string;
+  }[];
+  images: {
+    id: string;
+    url: string;
+  }[];
 }
 
 export interface OrderItem {
@@ -55,6 +63,10 @@ export interface OrderItem {
   sku: string;
   qtyOrdered: number;
   price: number;
+  formattedPrice: {
+    price: string;
+    total: string;
+  };
   product: OrderItemProduct;
 }
 
@@ -71,6 +83,9 @@ export interface CustomerOrderDetail {
   statusLabel: string;
   createdAt: string;
   grandTotal: number;
+  formattedPrice: {
+    grandTotal: string;
+  };
   items: OrderItem[];
   billingAddress: OrderAddress;
   shippingAddress: OrderAddress;

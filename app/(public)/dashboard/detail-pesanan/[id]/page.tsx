@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 import { getCustomerOrderDetail, CustomerOrderDetail } from '@/lib/bagisto/index';
+import { NOT_IMAGE } from '@/lib/constants';
 
 const ActivityIcon = ({ iconName, completed }: { iconName: string, completed: boolean }) => {
     let IconComponent: ElementType; 
@@ -65,7 +66,7 @@ function transformOrderData(order: CustomerOrderDetail) {
         price: item.formattedPrice.price || '0',
         qty: item.qtyOrdered,
         subtotal: item.formattedPrice.total || '0',
-        imageUrl: item.product.images[0]?.url || 'https://placehold.co/100x100' // Placeholder
+        imageUrl: item.product.images[0]?.url || NOT_IMAGE,
     }));
 
     // 3. Kembalikan data yang sudah ditransformasi
@@ -95,9 +96,12 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
     let fetchError: string | null = null;
 
     try {
+        // Await params before accessing its properties (Next.js 15+)
+        const resolvedParams = await params;
+        
         // 3. PEMANGGILAN FUNGSI
         // Panggil "pelayan" (getCustomerOrderDetail) di server
-        const orderResult = await getCustomerOrderDetail(params.id);
+        const orderResult = await getCustomerOrderDetail(resolvedParams.id);
 
         if (!orderResult) {
             throw new Error("Pesanan tidak ditemukan.");
@@ -117,8 +121,8 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                     <h1 className="text-xl font-semibold text-red-500">Terjadi Kesalahan</h1>
                     <p className="text-gray-600 mt-2">{fetchError}</p>
-                    <Link href="/dashboard/RiwayatPesanan" className="text-blue-600 mt-4 inline-block">
-                        &larr; Kembali ke Riwayat Pesanan
+                    <Link href="/customer/dashboard" className="text-blue-600 mt-4 inline-block">
+                        &larr; Kembali ke Dasbor
                     </Link>
                 </div>
             </div>
@@ -136,11 +140,11 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
             
             <nav className="text-sm text-gray-500 mb-4" aria-label="Breadcrumb">
                 <ol className="list-none p-0 inline-flex space-x-2">
-                    <li><a href="#" className="text-blue-600 hover:underline">Beranda</a></li>
+                    <li><Link href="/" className="text-blue-600 hover:underline">Beranda</Link></li>
                     <li><span>&gt;</span></li>
-                    <li><a href="#" className="text-blue-600 hover:underline">Akun Pengguna</a></li>
+                    <li><Link href="/customer/account" className="text-blue-600 hover:underline">Akun Pengguna</Link></li>
                     <li><span>&gt;</span></li>
-                    <li><Link href="/dashboard/RiwayatPesanan" className="text-blue-600 hover:underline">Dasbor</Link></li>
+                    <li><Link href="/customer/dashboard" className="text-blue-600 hover:underline">Dasbor</Link></li>
                     <li><span>&gt;</span></li>
                     <li className="text-gray-700">Detail Pesanan</li>
                 </ol>
@@ -151,7 +155,7 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
 
                 {/* Header Detail Pesanan */}
                 <div className="flex justify-between items-center mb-6">
-                    <Link href="/dashboard/RiwayatPesanan" className="flex items-center text-lg font-medium text-gray-800 hover:text-blue-600 group">
+                    <Link href="/dashboard/riwayat-pesanan" className="flex items-center text-lg font-medium text-gray-800 hover:text-blue-600 group">
                         <ArrowLeftIcon className="h-5 w-5 mr-3 transition-transform group-hover:-translate-x-1" />
                         <span className="uppercase">Detail Pesanan</span>
                     </Link>
@@ -184,7 +188,7 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
 
                 {/* Order Activity (Sekarang dinamis dari 'order.comments') */}
                 <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-6">Order Activity</h3>
+                    <h3 className="text-lg font-semibold mb-6">Aktivitas Pesanan</h3>
                     <div className="relative">
                         <div className="absolute left-5 top-2 bottom-2 w-0.5 bg-gray-200" style={{ zIndex: 0 }}></div>
                         <ul className="space-y-8">
@@ -207,7 +211,7 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
 
                 {/* Daftar Produk (Sekarang dinamis dari 'order.items') */}
                 <div className="mb-8">
-                    <h3 className="text-lg font-semibold mb-4">Product ({productCount})</h3>
+                    <h3 className="text-lg font-semibold mb-4">Produk ({productCount})</h3>
                     <div className="overflow-x-auto">
                         <table className="min-w-full">
                             <thead className="bg-gray-100">
