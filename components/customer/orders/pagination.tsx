@@ -10,7 +10,7 @@ interface PaginationProps {
 export default function Pagination({ 
     currentPage, 
     lastPage, 
-    basePath = '/dashboard/riwayat-pesanan' 
+    basePath = '/customer/dashboard/order-history' 
 }: PaginationProps) {
     const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
     

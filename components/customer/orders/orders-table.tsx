@@ -73,7 +73,7 @@ export default function OrdersTable({
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         <Link 
-                                            href={`/dashboard/detail-pesanan/${order.id}`} 
+                                            href={`/customer/dashboard/order-detail/${order.id}`} 
                                             className="text-blue-600 hover:underline"
                                         >
                                             Lihat Detail &rarr;

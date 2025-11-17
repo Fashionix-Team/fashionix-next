@@ -155,7 +155,7 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
 
                 {/* Header Detail Pesanan */}
                 <div className="flex justify-between items-center mb-6">
-                    <Link href="/dashboard/riwayat-pesanan" className="flex items-center text-lg font-medium text-gray-800 hover:text-blue-600 group">
+                    <Link href="/customer/dashboard/order-history" className="flex items-center text-lg font-medium text-gray-800 hover:text-blue-600 group">
                         <ArrowLeftIcon className="h-5 w-5 mr-3 transition-transform group-hover:-translate-x-1" />
                         <span className="uppercase">Detail Pesanan</span>
                     </Link>
