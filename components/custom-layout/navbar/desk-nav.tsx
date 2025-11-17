@@ -1,11 +1,11 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import UserMenuPopover from "./user-menu-popover";
 
 export default function DeskNav() {
   // demo state just to make the cart & user dropdowns work
   const [cartOpen, setCartOpen] = useState(false);
-  const [userOpen, setUserOpen] = useState(false);
   const [items, setItems] = useState([
     {
       id: "cam",
@@ -94,7 +94,6 @@ export default function DeskNav() {
                   className="inline-flex rounded-md p-1.5 text-white/90 hover:text-white transition"
                   onClick={() => {
                     setCartOpen((v) => !v);
-                    setUserOpen(false);
                   }}
                   aria-haspopup="dialog"
                   aria-expanded={cartOpen}
@@ -276,134 +275,7 @@ export default function DeskNav() {
               </button>
 
               {/* User */}
-              <div className="relative">
-                <button
-                  id="showHiddenMenuTwo"
-                  className="rounded-md p-1.5 text-white/90 hover:text-white transition"
-                  onClick={() => {
-                    setUserOpen((v) => !v);
-                    setCartOpen(false);
-                  }}
-                  aria-haspopup="dialog"
-                  aria-expanded={userOpen}
-                >
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="text-white"
-                  >
-                    <path
-                      d="M16 20C20.4183 20 24 16.4183 24 12C24 7.58172 20.4183 4 16 4C11.5817 4 8 7.58172 8 12C8 16.4183 11.5817 20 16 20Z"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeMiterlimit="10"
-                    />
-                    <path
-                      d="M3.875 27.0001C5.10367 24.8716 6.87104 23.104 8.99944 21.875C11.1278 20.646 13.5423 19.999 16 19.999C18.4577 19.999 20.8722 20.646 23.0006 21.875C25.129 23.104 26.8963 24.8716 28.125 27.0001"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-
-                {userOpen && (
-                  <div
-                    id="hiddenWidgetTwo"
-                    className="absolute right-0 z-50 mt-3 w-[360px] rounded-xl border border-black/10 bg-white p-5 shadow-2xl"
-                    role="dialog"
-                  >
-                    <h2 className="mb-3 text-lg font-semibold text-gray-900">
-                      Sign in to your account
-                    </h2>
-
-                    <form action="#" className="space-y-4">
-                      <div>
-                        <label
-                          htmlFor="email"
-                          className="mb-2 block text-sm font-medium text-gray-700"
-                        >
-                          Email address
-                        </label>
-                        <input
-                          id="email"
-                          type="email"
-                          className="w-full rounded-md border border-black/10 bg-white px-3 py-2.5 text-gray-700 placeholder-[#25373F]/70 outline-none focus:ring-2 focus:ring-orange-400"
-                        />
-                      </div>
-
-                      <div>
-                        <div className="mb-2 flex items-center justify-between">
-                          <label
-                            htmlFor="password"
-                            className="text-sm font-medium text-gray-700"
-                          >
-                            Password
-                          </label>
-                          <a
-                            href="#"
-                            className="text-sm font-medium text-[#1B6392] hover:underline"
-                          >
-                            Forget Password
-                          </a>
-                        </div>
-
-                        <div className="relative">
-                          <input
-                            id="password"
-                            type="password"
-                            placeholder="password"
-                            className="w-full rounded-md border border-black/10 bg-white px-3 py-2.5 pr-10 text-gray-700 outline-none placeholder-[#25373F]/70 focus:ring-2 focus:ring-orange-400"
-                          />
-                          <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
-                            <i className="far fa-eye" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <button className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-orange-500 px-4 py-2.5 text-sm font-semibold text-[#191C1F] hover:bg-orange-400">
-                        Login
-                        <svg
-                          width="21"
-                          height="20"
-                          viewBox="0 0 21 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M3.625 10H17.375"
-                            stroke="#191C1F"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          ></path>
-                          <path
-                            d="M11.75 4.375L17.375 10L11.75 15.625"
-                            stroke="#191C1F"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          ></path>
-                        </svg>
-                      </button>
-
-                      <div className="space-y-2">
-                        <p className="text-sm text-gray-600">Don’t have account</p>
-                        <a
-                          href="#"
-                          className="inline-flex w-full items-center justify-center rounded-md border border-orange-500 px-4 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50"
-                        >
-                          Create account
-                        </a>
-                      </div>
-                    </form>
-                  </div>
-                )}
-              </div>
+              <UserMenuPopover />
             </div>
             {/* /widgets */}
           </div>

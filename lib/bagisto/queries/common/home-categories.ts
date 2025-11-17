@@ -9,6 +9,20 @@ export const getHomeCategoriesQuery = /* GraphQL */ `
       logoUrl
       name
       slug
+      children {
+        id
+        logoPath
+        logoUrl
+        name
+        slug
+        children {
+          id
+          logoPath
+          logoUrl
+          name
+          slug
+        }
+      }
     }
   }
 `;
