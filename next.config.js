@@ -12,6 +12,10 @@ const nextConfig = {
                 protocol: "http",
                 hostname: process.env.IMAGE_DOMAIN,
             },
+            {
+                protocol: "http",
+                hostname: "localhost",
+            },
             // Menambahkan konfigurasi remotePatterns untuk susercontent.com by robin
             {
                 protocol: "https",
