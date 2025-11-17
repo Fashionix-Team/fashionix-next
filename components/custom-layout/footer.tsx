@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default async function Footer() {
+export default function Footer() {
   return (
     <>
       {/* Footer Section Start */}
