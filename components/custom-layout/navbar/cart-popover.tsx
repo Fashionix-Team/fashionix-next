@@ -131,7 +131,7 @@ export default function CartPopover() {
                   <div className="mt-1 text-sm">
                     <span className="text-gray-700">{item.quantity} x</span>{" "}
                     <span className="font-semibold text-gray-900">
-                      ${parseFloat(item.price?.toString() || "0").toLocaleString()}
+                      Rp.{parseFloat(item.price?.toString() || "0").toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function CartPopover() {
         <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3">
           <p className="text-xs text-gray-600">Sub-Total</p>
           <p className="text-sm font-semibold text-gray-900">
-            ${subTotal.toLocaleString()} {cart?.cartCurrencyCode || "USD"}
+            Rp.{subTotal.toLocaleString()} {cart?.cartCurrencyCode || "IDR"}
           </p>
         </div>
 
