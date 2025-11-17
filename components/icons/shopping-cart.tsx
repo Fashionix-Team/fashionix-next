@@ -1,6 +1,4 @@
-import clsx from "clsx";
-
-export default function ShoppingCartIcon(props: React.SVGProps<SVGSVGElement>) {
+function ShoppingCartIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -18,3 +16,5 @@ export default function ShoppingCartIcon(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 };
+
+export default ShoppingCartIcon;

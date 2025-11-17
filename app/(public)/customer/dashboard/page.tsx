@@ -1,17 +1,10 @@
 import { getServerSession } from 'next-auth';
-// Pastikan path ini benar. Jika auth.ts mengekspor getAuthOptions, gunakan ini.
 import { authOptions } from '@/auth';
-
-// UBAH: Sesuaikan path impor komponen DashboardContent
 import DashboardContent from '@/components/customer/dashboard/dashboard-page'; 
+import { getDashboardSummary } from '@/lib/bagisto';
+import { redirect } from 'next/navigation';
 
-// Data Dummy untuk Ringkasan Dashboard (Ganti dengan data fetching aktual)
-const dummySummary = {
-  totalOrders: 5,
-  PENDINGOrders: 1,
-  defaultAddress: 'Jl. Contoh No. 123, Jakarta, 12345',
-  totalWishlist: 8,
-};
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Dashboard Pelanggan',
@@ -19,32 +12,33 @@ export const metadata = {
 };
 
 export default async function DashboardPage() {
-  // UBAH: Panggil fungsi getAuthOptions()
   const session = await getServerSession(authOptions);
+  const user = session?.user;
+  
+  if (!user) {
+    redirect('/customer/login');
+  }
 
-  // Untuk pengembangan: Buat pengguna dummy jika tidak ada sesi login
-  const dummyUser = {
-    id: 'dummy-user-123',
-    name: 'Rafly',
-    email: 'rafly@example.com',
-    firstName: 'Rafly',
-    lastName: 'User',
-    role: 'customer',
-    accessToken: 'dummy-token',
-    phone: '081234567890' // Tambahkan properti phone jika diperlukan
-  };
+  try {
+    const summaryResult = await getDashboardSummary();
 
-  // Gunakan pengguna dari sesi jika ada, jika tidak, gunakan pengguna dummy
-  const user = session?.user || dummyUser;
+    const summaryData = summaryResult || {
+      totalOrders: 0,
+      pendingOrders: 0,
+      completedOrders: 0,
+      defaultAddress: null,
+      totalWishlist: 0,
+      latestOrders: [],
+    };
 
-  // Di sini Anda mungkin akan melakukan fetching data ringkasan dashboard
-  // const summaryData = await getDashboardSummary(session.user.id);
-  const summaryData = dummySummary;
-
-  return (
-    <div className="container mx-auto px-4 py-10 lg:py-16">
-      <h1 className="text-3xl font-bold mb-8">Halo, {user.name || 'Pelanggan'}!</h1>
-      <DashboardContent user={user} summary={summaryData} />
-    </div>
-  );
+    return (
+      <div className="container mx-auto px-4 py-10 lg:py-16">
+        <h1 className="text-3xl font-bold mb-8">Halo, {user.firstName || 'Pelanggan'}!</h1>
+        <DashboardContent user={user} summary={summaryData as any} />
+      </div>
+    );
+  } catch (error) {
+    console.error("Failed to fetch dashboard summary:", error);
+    redirect('/customer/login');
+  }
 }

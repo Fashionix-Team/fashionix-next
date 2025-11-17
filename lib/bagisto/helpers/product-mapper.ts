@@ -30,6 +30,7 @@ export function mapBagistoProductToProduct(
     priceOriginal: hasDiscount ? regularPrice : undefined,
     reviews: "(0)", // Bagisto doesn't provide review count in this query
     categories: ["all"], // Default category, can be enhanced based on product data
+    urlKey: bagistoProduct.urlKey, // Add urlKey for API calls
   };
 }
 
