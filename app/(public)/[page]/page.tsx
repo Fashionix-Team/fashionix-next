@@ -12,7 +12,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   // No need to await params, it's already an object
   const { page: pageParams } = await params;
-  const page = await getPage({ urlKey: pageParams });
+  let page: any = null;
+  try {
+    page = await getPage({ urlKey: pageParams });
+  } catch (error) {
+    console.error("generateMetadata: failed to load page:", error);
+    return notFound();
+  }
 
   if (!page?.data?.length) return notFound();
 
@@ -36,7 +42,13 @@ export default async function Page({
 }) {
   // No need to await params, it's already an object
   const { page: pageParams } = await params;
-  const page = await getPage({ urlKey: pageParams });
+  let page: any = null;
+  try {
+    page = await getPage({ urlKey: pageParams });
+  } catch (error) {
+    console.error("Page: failed to load page data:", error);
+    return notFound();
+  }
 
   if (!page?.data?.length) return notFound();
 

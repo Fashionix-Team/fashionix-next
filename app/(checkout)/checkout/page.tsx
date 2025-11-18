@@ -10,7 +10,14 @@ export default async function Information({
 }) {
   const { step = "email" } = (await searchParams) as { [key: string]: string };
 
-  const countryList = await getCountryList();
+  let countryList: any = [];
+  try {
+    countryList = await getCountryList();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Checkout page: failed to load country list:", error);
+    countryList = [];
+  }
 
   return <CheckOut countries={countryList} step={step} />;
 }
