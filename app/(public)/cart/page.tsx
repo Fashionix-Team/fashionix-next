@@ -1,6 +1,6 @@
 import { getCart } from "@/lib/bagisto";
 import { redirect } from "next/navigation";
-import CartContent from "./cart-content";
+import CartContent from "@/components/cart/cart-content";
 
 export const metadata = {
   title: "Keranjang Belanja",

@@ -16,7 +16,9 @@ export default function CartSummary({ cart }: { cart: Cart }) {
   };
 
   const subtotal = cart.subTotal || 0;
-  const shipping = cart.selectedShippingRate?.price || 0;
+  const shipping = cart.selectedShippingRate?.price
+    ? parseFloat(cart.selectedShippingRate.price)
+    : 0;
   const grandTotal = cart.grandTotal || 0;
 
   return (
