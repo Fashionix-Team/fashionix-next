@@ -33,7 +33,6 @@ import { getCountryQuery, getPageQuery, getPagesQuery } from "./queries/page";
 import { getPaymentMethodsQuery } from "./queries/payment-methods";
 import { getFilterAttributesQuery } from "./queries/product/product-attributes";
 import { getProductInfoQuery } from "./queries/product/product-info";
-import { getProductDetailQuery } from "./queries/product/product-detail";
 import { getShippingMethodQuery } from "./queries/shipping-method";
 import {
   BagistoAddToCartOperation,
@@ -879,38 +878,6 @@ export async function getCollectionReviewProducts({
   }
 
   return res.body.data.allProducts.data[0];
-}
-
-export async function getProductDetail({
-  urlKey,
-}: {
-  urlKey: string;
-}): Promise<any> {
-  const input = [
-    { key: "url_key", value: urlKey },
-    { key: "limit", value: "1" }
-  ];
-
-  const res = await bagistoFetch<any>({
-    query: getProductDetailQuery,
-    variables: {
-      input,
-    },
-    tags: [TAGS.products],
-    cache: "no-store",
-  });
-
-  if (!isObject(res.body.data?.allProducts) || !isArray(res.body.data.allProducts.data)) {
-    return null;
-  }
-
-  const productData = res.body.data.allProducts.data[0];
-  
-  if (!productData) {
-    return null;
-  }
-
-  return productData;
 }
 
 export async function getCollectionHomeProducts({
