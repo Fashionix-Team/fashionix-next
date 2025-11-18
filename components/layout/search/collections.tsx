@@ -5,7 +5,19 @@ import FilterList from "./filter";
 
 import { getMenu } from "@/lib/bagisto";
 async function CollectionList() {
-  const collections = await getMenu("navbar-meus");
+  let collections = [];
+  try {
+    // getMenu is defensive but guard callers too
+    // eslint-disable-next-line no-await-in-loop
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    collections = await getMenu("navbar-meus");
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("CollectionList failed to load collections:", err);
+    collections = [];
+  }
+
   const menuData = [{ path: "/search", title: "All" }, ...collections];
 
   return <FilterList filterAttributes={menuData} />;

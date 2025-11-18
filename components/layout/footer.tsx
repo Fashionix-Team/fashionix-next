@@ -27,7 +27,14 @@ export default async function Footer() {
   const copyrightDate = 2010 + (currentYear > 2010 ? `-${currentYear}` : "");
   const skeleton =
     "w-full h-6 animate-pulse rounded bg-neutral-200 dark:bg-neutral-700";
-  const menu = await getThemeCustomization();
+  let menu: any = {};
+  try {
+    menu = await getThemeCustomization();
+  } catch (error) {
+    console.error("Footer: failed to load theme customization:", error);
+    menu = {};
+  }
+
   const copyrightName = COMPANY_NAME || SITE_NAME || "";
   const services = menu?.services_content?.[0];
 

@@ -25,11 +25,17 @@ const CategoryCarousel: FC<{
     : [];
 
   // Collections that start with `hidden-*` are hidden from the search page.
-  const categories = await getCollectionMenus({
-    inputs: filters,
-    getCategoryTree: false,
-    tag: "home-categories",
-  });
+  let categories: any = [];
+  try {
+    categories = await getCollectionMenus({
+      inputs: filters,
+      getCategoryTree: false,
+      tag: "home-categories",
+    });
+  } catch (error) {
+    console.error("CategoryCarousel: failed to load categories:", error);
+    categories = [];
+  }
 
   if (!isArray(categories)) return null;
 

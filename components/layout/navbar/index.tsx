@@ -15,7 +15,20 @@ import MobileSearch from "./mobile-search";
 import dynamic from "next/dynamic";
 
 export default async function Navbar() {
-  const menu = await getMenu(CACHE_KEY.headerMenus);
+  let menu = [];
+  try {
+    // getMenu now returns [] on error, but guard here as well
+    // to ensure the navbar never throws and breaks pages.
+    // eslint-disable-next-line no-await-in-loop
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    menu = await getMenu(CACHE_KEY.headerMenus);
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("Navbar failed to load menu:", err);
+    menu = [];
+  }
+
   const menuData = [{ id: "", path: "/search", title: "All" }, ...menu];
 
   return (

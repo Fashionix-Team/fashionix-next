@@ -691,19 +691,25 @@ export async function getCollectionProducts({
     ];
   }
 
-  const res = await bagistoFetch<BagistoCollectionProductsOperation>({
-    query: getCollectionProductQuery,
-    tags: [TAGS.collections, TAGS.products],
-    variables: {
-      input,
-    },
-  });
+  try {
+    const res = await bagistoFetch<BagistoCollectionProductsOperation>({
+      query: getCollectionProductQuery,
+      tags: [TAGS.collections, TAGS.products],
+      variables: {
+        input,
+      },
+    });
 
-  if (!res.body.data?.allProducts) {
+    if (!res.body.data?.allProducts) {
+      return [];
+    }
+
+    return reshapeProducts(res.body.data.allProducts.data);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("getCollectionProducts: failed to fetch collection products:", error);
     return [];
   }
-
-  return reshapeProducts(res.body.data.allProducts.data);
 }
 
 export async function getDashboardSummary(): Promise<any> {
@@ -777,21 +783,26 @@ export async function getAllProductUrls(): Promise<Product[]> {
     { key: "page", value: "1" },
     { key: "limit", value: "48" },
   ];
+  try {
+    const res = await fetch(`${process.env.BAGISTO_STORE_DOMAIN}/graphql`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: getProductsUrlQuery,
+        variables: {
+          input,
+        },
+      }),
+      cache: "no-store",
+    });
 
-  const res = await fetch(`${process.env.BAGISTO_STORE_DOMAIN}/graphql`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: getProductsUrlQuery,
-      variables: {
-        input,
-      },
-    }),
-    cache: "no-store",
-  });
-
-  const body = await res.json();
-  return body?.data?.allProducts?.data;
+    const body = await res.json();
+    return body?.data?.allProducts?.data || [];
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("getAllProductUrls: failed to fetch product urls:", error);
+    return [];
+  }
 }
 
 export async function getCollectionReviewProducts({
@@ -909,9 +920,10 @@ export async function getMenu(handle: string): Promise<Menu[]> {
         query: getMenuQuery,
         tags: [TAGS.collections],
         variables: { handle },
-      }).then((res) => {
-        const response =
-          res.body?.data?.homeCategories?.map(
+      })
+        .then((res) => {
+          const response =
+            res.body?.data?.homeCategories?.map(
             (item: {
               name: string;
               slug: string;
@@ -926,40 +938,52 @@ export async function getMenu(handle: string): Promise<Menu[]> {
                 .replace("/collections", "/search")
                 .replace("/pages", "/search")}`,
             })
-          ) || [];
+            ) || [];
 
-        lruCache.set(handle, response);
-      });
+          lruCache.set(handle, response);
+        })
+        .catch((err) => {
+          // Swallow background refresh errors but log for debugging
+          // eslint-disable-next-line no-console
+          console.error("Error refreshing menu cache:", err);
+        });
     }
 
     // Return cached (fresh or stale)
     return cached;
   }
 
-  // No cache at all → fetch fresh
-  const res = await bagistoFetch<BagistoMenuOperation>({
-    query: getMenuQuery,
-    tags: [TAGS.collections],
-    variables: { handle },
-  });
+  // No cache at all → fetch fresh (guarded)
+  try {
+    const res = await bagistoFetch<BagistoMenuOperation>({
+      query: getMenuQuery,
+      tags: [TAGS.collections],
+      variables: { handle },
+    });
 
-  const response =
-    res.body?.data?.homeCategories?.map((item) => ({
-      id: item.id,
-      title: item.name,
-      description: item.description,
-      metaTitle: item.metaTitle,
-      metaDescription: item.metaDescription,
-      metaKeywords: item.metaKeywords,
-      path: `/search/${item.slug
-        .replace(domain, "")
-        .replace("/collections", "/search")
-        .replace("/pages", "/search")}`,
-    })) || [];
+    const response =
+      res.body?.data?.homeCategories?.map((item) => ({
+        id: item.id,
+        title: item.name,
+        description: item.description,
+        metaTitle: item.metaTitle,
+        metaDescription: item.metaDescription,
+        metaKeywords: item.metaKeywords,
+        path: `/search/${item.slug
+          .replace(domain, "")
+          .replace("/collections", "/search")
+          .replace("/pages", "/search")}`,
+      })) || [];
 
-  lruCache.set(handle, response);
+    lruCache.set(handle, response);
 
-  return response;
+    return response;
+  } catch (err) {
+    // Log error and return empty list so pages don't crash
+    // eslint-disable-next-line no-console
+    console.error("Error fetching menu in getMenu:", err);
+    return [];
+  }
 }
 
 export async function getThemeCustomization(): Promise<{
@@ -1054,16 +1078,35 @@ export async function getProducts({
     input = [...filters, ...input];
   }
 
-  const res = await bagistoFetch<BagistoCollectionProductsOperation>({
-    query: getCollectionProductsQuery,
-    tags: [tag, TAGS.products],
-    isCookies: false,
-    variables: {
-      input,
-    },
-  });
+  try {
+    const res = await bagistoFetch<BagistoCollectionProductsOperation>({
+      query: getCollectionProductsQuery,
+      tags: [tag, TAGS.products],
+      isCookies: false,
+      variables: {
+        input,
+      },
+    });
 
-  if (!isArray(res.body.data.allProducts.data)) {
+    if (!isArray(res.body.data.allProducts.data)) {
+      return {
+        paginatorInfo: {
+          count: 0,
+          currentPage: 1,
+          lastPage: 1,
+          total: 12,
+        },
+        products: [],
+      };
+    }
+
+    return {
+      paginatorInfo: res.body.data.allProducts?.paginatorInfo,
+      products: reshapeProducts(res.body.data.allProducts.data),
+    };
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("getProducts: failed to fetch products:", error);
     return {
       paginatorInfo: {
         count: 0,
@@ -1074,11 +1117,6 @@ export async function getProducts({
       products: [],
     };
   }
-
-  return {
-    paginatorInfo: res.body.data.allProducts?.paginatorInfo,
-    products: reshapeProducts(res.body.data.allProducts.data),
-  };
 }
 
 export async function getFilterAttributes({
@@ -1086,26 +1124,38 @@ export async function getFilterAttributes({
 }: {
   categorySlug: string;
 }): Promise<any> {
-  const res = await bagistoFetch<BagistoCollectionCategoriesOperation>({
-    query: getFilterAttributesQuery,
-    variables: {
-      categorySlug,
-    },
-  });
+  try {
+    const res = await bagistoFetch<BagistoCollectionCategoriesOperation>({
+      query: getFilterAttributesQuery,
+      variables: {
+        categorySlug,
+      },
+    });
 
-  if (!isObject(res.body.data?.getFilterAttribute)) {
+    if (!isObject(res.body.data?.getFilterAttribute)) {
+      return {};
+    }
+
+    return res.body.data.getFilterAttribute;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("getFilterAttributes: failed to fetch filter attributes:", error);
     return {};
   }
-
-  return res.body.data.getFilterAttribute;
 }
 
 export async function getCountryList(): Promise<CountryArrayDataType[]> {
-  const res = await bagistoFetch<BagistoCountriesOperation>({
-    query: getCountryQuery,
-  });
+  try {
+    const res = await bagistoFetch<BagistoCountriesOperation>({
+      query: getCountryQuery,
+    });
 
-  return res.body?.data?.countries;
+    return res.body?.data?.countries || [];
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("getCountryList: failed to fetch country list:", error);
+    return [];
+  }
 }
 
 export async function getShippingMethod(): Promise<

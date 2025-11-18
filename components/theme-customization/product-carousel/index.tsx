@@ -29,10 +29,16 @@ const ProductCarousel: FC<ProductCarouselProps> = async ({
     ? isCleanFilter(options.filters)
     : [];
 
-  const products = await getCollectionHomeProducts({
-    filters,
-    tag: `ProductCarousel${sortOrder}`,
-  });
+  let products: any = [];
+  try {
+    products = await getCollectionHomeProducts({
+      filters,
+      tag: `ProductCarousel${sortOrder}`,
+    });
+  } catch (error) {
+    console.error("ProductCarousel: failed to load products:", error);
+    products = [];
+  }
 
   if (!products?.length) return null;
 

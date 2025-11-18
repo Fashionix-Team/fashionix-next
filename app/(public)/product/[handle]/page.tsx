@@ -21,10 +21,16 @@ import Grid from "@/components/grid";
 import HeroCarousel from "@/components/product/slider/hero-carousel";
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
-  const prooducts = await getAllProductUrls();
+  let prooducts: any[] = [];
+  try {
+    prooducts = await getAllProductUrls();
+  } catch (error) {
+    console.error("generateStaticParams: failed to load product urls:", error);
+    return [];
+  }
 
   return isObject(prooducts)
-    ? prooducts.map((post) => ({
+    ? prooducts.map((post: any) => ({
         handle: `${post.slug}?type=${post.type}`,
       }))
     : [];
@@ -42,11 +48,17 @@ export async function generateMetadata({
   const { handle } = await params;
   const { type } = await searchParams;
 
-  const product = await getCollectionProducts({
-    collection: handle,
-    type: type,
-    page: "product",
-  });
+  let product: any = null;
+  try {
+    product = await getCollectionProducts({
+      collection: handle,
+      type: type,
+      page: "product",
+    });
+  } catch (error) {
+    console.error("generateMetadata: failed to load product:", error);
+    return notFound();
+  }
 
   if (!product) return notFound();
   const data = product[0];
@@ -91,13 +103,19 @@ export default async function ProductPage({
   const { handle } = await params;
   const { type } = await searchParams;
 
-  const product = await getCollectionProducts({
-    collection: handle,
-    type: type,
-    page: "product",
-  });
+  let product: any = null;
+  try {
+    product = await getCollectionProducts({
+      collection: handle,
+      type: type,
+      page: "product",
+    });
+  } catch (error) {
+    console.error("ProductPage: failed to load product:", error);
+    return notFound();
+  }
 
-  if (!product[0]) return notFound();
+  if (!product?.[0]) return notFound();
   const data = product[0];
   const productJsonLd = {
     "@context": BASE_SCHEMA_URL,
@@ -108,7 +126,7 @@ export default async function ProductPage({
     offers: {
       "@type": PRODUCT_OFFER_TYPE,
       availability:
-        data?.inventories?.[0]?.qty || 0 > 0
+        (Number(data?.inventories?.[0]?.qty) || 0) > 0
           ? `${BASE_SCHEMA_URL}/InStock`
           : `${BASE_SCHEMA_URL}/OutOfStock`,
       priceCurrency: data?.priceHtml.currencyCode,
@@ -117,58 +135,74 @@ export default async function ProductPage({
     },
   };
 
-  return (
-    <>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productJsonLd),
-        }}
-        type="application/ld+json"
-      />
-      <div className="flex flex-col gap-y-4 rounded-lg pb-0 pt-4 sm:gap-y-6 md:py-7.5 lg:flex-row lg:gap-8">
-        <div className="h-full w-full max-w-[885px]">
-          <Suspense fallback={<ProductDetailSkeleton />}>
-            {isArray(data?.cacheGalleryImages) ? (
-              <HeroCarousel
-                images={
-                  data?.cacheGalleryImages?.map((image) => ({
-                    src: image?.originalImageUrl || "",
-                    altText: image?.originalImageUrl || "",
-                  })) || []
-                }
-              />
-            ) : (
-              <HeroCarousel
-                images={[
-                  {
-                    src: NOT_IMAGE,
-                    altText: "product image",
-                  },
-                ]}
-              />
-            )}
-          </Suspense>
+  try {
+    return (
+      <>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(productJsonLd),
+          }}
+          type="application/ld+json"
+        />
+        <div className="flex flex-col gap-y-4 rounded-lg pb-0 pt-4 sm:gap-y-6 md:py-7.5 lg:flex-row lg:gap-8">
+          <div className="h-full w-full max-w-[885px]">
+            <Suspense fallback={<ProductDetailSkeleton />}>
+                {isArray(data?.cacheGalleryImages) ? (
+                <HeroCarousel
+                  images={
+                    data?.cacheGalleryImages?.map((image: any) => ({
+                      src: image?.originalImageUrl || "",
+                      altText: image?.originalImageUrl || "",
+                    })) || []
+                  }
+                />
+              ) : (
+                <HeroCarousel
+                  images={[
+                    {
+                      src: NOT_IMAGE,
+                      altText: "product image",
+                    },
+                  ]}
+                />
+              )}
+            </Suspense>
+          </div>
+          <div className="basis-full lg:basis-4/6">
+            <ProductDescription product={product} slug={handle} />
+            <div className="mt-8 border-t pt-6">
+              <h2 className="text-xl font-semibold mb-4">Beri Rating Produk Ini</h2>
+              <RatingStars criteria="Kualitas Bahan" />
+              <RatingStars criteria="Desain" />
+              <RatingStars criteria="Kenyamanan" />
+              <RatingStars criteria="Harga" />
+            </div>
+          </div>
         </div>
-        <div className="basis-full lg:basis-4/6">
-          <ProductDescription product={product} slug={handle} />
-          <div className="mt-8 border-t pt-6">
-            <h2 className="text-xl font-semibold mb-4">Beri Rating Produk Ini</h2>
-            <RatingStars criteria="Kualitas Bahan" />
-            <RatingStars criteria="Desain" />
-            <RatingStars criteria="Kenyamanan" />
-            <RatingStars criteria="Harga" />
-        </div>
+
+        <Suspense fallback={<RelatedProductSkeleton />}>
+          <RelatedProductsList relatedProduct={data?.relatedProducts || []} />
+        </Suspense>
+      </>
+    );
+  } catch (renderError) {
+    // eslint-disable-next-line no-console
+    console.error("ProductPage: render error:", renderError);
+    return (
+      <div className="container mx-auto py-24">
+        <div className="mx-auto max-w-3xl rounded-md border border-neutral-200 bg-white p-8 text-center">
+          <h1 className="text-2xl font-semibold">Oh no!</h1>
+          <p className="mt-4 text-neutral-600 text-sm">
+            Terjadi masalah saat menampilkan produk ini. Silakan coba lagi atau
+            kembali ke halaman sebelumnya.
+          </p>
         </div>
       </div>
-
-      <Suspense fallback={<RelatedProductSkeleton />}>
-        <RelatedProducts relatedProduct={data?.relatedProducts || []} />
-      </Suspense>
-    </>
-  );
+    );
+  }
 }
 
-async function RelatedProducts({
+async function RelatedProductsList({
   relatedProduct,
 }: {
   relatedProduct: RelatedProducts[];
@@ -185,7 +219,7 @@ async function RelatedProducts({
         </p>
       </div>
       <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {relatedProduct.map((item, index) => (
+        {relatedProduct.map((item: any, index: number) => (
           <ProductCard
             key={index}
             currency={item?.priceHtml?.currencyCode}

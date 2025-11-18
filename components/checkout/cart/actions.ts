@@ -18,7 +18,13 @@ export async function addItem(
   const cartId = cookieStore.get(BAGISTO_SESSION)?.value;
 
   if (cartId) {
-    await getCart();
+    try {
+      await getCart();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("addItem: failed to refresh cart:", error);
+      // allow flow to continue; we'll create a new cart cookie if needed
+    }
   } else {
     cookieStore.set(BAGISTO_SESSION, generateCookieValue(40), {
       httpOnly: true,

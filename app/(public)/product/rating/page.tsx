@@ -9,13 +9,19 @@ export default function RatingModal() {
   const [hover, setHover] = useState<number>(0);
   const [feedback, setFeedback] = useState<string>("");
 
+ const [status, setStatus] = useState<string | null>(null);
+ const [submitting, setSubmitting] = useState(false);
+
  const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
 
   if (rating === 0) {
-    alert("Silakan beri penilaian dulu!");
+    setStatus("Silakan beri penilaian dulu!");
     return;
   }
+
+  setSubmitting(true);
+  setStatus(null);
 
   try {
     const res = await fetch("/api/rating", {
@@ -31,14 +37,16 @@ export default function RatingModal() {
     const data = await res.json();
 
     if (res.ok) {
-      alert("Ulasan berhasil dikirim!");
+      setStatus("Ulasan berhasil dikirim!");
       setRating(0);
       setFeedback("");
     } else {
-      alert("Gagal: " + data.error);
+      setStatus(`Gagal: ${data?.error || "unknown error"}`);
     }
   } catch (err) {
-    alert("Terjadi kesalahan server.");
+    setStatus("Terjadi kesalahan server.");
+  } finally {
+    setSubmitting(false);
   }
 };
 

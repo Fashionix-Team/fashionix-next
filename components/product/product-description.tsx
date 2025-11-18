@@ -20,10 +20,16 @@ export async function ProductDescription({
   const data = product[0];
   const configurableProductData = data?.configutableData?.attributes || [];
   const configurableProductIndexData = data?.configutableData?.index || [];
-  const moreDetails = await getCollectionReviewProducts({
-    collection: slug,
-    page: "product",
-  });
+  let moreDetails: any = { additionalData: [], description: "", reviews: [], averageRating: 0 };
+  try {
+    moreDetails = await getCollectionReviewProducts({
+      collection: slug,
+      page: "product",
+    });
+  } catch (error) {
+    console.error("ProductDescription: failed to load review details:", error);
+    moreDetails = { additionalData: [], description: "", reviews: [], averageRating: 0 };
+  }
 
   return (
     <>

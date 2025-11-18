@@ -47,14 +47,27 @@ export default async function SearchPage({
     value,
   }));
 
-  const data = await getProducts({
-    sortKey,
-    query: searchValue,
-    filters,
-    tag: "search",
-  });
+  let data: any = { products: [], paginatorInfo: { total: 0, currentPage: 1 } };
+  try {
+    data = await getProducts({
+      sortKey,
+      query: searchValue,
+      filters,
+      tag: "search",
+    });
+  } catch (error) {
+    console.error("SearchPage: failed to load products:", error);
+    data = { products: [], paginatorInfo: { total: 0, currentPage: 1 } };
+  }
 
-  const productAttributes = await getFilterAttributes({ categorySlug: "" });
+  let productAttributes: any = {};
+  try {
+    productAttributes = await getFilterAttributes({ categorySlug: "" });
+  } catch (error) {
+    console.error("SearchPage: failed to load filter attributes:", error);
+    productAttributes = {};
+  }
+
   const sortOrders = productAttributes?.sortOrders;
   const filterAttributes = productAttributes?.filterAttributes;
   const products = data?.products || [];

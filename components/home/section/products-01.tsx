@@ -9,10 +9,16 @@ export default async function Products01Section() {
     { key: "sort", value: "name-asc" },
   ];
 
-  const bagistoProducts = await getCollectionHomeProducts({
-    filters,
-    tag: "products-section-01",
-  });
+  let bagistoProducts = [];
+  try {
+    bagistoProducts = await getCollectionHomeProducts({
+      filters,
+      tag: "products-section-01",
+    });
+  } catch (error) {
+    console.error("Products01Section: failed to load products:", error);
+    bagistoProducts = [];
+  }
 
   // Convert Bagisto products to our Product type
   const products = mapBagistoProducts(bagistoProducts);

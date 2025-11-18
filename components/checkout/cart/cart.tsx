@@ -7,6 +7,8 @@ import CartItemAccordion from "./cart-item-accordian";
 import { GridTileImage } from "@/components/grid/tile";
 import Price from "@/components/price";
 import Prose from "@/components/prose";
+import { DeleteItemButton } from "@/components/cart/delete-item-button";
+import { EditItemQuantityButton } from "@/components/cart/edit-item-quantity-button";
 import { DEFAULT_OPTION } from "@/lib/constants";
 import { isObject } from "@/lib/type-guards";
 import { createUrl } from "@/lib/utils";
@@ -85,12 +87,23 @@ export default function Cart({ cart }: { cart: BagistoCart }) {
                         </div>
                       </div>
                     </Link>
-                    <div className="hidden h-16 xl:block">
+                    <div className="hidden h-16 xl:flex xl:flex-col xl:items-end">
                       <Price
                         amount={item.total}
                         className="space-y-2 text-start font-outfit text-lg font-medium xl:text-right"
                         currencyCode={"USD"}
                       />
+
+                      <div className="mt-2 flex items-center gap-x-2">
+                        <DeleteItemButton item={item} />
+                        <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200">
+                          <EditItemQuantityButton item={item} type="minus" />
+                          <p className="w-6 text-center">
+                            <span className="w-full text-sm">{item.quantity}</span>
+                          </p>
+                          <EditItemQuantityButton item={item} type="plus" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </li>

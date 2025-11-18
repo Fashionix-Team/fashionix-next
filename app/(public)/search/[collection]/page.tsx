@@ -35,7 +35,17 @@ export async function generateMetadata({
   params: Promise<{ collection: string }>;
 }): Promise<Metadata> {
   const { collection: categorySlug } = await params;
-  const collections = await getMenu("catalog");
+  let collections = [];
+  try {
+    // eslint-disable-next-line no-await-in-loop
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    collections = await getMenu("catalog");
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("generateMetadata failed to load menu:", err);
+    collections = [];
+  }
   const categoryItem = collections.find(
     (item) => item.path == `/search/${categorySlug}`
   );
@@ -59,7 +69,17 @@ export default async function CategoryPage({
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { collection: categorySlug } = await params;
-  const collections = await getMenu("catalog");
+  let collections = [];
+  try {
+    // eslint-disable-next-line no-await-in-loop
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    collections = await getMenu("catalog");
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("CategoryPage failed to load menu:", err);
+    collections = [];
+  }
 
   const categoryItem = collections.find(
     (item) => item.path == `/search/${categorySlug}`
@@ -74,19 +94,31 @@ export default async function CategoryPage({
     value,
   }));
 
-  const data = await getProducts({
-    categoryId,
-    sortKey,
-    filters,
-    tag: categorySlug,
-  });
+  let data: any = { products: [], paginatorInfo: { total: 0, currentPage: 1 } };
+  try {
+    data = await getProducts({
+      categoryId,
+      sortKey,
+      filters,
+      tag: categorySlug,
+    });
+  } catch (error) {
+    console.error("CategoryPage: failed to load products:", error);
+    data = { products: [], paginatorInfo: { total: 0, currentPage: 1 } };
+  }
 
-  const productAttributes = await getFilterAttributes({
-    categorySlug: categorySlug,
-  });
+  let productAttributes: any = {};
+  try {
+    productAttributes = await getFilterAttributes({
+      categorySlug: categorySlug,
+    });
+  } catch (error) {
+    console.error("CategoryPage: failed to load filter attributes:", error);
+    productAttributes = {};
+  }
   const sortOrders = productAttributes?.sortOrders;
   const filterAttributes = productAttributes?.filterAttributes;
-  const products = data?.products;
+  const products = data?.products || [];
   const paginatorInfo = data?.paginatorInfo;
   const { total, currentPage } = paginatorInfo;
 

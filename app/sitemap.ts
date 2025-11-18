@@ -86,40 +86,52 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date().toISOString(),
   }));
 
-  const collectionsPromise = getHomeCategories().then((collections) =>
-    collections.map((collection) => ({
-      url: `${baseUrl}${collection.path}`,
-      lastModified: collection.updatedAt ,
-    })),
-  );
-
-   const productsPromise = getProducts().then(({products}) => 
-    products.map((product) => ({
-      url: `${baseUrl}/product/${product.urlKey}?type=${product.type}`,
-      lastModified: product?.updatedAt || ''
-    }))
-  );
-
-   const pagesPromise = getPages().then(
-    (pages) =>
-      pages?.data?.map((page) => ({
-        url: `${baseUrl}/${page?.translations?.[0]?.urlKey || ''}`,
-        lastModified: page?.updatedAt || ''
-      }))
-  );
-
-  let fetchedRoutes: Route[] = [];
+  // Fetch collections, products, and pages separately and guard each call
+  const fetchedRoutes: Route[] = [];
 
   try {
-    fetchedRoutes = (await Promise.all([
-      collectionsPromise, 
-      pagesPromise,
-      productsPromise
-      ])).flat();
-  } catch (error) {
-    throw JSON.stringify(error, null, 2);
+    const collections = await getHomeCategories();
+    if (Array.isArray(collections) && collections.length) {
+      const collectionRoutes = collections.map((collection) => ({
+        url: `${baseUrl}${collection.path}`,
+        lastModified: collection.updatedAt,
+      }));
+      fetchedRoutes.push(...collectionRoutes);
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("sitemap: failed to fetch collections:", err);
   }
 
+  try {
+    const productsData = await getProducts();
+    const products = productsData?.products || [];
+    if (Array.isArray(products) && products.length) {
+      const productRoutes = products.map((product) => ({
+        url: `${baseUrl}/product/${product.urlKey}?type=${product.type}`,
+        lastModified: product?.updatedAt || "",
+      }));
+      fetchedRoutes.push(...productRoutes);
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("sitemap: failed to fetch products:", err);
+  }
+
+  try {
+    const pages = await getPages();
+    const pagesList = pages?.data || [];
+    if (Array.isArray(pagesList) && pagesList.length) {
+      const pageRoutes = pagesList.map((page) => ({
+        url: `${baseUrl}/${page?.translations?.[0]?.urlKey || ""}`,
+        lastModified: page?.updatedAt || "",
+      }));
+      fetchedRoutes.push(...pageRoutes);
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.error("sitemap: failed to fetch pages:", err);
+  }
 
   return [...routesMap, ...fetchedRoutes];
 }

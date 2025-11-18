@@ -25,10 +25,17 @@ export const ThreeItemGrid: FC<{
     ? isCleanFilter(options?.filters || [], "filter")
     : [];
   // Collections that start with `hidden-*` are hidden from the search page.
-  const homepageItems = await getCollectionHomeProducts({
-    filters,
-    tag: "ThreeItemGridItem",
-  });
+  let homepageItems: any = [];
+  try {
+    homepageItems = await getCollectionHomeProducts({
+      filters,
+      tag: "ThreeItemGridItem",
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("ThreeItemGrid: failed to load homepage items:", error);
+    return null;
+  }
 
   if (!homepageItems[0] || !homepageItems[1] || !homepageItems[2]) return null;
 
