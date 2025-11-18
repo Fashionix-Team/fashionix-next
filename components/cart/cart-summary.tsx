@@ -62,7 +62,7 @@ export default function CartSummary({ cart }: { cart: Cart }) {
         href="/checkout"
         className="mt-6 flex w-full items-center justify-center gap-2 rounded-md bg-orange-500 px-6 py-3 text-base font-medium text-white transition-colors hover:bg-orange-600"
       >
-        LANJUT KE PEMBAYARAN
+        LANJUT KE CHECKOUT
         <ArrowRightIcon className="h-5 w-5" />
       </Link>
 
