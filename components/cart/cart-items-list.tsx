@@ -28,7 +28,9 @@ export default function CartItemsList({ cart }: { cart: Cart }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          qty: [{ cartItemId, quantity: newQuantity }],
+          input: {
+            qty: [{ cartItemId, quantity: newQuantity }],
+          },
         }),
       });
 
