@@ -5,7 +5,6 @@ import type { TabId, Product } from "@/types/product";
 import { TABS } from "@/data/products";
 import { cn } from "@heroui/react";
 import ProductCard from "./product-card";
-import ProductActions, { IconButton } from "./product-actions";
 import Link from "next/link";
 
 function WishlistIcon() {
@@ -85,6 +84,27 @@ function ViewIcon() {
   );
 }
 
+function ActionButton({ 
+  ariaLabel, 
+  children, 
+  onClick 
+}: { 
+  ariaLabel: string; 
+  children: React.ReactNode;
+  onClick?: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={ariaLabel}
+      onClick={onClick}
+      className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-gray-900 transition hover:bg-orange-400 hover:text-white"
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function ProductsTabs({ title, products }: {
   title: string;
   products: Product[];
@@ -143,19 +163,11 @@ export default function ProductsTabs({ title, products }: {
             <ProductCard
               key={product.id}
               product={product}
-              actions={
-                <ProductActions>
-                  <IconButton ariaLabel="Add to wishlist">
-                    <WishlistIcon />
-                  </IconButton>
-                  <IconButton ariaLabel="Add to cart">
-                    <CartIcon />
-                  </IconButton>
-                  <IconButton ariaLabel="Quick view">
-                    <ViewIcon />
-                  </IconButton>
-                </ProductActions>
-              }
+              actionButtons={{
+                wishlist: <ActionButton ariaLabel="Add to wishlist"><WishlistIcon /></ActionButton>,
+                cart: <ActionButton ariaLabel="Add to cart"><CartIcon /></ActionButton>,
+                quickview: <ViewIcon />
+              }}
             />
           ))}
         </div>
