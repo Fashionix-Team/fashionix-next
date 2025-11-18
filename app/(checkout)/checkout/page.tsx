@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import CheckoutPage from "@/components/checkout/checkout-page";
-import { getCountryList, getCart } from "@/lib/bagisto";
+import { getCountryList, getCart, getAccountInfo } from "@/lib/bagisto";
 import { redirect } from "next/navigation";
 
 export default async function Information({
@@ -21,6 +21,10 @@ export default async function Information({
     redirect("/cart");
   }
 
+  // Get user account info with addresses
+  const accountInfo = await getAccountInfo();
+  const addresses = accountInfo?.addresses || [];
+
   const countryList = await getCountryList();
 
   return (
@@ -29,6 +33,7 @@ export default async function Information({
       step={step}
       user={session?.user}
       cart={cart}
+      addresses={addresses}
     />
   );
 }

@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { type CountryArrayDataType as Country, type Cart } from "@/lib/bagisto/types";
-import { BillingForm } from './billing-form';
+import { type CountryArrayDataType as Country, type Cart, type CustomerAddressDetailTypes } from "@/lib/bagisto/types";
+import { AddressSelector } from './address-selector';
 import { PaymentMethods } from './payment-methods';
 import { OrderSummary } from './order-summary';
 import { type User, type BillingFormData } from './types';
@@ -13,28 +13,23 @@ interface CheckoutPageProps {
   step: string;
   user?: User | null;
   cart: Cart;
+  addresses: CustomerAddressDetailTypes[];
 }
 
-export default function CheckoutPage({ countries, step, user, cart }: CheckoutPageProps) {
+export default function CheckoutPage({ step, user, cart, addresses }: CheckoutPageProps) {
   // Setup react-hook-form
   const {
-    register,
     handleSubmit,
-    formState: { errors, isSubmitting }
+    formState: { isSubmitting }
   } = useForm<BillingFormData>({
-    defaultValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      address: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: countries.length > 0 ? countries[0].id : '',
-    },
     mode: 'onBlur'
   });
+
+  // State untuk alamat yang dipilih
+  const defaultAddress = addresses.find(addr => addr.defaultAddress);
+  const [selectedAddressId, setSelectedAddressId] = useState<string>(
+    defaultAddress?.id || addresses[0]?.id || ''
+  );
 
   // State untuk metode pembayaran
   const [paymentMethod, setPaymentMethod] = useState<string>('');
@@ -45,13 +40,15 @@ export default function CheckoutPage({ countries, step, user, cart }: CheckoutPa
   const total = parseFloat(cart.grandTotal);
 
   // Handle submit form
-  const onSubmit = (data: BillingFormData) => {
+  const onSubmit = () => {
+    const selectedAddress = addresses.find(addr => addr.id === selectedAddressId);
+
     // Logika untuk memproses checkout
-    console.log('Form submitted:', data);
+    console.log('Selected address:', selectedAddress);
     console.log('Payment method:', paymentMethod);
 
     // TODO: Implement checkout API call
-    // - Save billing address using Bagisto mutation
+    // - Save billing/shipping address using Bagisto mutation
     // - Save payment method
     // - Place order
   };
@@ -73,12 +70,12 @@ export default function CheckoutPage({ countries, step, user, cart }: CheckoutPa
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Kolom Kiri - Form Informasi Penagihan & Metode Pembayaran */}
+          {/* Kolom Kiri - Alamat Pengiriman & Metode Pembayaran */}
           <div className="lg:col-span-2">
-            <BillingForm
-              register={register}
-              errors={errors}
-              countries={countries}
+            <AddressSelector
+              addresses={addresses}
+              selectedAddressId={selectedAddressId}
+              onAddressSelect={setSelectedAddressId}
             />
 
             <PaymentMethods
