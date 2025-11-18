@@ -56,7 +56,6 @@ export const SIGNUP_IMG = "/image/sign-in.webp";
 export const SIGNIN_IMG = "/image/login.webp";
 export const FORGET_PASSWORD_IMG = "/image/forget-password.webp";
 export const NOT_IMAGE = "/image/placeholder.webp";
-export const SEPATU_PLACEHOLDER = "/image/sepatu-placeholder.webp";
 
 export const variants = {
   hidden: { opacity: 0, y: 50 },
