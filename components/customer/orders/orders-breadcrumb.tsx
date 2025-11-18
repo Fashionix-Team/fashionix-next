@@ -20,7 +20,7 @@ export default function OrdersBreadcrumb() {
         <li>
           <span>&gt;</span>
         </li>
-        <li className="text-gray-700">Dasbor</li>
+        <li className="text-gray-700">Dashboard</li>
       </ol>
     </nav>
   );

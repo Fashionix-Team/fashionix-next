@@ -5,10 +5,12 @@ import { useMemo } from "react";
 
 import { MapIcon } from "@/components/icons/map-icon";
 import  EarphoneIcon from "@/components/icons/service/earphone-icon";
-import ShoppingCartIcon from "@/components/icons/shopping-cart"; 
+// ShoppingCartIcon is no longer needed here; OrdersTable provides row-level UI
 import { RocketIcon } from "@/components/icons/roket";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { CubeIcon } from "@/components/icons/cube";
+import { OrdersTable } from '@/components/customer/orders';
+import type { CustomerOrder } from '@/lib/bagisto/types/order';
 
 // Interface tetap sama
 interface DashboardUser {
@@ -33,6 +35,27 @@ interface DashboardContentProps {
     latestOrders: LatestOrder[];
    };
 }
+
+/**
+ * Mengubah label status dari backend agar sesuai dengan UI.
+ * (Fungsi ini diambil dari kode baru Anda)
+ */
+const transformOrderLabel = (order: CustomerOrder): CustomerOrder => {
+  let uiStatusLabel = order.statusLabel || 'Unknown';
+  
+  if (order.status === 'pending') {
+      uiStatusLabel = 'Sedang Dikemas'; 
+  } else if (order.status === 'processing') {
+      uiStatusLabel = 'Dalam Pengiriman';
+  } else if (order.status === 'completed' || order.status === 'closed') {
+      uiStatusLabel = 'Terkirim';
+  }
+
+  return {
+    ...order,
+    statusLabel: uiStatusLabel 
+  };
+};
 
 // Interface Pesanan Terbaru
 interface LatestOrder {
@@ -82,33 +105,40 @@ const SummaryListCard = ({ title, value, linkHref, icon, bgColor }: { title: str
 );
 
 // Komponen Menampilkan Daftar Pesanan Terbaru
+
 const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) => {
-    const getStatusColor = (status: LatestOrder['status']) => {
-        switch (status) {
-            case 'COMPLETED': return 'text-green-400';
-            case 'PENDING': return 'text-yellow-400';
-            case 'IN PROGRESS': return 'text-orange-400';
-            case 'CANCELED': return 'text-red-400';
-            default: return 'text-gray-800';
-        }
+    // Convert LatestOrder[] to CustomerOrder[] for re-usable OrdersTable
+    const mapToCustomerOrders = (items: LatestOrder[]): CustomerOrder[] => {
+        return items.map((o) => ({
+            id: o.id,
+            incrementId: o.orderId,
+            status: o.status,
+            statusLabel:
+                o.status === 'PENDING'
+                    ? 'Sedang Dikemas'
+                    : o.status === 'IN PROGRESS'
+                    ? 'Dalam Pengiriman'
+                    : o.status === 'COMPLETED'
+                    ? 'Terkirim'
+                    : o.status === 'CANCELED'
+                    ? 'Dibatalkan'
+                    : o.status,
+            createdAt: o.date,
+            formattedPrice: { grandTotal: o.total },
+            grandTotal: undefined,
+            totalQtyOrdered: o.productCount,
+        } as unknown as CustomerOrder));
     };
 
-    // Fungsi untuk memformat tanggal secara konsisten
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    };
-
+    const transformedOrders = mapToCustomerOrders(latestOrders).map(transformOrderLabel);
+    
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
             {/* Header Section */}
             <div className="flex justify-between px-6 py-4 items-center mb-2 pb-2 dark:border-gray-700">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">PESANAN TERBARU</h2>
                     <Link 
-                    href="/customer/orders" 
+                    href="/customer/dashboard/order-history" 
                     className="text-orange-400 dark:text-blue-400 hover:text-blue-700 text-sm font-medium inline-flex items-center"
                 >
                     Lihat Semua
@@ -118,84 +148,17 @@ const LatestOrdersSection = ({ latestOrders }: { latestOrders: LatestOrder[] }) 
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    {/* Table Header */}
-                    <thead className="bg-gray-200 dark:bg-gray-900">
-                        <tr>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                ID Pesanan
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Status
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Tanggal
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Total
-                            </th>
-                            <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                                Tindakan
-                            </th>
-                        </tr>
-                    </thead>
-
-                    {/* Table Body */}
-                    <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                        {latestOrders.map((order) => (
-                            <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-750">
-                                {/* Order ID */}
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        <div className="flex-shrink-0 h-5 w-5 text-gray-400">
-                                            <ShoppingCartIcon />
-                                        </div>
-                                        <div className="ml-4">
-                                            <div className="text-sm font-medium text-gray-900 dark:text-white">
-                                                {order.orderId}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                {/* Status */}
-                                <td className="px-6 py-4 whitespace-nowrap">
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(order.status)}`}>
-                                        {order.status}
-                                    </span>
-                                </td>
-
-                                {/* Date */}
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                    {formatDate(order.date)}
-                                </td>
-
-                                {/* Total */}
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                                    {order.total} ({order.productCount} Products)
-                                </td>
-
-                                {/* Action */}
-                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    <Link 
-                                        href={`/customer/orders/${order.id}`}
-                                        className="text-blue-400 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
-                                    >
-                                        Lihat Detail
-                                    </Link>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                {/* Use shared OrdersTable component for consistency */}
+                <OrdersTable
+                    orders={transformedOrders}
+                    currentPage={1}
+                    lastPage={1}
+                    total={latestOrders.length}
+                />
+                {/* OrdersTable includes header, body and pagination */}
             </div>
             
-            {/* Jika tidak ada pesanan */}
-            {latestOrders.length === 0 && (
-                <div className="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                    Anda belum memiliki pesanan.
-                </div>
-            )}
+            {/* OrdersTable already displays an empty state; no duplicate message here */}
         </div>
     );
 };
@@ -290,7 +253,7 @@ export default function DashboardContent({ user, summary }: DashboardContentProp
             {/* 2. SECTION: Alamat Default */}
             <DashboardCard
                 title="ALAMAT"
-                linkHref="/customer/addresses"
+                linkHref="/customer/account"
                 linkText="Edit Alamat"
             >
                 <div className="space-y-4">
