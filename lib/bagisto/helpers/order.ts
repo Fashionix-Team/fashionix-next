@@ -30,7 +30,10 @@ export async function getCustomerOrders(
     return res.body.data.ordersList;
   } catch (error) {
     console.error("Error fetching customer orders:", error);
-    throw error;
+    // Re-throw with more context
+    throw new Error(
+      `Gagal memuat riwayat pesanan. ${error instanceof Error ? error.message : 'Silakan coba lagi.'}`
+    );
   }
 }
 
