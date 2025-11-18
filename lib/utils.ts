@@ -230,3 +230,39 @@ export function getInitials(name?: string) {
   const initials = words.map((w) => w[0]).join(""); // JDS
   return initials.substring(0, 2).toUpperCase(); // JD
 }
+
+/**
+ * Fix Bagisto image URL by ensuring it includes the correct port
+ * Bagisto API returns URLs like http://localhost/storage/...
+ * but the backend runs on http://localhost:8000/storage/...
+ * @param url - The image URL from Bagisto API
+ * @returns Fixed URL with correct port
+ */
+export function fixBagistoImageUrl(url: string | undefined): string {
+  if (!url) return "";
+
+  const bagistoDomain = process.env.BAGISTO_STORE_DOMAIN || "http://localhost:8000";
+
+  // If URL already has the full domain with port, return as is
+  if (url.startsWith(bagistoDomain)) {
+    return url;
+  }
+
+  // If URL starts with http://localhost/ (without port), fix it
+  if (url.startsWith("http://localhost/")) {
+    return url.replace("http://localhost/", `${bagistoDomain}/`);
+  }
+
+  // If URL starts with https://localhost/ (without port), fix it
+  if (url.startsWith("https://localhost/")) {
+    return url.replace("https://localhost/", `${bagistoDomain}/`);
+  }
+
+  // If URL is a relative path like /storage/..., prepend the full domain
+  if (url.startsWith("/")) {
+    return `${bagistoDomain}${url}`;
+  }
+
+  // Return original URL if no fix needed
+  return url;
+}
