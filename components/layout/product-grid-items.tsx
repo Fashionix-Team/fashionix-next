@@ -16,13 +16,25 @@ export default function ProductGridItems({
       product?.priceHtml?.finalPrice || product?.priceHtml?.regularPrice || "0";
     const currency = product?.priceHtml?.currencyCode;
 
+    // Prepare images array for QuickView
+    const images = product?.cacheGalleryImages?.map((img) => ({
+      url: img.originalImageUrl || img.largeImageUrl || img.mediumImageUrl || NOT_IMAGE,
+      altText: product.name || "Product image"
+    })) || product?.images?.map((img) => ({
+      url: img.url || NOT_IMAGE,
+      altText: img.altText || product.name || "Product image"
+    })) || [{ url: imageUrl, altText: product.name || "Product image" }];
+
     return (
       <ProductCard
         key={index}
         currency={currency}
         imageUrl={imageUrl}
         price={price}
-        product={product}
+        product={{
+          ...product,
+          images: images
+        }}
       />
     );
   });

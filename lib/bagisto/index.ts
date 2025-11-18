@@ -1119,6 +1119,27 @@ export async function getProducts({
   }
 }
 
+// --- Export helper functions ---
+export { getCustomerOrders, getCustomerOrderDetail } from "./helpers/order";
+
+// --- Export order types ---
+export type {
+  CustomerOrder,
+  PaginatorInfo,
+  GetCustomerOrdersResponse,
+  FilterCustomerOrderInput,
+  OrderAddress,
+  OrderItemProduct,
+  OrderItem,
+  OrderComment,
+  CustomerOrderDetail,
+  GetCustomerOrderDetailResponse,
+} from "./types/order";
+
+// --- Selesai Definisi Tipe ---
+
+
+
 export async function getFilterAttributes({
   categorySlug,
 }: {
