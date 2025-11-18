@@ -5,6 +5,7 @@ export const GET_CUSTOMER_ORDER_DETAIL_QUERY = /* GraphQL */ `
       # Info Dasar (source 72-74)
       id
       incrementId
+      status
       statusLabel
       createdAt
       formattedPrice {
