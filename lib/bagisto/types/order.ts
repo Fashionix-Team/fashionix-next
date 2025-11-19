@@ -46,6 +46,7 @@ export interface OrderAddress {
 }
 
 export interface OrderItemProduct {
+  id: string;
   name: string;
   sku: string;
   categories: {
