@@ -441,6 +441,8 @@ export async function addCheckoutAddress(input: any): Promise<any> {
     cache: "no-store",
   });
 
+  console.log('addCheckoutAddress response:', JSON.stringify(res.body.data.saveCheckoutAddresses, null, 2));
+
   return reshapeShippingAddress(res.body.data.saveCheckoutAddresses);
 }
 
@@ -1143,7 +1145,7 @@ export async function getShippingMethod(): Promise<
     return undefined;
   }
 
-  return res.body.data.shippingMethods;
+  return res.body.data.shippingMethods.shippingMethods;
 }
 
 // This is called from `app/api/revalidate.ts` so providers can control revalidation logic.
