@@ -155,28 +155,10 @@ export default async function ProductPage({
         </nav>
       </div>
 
-      <div className="container mx-auto px-4">
-        {/* --- BAGIAN ATAS: TAB DESKRIPSI & FITUR (Sesuai Gambar) --- */}
-        <div className="mb-12 border border-gray-200 rounded-sm p-6">
-        
-          {/* Content: Grid 4 Kolom (50% Deskripsi, 25% Fitur, 25% Pengiriman) */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 text-sm text-gray-600">
-            
-            {/* Kolom 1: Deskripsi Teks (Lebar Double / 50%) */}
-            <div className="lg:col-span-2">
-               <h3 className="font-bold text-gray-900 mb-3 uppercase text-xs tracking-wider">DESKRIPSI</h3>
-               <div 
-                 dangerouslySetInnerHTML={{ __html: data?.description || '<p>Deskripsi produk belum tersedia.</p>' }} 
-                 className="leading-relaxed text-justify" 
-               />
-            </div>
-
-          </div>
-        </div>
-
+      <div className="container mx-auto px-4">        
         {/* --- BAGIAN BAWAH: GAMBAR PRODUK & DETAIL PEMBELIAN --- */}
         <div className="flex flex-col gap-8 lg:flex-row mb-12">
-          {/* Left: Image Gallery - 50% */}
+          {/* Left: Image Gallery - 50% */} 
           <div className="w-full lg:w-1/2 border border-gray-100 p-4 rounded-md">
             <Suspense fallback={<ProductDetailSkeleton />}>
               {isArray(data?.cacheGalleryImages) ? (
