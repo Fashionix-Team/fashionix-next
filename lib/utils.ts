@@ -2,8 +2,41 @@ import { ReadonlyURLSearchParams } from "next/navigation";
 
 import { AddressDataTypes, CartItem, FilterDataTypes } from "./bagisto/types";
 import { isArray, isObject } from "./type-guards";
+import { NOT_IMAGE } from "./constants";
 
 import { ReviewDatatypes } from "@/components/product/producr-more-detail";
+
+/**
+ * Helper function to validate and fix image URLs from backend
+ * @param url - Image URL that might be relative or undefined
+ * @returns Valid image URL or placeholder
+ */
+export const getValidImageUrl = (url: string | undefined): string => {
+  if (!url || url === 'undefined' || url.trim() === '') {
+    return NOT_IMAGE;
+  }
+  
+  // If it's already a full URL (http:// or https://), return as is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+  
+  // If it's a path from backend storage, prepend backend URL
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://fashionix-lara.test';
+  if (url.startsWith('/storage/') || url.startsWith('storage/')) {
+    const cleanPath = url.startsWith('/') ? url : `/${url}`;
+    return `${backendUrl}${cleanPath}`;
+  }
+  
+  // If it starts with /, it's a local path
+  if (url.startsWith('/')) {
+    return url;
+  }
+  
+  // Otherwise, prepend /
+  return `/${url}`;
+};
+
 export const createUrl = (
   pathname: string,
   params: URLSearchParams | ReadonlyURLSearchParams
