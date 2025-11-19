@@ -5,7 +5,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 export default function CheckoutSuccessPage() {
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-center px-4 py-10">
+    <div className="w-full min-h-full flex flex-col items-center justify-center px-4 py-10">
 
       {/* Box */}
       <div className="bg-white shadow-md rounded-lg w-full max-w-2xl py-10 px-6 flex flex-col items-center text-center">
