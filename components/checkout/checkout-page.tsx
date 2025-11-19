@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 import { type CountryArrayDataType as Country, type Cart, type CustomerAddressDetailTypes, type ShippingArrayDataType } from "@/lib/bagisto/types";
 import { AddressSelector } from './address-selector';
 import { PaymentMethods } from './payment-methods';
@@ -19,6 +20,8 @@ interface CheckoutPageProps {
 }
 
 export default function CheckoutPage({ step, user, cart, addresses, paymentMethods }: CheckoutPageProps) {
+  const router = useRouter();
+  
   // Setup react-hook-form
   const {
     handleSubmit,
@@ -162,9 +165,9 @@ export default function CheckoutPage({ step, user, cart, addresses, paymentMetho
       console.log('Order placed successfully:', orderResult);
       setOrderSuccess(true);
       
-      // Redirect to dashboard after 1 second
+      // Redirect to success page after 1 second
       setTimeout(() => {
-        window.location.href = '/customer/dashboard';
+        router.push('/checkout/success');
       }, 1000);
       
     } catch (error: any) {
