@@ -14,9 +14,10 @@ interface CheckoutPageProps {
   user?: User | null;
   cart: Cart;
   addresses: CustomerAddressDetailTypes[];
+  paymentMethods?: any[];
 }
 
-export default function CheckoutPage({ step, user, cart, addresses }: CheckoutPageProps) {
+export default function CheckoutPage({ step, user, cart, addresses, paymentMethods }: CheckoutPageProps) {
   // Setup react-hook-form
   const {
     handleSubmit,
@@ -81,6 +82,7 @@ export default function CheckoutPage({ step, user, cart, addresses }: CheckoutPa
             <PaymentMethods
               selectedMethod={paymentMethod}
               onMethodSelect={setPaymentMethod}
+              methods={paymentMethods}
             />
           </div>
 

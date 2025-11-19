@@ -1,6 +1,7 @@
-import { LayoutProvider } from "@/components/custom-layout";
-import Navbar from "@/components/custom-layout/navbar";
 import { ReactNode } from "react";
+import Navbar from "@/components/custom-layout/navbar";
+import { LayoutProvider } from "@/components/custom-layout/layout-context";
+
 export default async function RootLayout({
   children,
 }: {
