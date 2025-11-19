@@ -105,7 +105,10 @@ export type BagistoPaymentDataType = {
       discountedSubTotal: string;
       baseDiscountedSubTotal: string;
     };
-    selectedShippingRate: {};
+    selectedShippingRate: {
+      price?: string;
+      method?: string;
+    };
     payment: {
       id: string;
       method: string;

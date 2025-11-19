@@ -12,7 +12,7 @@ const checkAuthPages = (pathName: string) => {
 };
 
 export const config = {
-  matcher: ["/customer/:path*"],
+  matcher: ["/customer/:path*", "/checkout/:path*"],
 };
 
 export default withAuth(
