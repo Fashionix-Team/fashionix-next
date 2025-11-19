@@ -50,6 +50,7 @@ export const GET_CUSTOMER_ORDER_DETAIL_QUERY = /* GraphQL */ `
         }
         product {
           # (source 135)
+          id
           categories {
             # (source 136, 172)
             name

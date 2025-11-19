@@ -1,15 +1,65 @@
-import React, { ElementType } from 'react';
+"use client";
+
+import React, { ElementType, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-// --- Impor digabungkan dari kedua file ---
-import { getCustomerOrderDetail } from '@/lib/bagisto/helpers/order'; // Dari kode baru
-import { CustomerOrderDetail } from '@/lib/bagisto/types/order'; // Dari kode baru
-import { NOT_IMAGE } from '@/lib/constants'; // Dari file asli
+import { CustomerOrderDetail } from '@/lib/bagisto/types/order';
+import { NOT_IMAGE } from '@/lib/constants';
 import {
     CheckCircleIcon, UserIcon, MapPinIcon, MapIcon,
     ClipboardDocumentCheckIcon, ClipboardIcon,
     ArchiveBoxIcon, TruckIcon, CheckBadgeIcon, ArrowLeftIcon
-} from '@heroicons/react/24/outline'; // Dari kode baru (lebih lengkap)
+} from '@heroicons/react/24/outline';
+import RatingModal from '@/components/customer/rating-modal';
+import { fetchOrderDetail } from './actions';
+
+/**
+ * Interface untuk transformed order data
+ */
+interface TransformedActivity {
+    text: string;
+    time: string;
+    completed: boolean;
+    icon: string;
+}
+
+interface TransformedProduct {
+    id: string;
+    productId: string;
+    name: string;
+    category: string;
+    price: string;
+    qty: number;
+    subtotal: string;
+    imageUrl: string;
+}
+
+interface TransformedAddress {
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    state: string;
+    postcode: string;
+    country: string;
+    phone: string;
+    email: string;
+}
+
+interface TransformedOrderData {
+    id: string;
+    placedOn: string;
+    total: string;
+    statusKey: string;
+    expectedDelivery: string;
+    statusLabel: string;
+    activities: TransformedActivity[];
+    products: TransformedProduct[];
+    billingAddress: TransformedAddress;
+    shippingAddress: TransformedAddress;
+    notes: string;
+}
+
 
 /**
  * Komponen ActivityIcon
@@ -42,7 +92,7 @@ const ActivityIcon = ({ iconName, completed }: { iconName: string, completed: bo
  * Fungsi "Adapter" transformOrderData
  * (Diambil dari kode baru karena lebih canggih, DENGAN perbaikan NOT_IMAGE)
  */
-function transformOrderData(order: CustomerOrderDetail) {
+function transformOrderData(order: CustomerOrderDetail): TransformedOrderData {
     
     // 1. Transformasi 'activities' dari 'comments' (Logika baru)
     const activities = order.comments.map(comment => {
@@ -76,6 +126,7 @@ function transformOrderData(order: CustomerOrderDetail) {
     // 2. Transformasi 'products' dari 'items'
     const products = order.items.map(item => ({
         id: item.id,
+        productId: item.product.id,
         name: item.name,
         category: item.product.categories[0]?.name.toUpperCase() || 'PRODUK',
         price: item.formattedPrice.price || '0',
@@ -118,32 +169,53 @@ function transformOrderData(order: CustomerOrderDetail) {
 
 
 type DetailPesananPageProps = {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 };
 
-// --- Komponen Halaman Utama (Server Component) ---
-export default async function DetailPesananPage({ params }: DetailPesananPageProps) {
-    
-    let orderData;
-    let fetchError: string | null = null;
+// --- Komponen Halaman Utama (Client Component) ---
+export default function DetailPesananPage({ params }: DetailPesananPageProps) {
+    const [orderData, setOrderData] = useState<TransformedOrderData | null>(null);
+    const [fetchError, setFetchError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
 
-    // Blok try...catch diambil dari file asli (lebih aman dengan 'await params')
-    try {
-        // Await params before accessing its properties (Next.js 15+)
-        const resolvedParams = await params;
-        
-        // Panggil "pelayan" (getCustomerOrderDetail) di server
-        const orderResult = await getCustomerOrderDetail(resolvedParams.id);
-
-        if (!orderResult) {
-            throw new Error("Pesanan tidak ditemukan.");
+    useEffect(() => {
+        async function loadOrderData() {
+            try {
+                setIsLoading(true);
+                // Await params before accessing its properties (Next.js 15+)
+                const resolvedParams = await params;
+                
+                // Call server action to fetch order detail
+                const result = await fetchOrderDetail(resolvedParams.id);
+                
+                if (result.error || !result.data) {
+                    throw new Error(result.error || "Pesanan tidak ditemukan.");
+                }
+                
+                // Panggil fungsi transformOrderData
+                const transformedData = transformOrderData(result.data);
+                setOrderData(transformedData);
+            } catch (e: any) {
+                setFetchError(e.message || "Gagal memuat detail pesanan.");
+            } finally {
+                setIsLoading(false);
+            }
         }
-        
-        // Panggil fungsi transformOrderData (versi baru yang sudah digabung)
-        orderData = transformOrderData(orderResult);
 
-    } catch (e: any) {
-        fetchError = e.message || "Gagal memuat detail pesanan.";
+        loadOrderData();
+    }, [params]);
+
+    // Loading state
+    if (isLoading) {
+        return (
+            <div className="p-4 md:p-8 bg-gray-50 min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Memuat detail pesanan...</p>
+                </div>
+            </div>
+        );
     }
 
     // Tampilkan pesan error jika fetch gagal
@@ -229,9 +301,12 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
                         <ArrowLeftIcon className="h-5 w-5 mr-3 transition-transform group-hover:-translate-x-1" />
                         <span className="uppercase">Detail Pesanan</span>
                     </Link>
-                    <a href="#" className="text-sm text-orange-500 font-medium hover:text-orange-600">
+                    <button
+                        onClick={() => setIsRatingModalOpen(true)}
+                        className="text-sm text-orange-500 font-medium hover:text-orange-600 transition-colors hover:cursor-pointer"
+                    >
                         Beri Penilaian +
-                    </a>
+                    </button>
                 </div>
 
                 <hr className="mb-6" />
@@ -380,6 +455,19 @@ export default async function DetailPesananPage({ params }: DetailPesananPagePro
                 </div>
                 
             </div>
+
+            {/* Rating Modal */}
+            <RatingModal
+                isOpen={isRatingModalOpen}
+                onClose={() => setIsRatingModalOpen(false)}
+                orderId={order.id}
+                products={order.products.map((p) => ({
+                    id: p.productId,
+                    name: p.name,
+                    category: p.category,
+                    imageUrl: p.imageUrl,
+                }))}
+            />
         </div>
     );
 }
