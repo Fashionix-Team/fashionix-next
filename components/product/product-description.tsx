@@ -13,8 +13,8 @@ export function ProductDescription({
 }: {
   product: BagistoProductInfo[];
 }) {
-  const [quantity, setQuantity] = useState(1);
-  const data = product[0];
+  const [quantity, setQuantity] = useState<number>(1);
+  const data = product?.[0];
   const configurableProductData = data?.configutableData?.attributes || [];
   const configurableProductIndexData = data?.configutableData?.index || [];
 
@@ -36,9 +36,7 @@ export function ProductDescription({
             <StarIcon
               key={star}
               className={`h-5 w-5 ${
-                star <= Math.floor(averageRating)
-                  ? "text-orange-400"
-                  : "text-gray-300"
+                star <= Math.floor(averageRating) ? "text-orange-400" : "text-gray-300"
               }`}
             />
           ))}
@@ -52,9 +50,7 @@ export function ProductDescription({
       <div className="flex items-baseline gap-3">
         <Price
           amount={
-            data?.priceHtml?.finalPrice ||
-            data?.priceHtml?.regularPrice ||
-            "0"
+            data?.priceHtml?.finalPrice || data?.priceHtml?.regularPrice || "0"
           }
           className="text-3xl font-bold text-neutral-900 dark:text-neutral-100"
           currencyCode={data?.priceHtml?.currencyCode || ""}
@@ -100,12 +96,10 @@ export function ProductDescription({
               type="number"
               value={quantity}
               onChange={(e) =>
-                setQuantity(
-                  Math.max(1, parseInt(e.target.value) || 1)
-                )
+                setQuantity(Math.max(1, parseInt(e.target.value) || 1))
               }
               className="w-16 border-x border-neutral-300 bg-transparent px-3 py-2 text-center dark:border-neutral-600"
-              min="1"
+              min={1}
             />
 
             <button
