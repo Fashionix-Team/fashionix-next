@@ -1,8 +1,16 @@
-import RatingStars from "@/components/product/rating-starts";
 import type { RelatedProducts } from "@/lib/bagisto/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import Link from "next/link";
+import { 
+  ChevronRightIcon,
+  ShieldCheckIcon,
+  TruckIcon,
+  ArrowPathIcon,
+  ChatBubbleLeftRightIcon,
+  CreditCardIcon
+} from "@heroicons/react/24/outline";
 import {
   ProductDetailSkeleton,
   RelatedProductSkeleton,
@@ -34,8 +42,6 @@ export async function generateStaticParams() {
     : [];
 }
 
-// Multiple versions of this page will be statically generated
-// using the `params` returned by `generateStaticParams`
 export async function generateMetadata({
   params,
   searchParams,
@@ -122,7 +128,7 @@ export default async function ProductPage({
   };
 
   return (
-    <>
+    <div className="bg-white">
       <script
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(productJsonLd),
@@ -131,54 +137,87 @@ export default async function ProductPage({
       />
       
       {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-gray-600 mb-6 py-4">
-        <a href="/" className="hover:text-gray-900">Beranda</a>
-        <span className="mx-2">›</span>
-        <a href="/search" className="hover:text-gray-900">Toko</a>
-        <span className="mx-2">›</span>
-        <a href="/search" className="hover:text-gray-900">Sepatu dan Topi</a>
-        <span className="mx-2">›</span>
-        <span className="text-gray-900">Fashion</span>
-        <span className="mx-2">›</span>
-        <span className="text-gray-900">Produksi</span>
-      </nav>
+      <div className="container mx-auto px-4">
+        <nav className="flex items-center gap-2 text-xs sm:text-sm text-neutral-500 dark:text-neutral-400 py-4 bg-[#F3F4F6] px-4 rounded-md mb-6">
+          <Link href="/" className="hover:text-neutral-900">
+            Beranda
+          </Link>
+          <ChevronRightIcon className="h-3 w-3" />
+          <Link href="/toko" className="hover:text-neutral-900">
+            Toko
+          </Link>
+          <ChevronRightIcon className="h-3 w-3" />
+          <span className="text-neutral-900 font-medium">Tampilan Grid Toko</span>
+          <ChevronRightIcon className="h-3 w-3" />
+          <span className="text-neutral-900 font-medium">Fashion</span>
+          <ChevronRightIcon className="h-3 w-3" />
+          <span className="text-blue-500 font-medium">{data?.name || "Pakaian"}</span>
+        </nav>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-8">
-        {/* Left Column - Image Gallery */}
-        <div className="w-full">
-          <Suspense fallback={<ProductDetailSkeleton />}>
-            {isArray(data?.cacheGalleryImages) ? (
-              <HeroCarousel
-                images={
-                  data?.cacheGalleryImages?.map((image) => ({
-                    src: image?.originalImageUrl || "",
-                    altText: image?.originalImageUrl || "",
-                  })) || []
-                }
-              />
-            ) : (
-              <HeroCarousel
-                images={[
-                  {
-                    src: NOT_IMAGE,
-                    altText: "product image",
-                  },
-                ]}
-              />
-            )}
-          </Suspense>
+      <div className="container mx-auto px-4">
+        {/* --- BAGIAN ATAS: TAB DESKRIPSI & FITUR (Sesuai Gambar) --- */}
+        <div className="mb-12 border border-gray-200 rounded-sm p-6">
+        
+          {/* Content: Grid 4 Kolom (50% Deskripsi, 25% Fitur, 25% Pengiriman) */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 text-sm text-gray-600">
+            
+            {/* Kolom 1: Deskripsi Teks (Lebar Double / 50%) */}
+            <div className="lg:col-span-2">
+               <h3 className="font-bold text-gray-900 mb-3 uppercase text-xs tracking-wider">DESKRIPSI</h3>
+               <div 
+                 dangerouslySetInnerHTML={{ __html: data?.description || '<p>Deskripsi produk belum tersedia.</p>' }} 
+                 className="leading-relaxed text-justify" 
+               />
+            </div>
+
+          </div>
         </div>
 
-        {/* Right Column - Product Details */}
-        <div className="w-full">
-          <ProductDescription product={product} slug={handle} />
+        {/* --- BAGIAN BAWAH: GAMBAR PRODUK & DETAIL PEMBELIAN --- */}
+        <div className="flex flex-col gap-8 lg:flex-row mb-12">
+          {/* Left: Image Gallery - 50% */}
+          <div className="w-full lg:w-1/2 border border-gray-100 p-4 rounded-md">
+            <Suspense fallback={<ProductDetailSkeleton />}>
+              {isArray(data?.cacheGalleryImages) ? (
+                <HeroCarousel
+                  images={
+                    data?.cacheGalleryImages?.map((image) => ({
+                      src: image?.originalImageUrl || "",
+                      altText: image?.originalImageUrl || "",
+                    })) || []
+                  }
+                />
+              ) : (
+                <HeroCarousel
+                  images={[
+                    {
+                      src: NOT_IMAGE,
+                      altText: "product image",
+                    },
+                  ]}
+                />
+              )}
+            </Suspense>
+          </div>
+
+          {/* Right Section: Info Produk & Tombol Beli - 50% */}
+          <div className="flex w-full flex-col gap-6 lg:w-1/2">
+            {/* Product Info */}
+            <div className="flex-1">
+              <ProductDescription product={product} />
+            </div>
+          </div>
         </div>
       </div>
 
-      <Suspense fallback={<RelatedProductSkeleton />}>
-        <RelatedProducts relatedProduct={data?.relatedProducts || []} />
-      </Suspense>
-    </>
+      {/* Related Products */}
+      <div className="container mx-auto px-4">
+        <Suspense fallback={<RelatedProductSkeleton />}>
+          <RelatedProducts relatedProduct={data?.relatedProducts || []} />
+        </Suspense>
+      </div>
+    </div>
   );
 }
 
@@ -190,15 +229,14 @@ async function RelatedProducts({
   if (!relatedProduct.length) return null;
 
   return (
-    <div className="flex flex-col gap-y-10 py-8 sm:py-12 lg:py-20">
-      <div className="flex flex-col gap-y-4 font-outfit">
-        <h2 className="text-4xl font-semibold">Related Products</h2>
-        <p className="dark:b-neutral-300 font-normal text-black/[60%] dark:text-neutral-300">
-          Discover the latest trends! Fresh products just added—shop new styles,
-          tech, and essentials before they&apos;re gone.
+    <div className="flex flex-col gap-y-10 py-8 sm:py-12 lg:py-20 border-t border-gray-200">
+      <div className="flex flex-col gap-y-4 font-outfit text-center">
+        <h2 className="text-3xl font-bold text-gray-900">Produk Terkait</h2>
+        <p className="font-normal text-gray-500">
+           Temukan tren terbaru! Produk baru saja ditambahkan.
         </p>
       </div>
-      <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {relatedProduct.map((item, index) => (
           <ProductCard
             key={index}
