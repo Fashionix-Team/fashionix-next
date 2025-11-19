@@ -42,15 +42,10 @@ export interface BillingFormProps {
   countries: CountryArrayDataType[];
 }
 
-export interface PaymentMethod {
-  id: string;
-  name: string;
-}
-
 export interface PaymentMethodsProps {
   selectedMethod: string;
   onMethodSelect: (_methodId: string) => void;
-  methods?: PaymentMethod[];
+  methods?: any[]; // Array dari backend dengan struktur: method, methodTitle, description, sort, image
 }
 
 export interface OrderSummaryProps {

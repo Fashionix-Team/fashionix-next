@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 import CheckoutPage from "@/components/checkout/checkout-page";
-import { getCountryList, getCart, getAccountInfo } from "@/lib/bagisto";
+import { getCountryList, getCart, getAccountInfo, getPaymentMethod } from "@/lib/bagisto";
 import { redirect } from "next/navigation";
 
 export default async function Information({
@@ -27,6 +27,11 @@ export default async function Information({
 
   const countryList = await getCountryList();
 
+  // Get payment methods from backend
+  // Default shipping method bisa disesuaikan berdasarkan yang dipilih user
+  const shippingMethod = cart?.selectedShippingRate?.method || "flatrate_flatrate";
+  const paymentMethods = await getPaymentMethod({ shippingMethod });
+
   return (
     <CheckoutPage
       countries={countryList}
@@ -34,6 +39,7 @@ export default async function Information({
       user={session?.user}
       cart={cart}
       addresses={addresses}
+      paymentMethods={paymentMethods}
     />
   );
 }
