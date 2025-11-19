@@ -1190,7 +1190,7 @@ export async function getShippingMethod(): Promise<
     return undefined;
   }
 
-  return res.body.data.shippingMethods;
+  return res.body.data.shippingMethods.shippingMethods;
 }
 
 // This is called from `app/api/revalidate.ts` so providers can control revalidation logic.

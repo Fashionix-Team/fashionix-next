@@ -1050,12 +1050,22 @@ export type ShippingArrayDataType = {
     formattedPrice: string;
     basePrice: number;
     formattedBasePrice: string;
-  };
+  } | {
+    code: string;
+    label: string;
+    price: number;
+    formattedPrice: string;
+    basePrice: number;
+    formattedBasePrice: string;
+  }[];
 };
 
 export type BagistoCheckoutOperation = {
   data: {
-    shippingMethods: ShippingArrayDataType[];
+    shippingMethods: {
+      message: string;
+      shippingMethods: ShippingArrayDataType[];
+    };
   };
 };
 

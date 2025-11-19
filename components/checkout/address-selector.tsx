@@ -21,7 +21,7 @@ export function AddressSelector({
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-semibold">Alamat Pengiriman</h2>
         <Link
-          href="/customer/account/address"
+          href="/customer/account/addresses"
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors text-sm font-medium"
         >
           <PlusIcon className="w-4 h-4" />
