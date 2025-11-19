@@ -441,8 +441,6 @@ export async function addCheckoutAddress(input: any): Promise<any> {
     cache: "no-store",
   });
 
-  console.log('addCheckoutAddress response:', JSON.stringify(res.body.data.saveCheckoutAddresses, null, 2));
-
   return reshapeShippingAddress(res.body.data.saveCheckoutAddresses);
 }
 

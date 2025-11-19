@@ -51,11 +51,6 @@ export async function POST(request: NextRequest) {
     console.log('Saving checkout addresses:', JSON.stringify(input, null, 2));
 
     const result = await addCheckoutAddress({ input });
-
-    console.log('Save address result:', result ? 'Success' : 'Failed');
-    console.log('Result keys:', Object.keys(result || {}));
-    console.log('Shipping methods:', result?.shippingMethods);
-    console.log('Shipping methods count:', result?.shippingMethods?.length || 0);
     
     return NextResponse.json({
       success: true,
