@@ -98,6 +98,53 @@ type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
   : never;
 
+// Helper function to retry fetch with exponential backoff
+async function retryFetch(
+  fn: () => Promise<Response>,
+  retries: number = 2,
+  delay: number = 1000
+): Promise<Response> {
+  try {
+    return await fn();
+  } catch (error) {
+    if (retries === 0) throw error;
+    
+    // Check if it's a network error that might be transient
+    const isRetriable = error instanceof TypeError || 
+                       (error instanceof Error && error.message.includes('fetch failed'));
+    
+    if (!isRetriable) throw error;
+    
+    await new Promise(resolve => setTimeout(resolve, delay));
+    return retryFetch(fn, retries - 1, delay * 2);
+  }
+}
+
+// Helper function to add timeout to fetch
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  timeout: number = 30000
+): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timeout - server took too long to respond');
+    }
+    throw error;
+  }
+}
+
 export async function bagistoFetch<T>({
   cache = "force-cache", // Always fetch fresh data
   headers,
@@ -126,7 +173,7 @@ export async function bagistoFetch<T>({
     const session = await getServerSession(authOptions);
     const accessToken = session?.user?.accessToken;
 
-    const result = await fetch(endpoint, {
+    const result = await retryFetch(() => fetchWithTimeout(endpoint, {
       method: "POST",
       headers: {
         // Gabungkan header yang masuk dengan header default.
@@ -150,7 +197,7 @@ export async function bagistoFetch<T>({
         revalidate: cache === "no-store" ? 0 : 60,
         ...(tags && { tags }),
       },
-    });
+    }));
 
     const body = await result.json();
 
@@ -1081,6 +1128,27 @@ export async function getProducts({
   };
 }
 
+// --- Export helper functions ---
+export { getCustomerOrders, getCustomerOrderDetail } from "./helpers/order";
+
+// --- Export order types ---
+export type {
+  CustomerOrder,
+  PaginatorInfo,
+  GetCustomerOrdersResponse,
+  FilterCustomerOrderInput,
+  OrderAddress,
+  OrderItemProduct,
+  OrderItem,
+  OrderComment,
+  CustomerOrderDetail,
+  GetCustomerOrderDetailResponse,
+} from "./types/order";
+
+// --- Selesai Definisi Tipe ---
+
+
+
 export async function getFilterAttributes({
   categorySlug,
 }: {
@@ -1122,7 +1190,7 @@ export async function getShippingMethod(): Promise<
     return undefined;
   }
 
-  return res.body.data.shippingMethods;
+  return res.body.data.shippingMethods.shippingMethods;
 }
 
 // This is called from `app/api/revalidate.ts` so providers can control revalidation logic.

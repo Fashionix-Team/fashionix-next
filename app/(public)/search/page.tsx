@@ -10,8 +10,13 @@ import MobileFilter from "@/components/layout/search/filter/modile-filter";
 import { isArray } from "@/lib/type-guards";
 import Pagination from "@/components/elements/pagination";
 import CategoryDetail from "@/components/layout/search/category-detail.tsx";
+import Breadcrumb from "@/components/layout/search/breadcrumb";
+import FilterSidebar from "@/components/layout/search/filter/sidebar";
+import SearchHeader from "@/components/layout/search/search-header";
+import SearchField from "@/components/layout/search/search-field";
+import ActiveFilters from "@/components/layout/search/active-filters";
 const ProductGridItems = dynamic(
-  () => import("@/components/layout/product-grid-items"),
+  () => import("@/components/layout/product-grid-items-compact"),
   {
     ssr: true,
   }
@@ -61,49 +66,72 @@ export default async function SearchPage({
   const paginatorInfo = data?.paginatorInfo;
   const { total, currentPage } = paginatorInfo;
 
+  // Check if products array is valid and has items
+  const hasProducts = isArray(products) && products.length > 0;
+  const actualTotal = hasProducts ? total : 0;
+
   return (
-    <>
-      <CategoryDetail
-        categoryItem={{
-          description: `<h1>All Top Products</h1> <p>${searchValue ? searchValue : ""}</p>`,
-        }}
+    <div className="container mx-auto px-4 py-6">
+      {/* Breadcrumb */}
+      <Breadcrumb
+        items={[
+          { label: "Semua Kategori", href: "/search" },
+          { label: searchValue || "Produk Semua" },
+        ]}
       />
 
-      <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between">
-        <Suspense fallback={<FilterListSkeleton />}>
-          <FilterList filterAttributes={filterAttributes} />
-        </Suspense>
-
-        <Suspense fallback={<SortOrderSkeleton />}>
-          <SortOrder sortOrders={sortOrders} title="Sort by" />
-        </Suspense>
-      </div>
-      <div className="flex items-center justify-between gap-4 py-8 md:hidden">
+      {/* Mobile Filter */}
+      <div className="flex items-center justify-between gap-4 mb-6 md:hidden">
         <MobileFilter filterAttributes={filterAttributes} />
-
         <Suspense fallback={<SortOrderSkeleton />}>
-          <SortOrder sortOrders={sortOrders} title="Sort by" />
+          <div className="flex-1 max-w-[200px]">
+            <SortOrder sortOrders={sortOrders} title="Urutkan" />
+          </div>
         </Suspense>
       </div>
 
-      {!isArray(products) && (
-        <NotFound
-          msg={`${
-            searchValue
-              ? `There are no products that match Showing : ${searchValue}`
-              : "There are no products that match Showing"
-          } `}
-        />
-      )}
-      {isArray(products) ? (
-        <Grid className="mb-4 grid-cols-1 400:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          <ProductGridItems products={products} />
-        </Grid>
-      ) : null}
+      {/* Main Layout */}
+      <div className="flex gap-6">
+        {/* Sidebar Filter - Desktop */}
+        <Suspense fallback={<div className="hidden md:block w-64 animate-pulse bg-gray-200 rounded-lg h-96" />}>
+          <FilterSidebar filterAttributes={filterAttributes} />
+        </Suspense>
 
-      {isArray(products) ? (
-        <>
-          {total > 12 ? (
+        {/* Main Content */}
+        <div className="flex-1 min-w-0">
+          {/* Search Field */}
+          <SearchField />
+
+          {/* Active Filters */}
+          <ActiveFilters filterAttributes={filterAttributes} />
+
+          {/* Search Header with results count and sort */}
+          <SearchHeader
+            categoryName={searchValue ? `Hasil Pencarian: "${searchValue}"` : "Semua Produk"}
+            totalResults={actualTotal}
+            sortOrders={sortOrders}
+            filterAttributes={filterAttributes}
+          />
+
+          {/* Products Grid */}
+          {!hasProducts && (
+            <NotFound
+              msg={`${
+                searchValue
+                  ? `There are no products that match Showing : ${searchValue}`
+                  : "There are no products that match Showing"
+              } `}
+            />
+          )}
+          
+          {hasProducts ? (
+            <Grid className="mb-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <ProductGridItems products={products} />
+            </Grid>
+          ) : null}
+
+          {/* Pagination */}
+          {hasProducts && total > 12 ? (
             <nav
               aria-label="Collection pagination"
               className="mt-10 block items-center sm:flex"
@@ -115,8 +143,8 @@ export default async function SearchPage({
               />
             </nav>
           ) : null}
-        </>
-      ) : null}
-    </>
+        </div>
+      </div>
+    </div>
   );
 }

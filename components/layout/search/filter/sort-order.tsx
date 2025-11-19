@@ -35,12 +35,12 @@ const SortOrder: FC<{
   };
 
   return (
-    <section className="flex w-64 items-center gap-x-2.5 dark:text-white">
+    <section className="flex items-center gap-x-2.5 dark:text-white min-w-[200px]">
       <p
         id="sort-label"
-        className="leading-0 text-nowrap min-[1300]:block hidden"
+        className="leading-0 text-nowrap text-sm text-gray-700 dark:text-gray-300"
       >
-        {title}
+        {title}:
       </p>
       <Select
         defaultOpen={false}
@@ -53,12 +53,13 @@ const SortOrder: FC<{
         renderValue={(items) => (
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1.5 pt-1">
             {items.map((item) => (
-              <p key={item.key}>{item.data?.title}</p>
+              <p key={item.key} className="text-sm">{item.data?.title}</p>
             ))}
           </div>
         )}
-        size="md"
-        variant="flat"
+        size="sm"
+        variant="bordered"
+        className="max-w-xs"
         onSelectionChange={(e) => handleSortChange(e.currentKey as string)}
       >
         {(order) => (

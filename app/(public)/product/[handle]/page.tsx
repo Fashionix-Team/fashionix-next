@@ -125,8 +125,23 @@ export default async function ProductPage({
         }}
         type="application/ld+json"
       />
-      <div className="flex flex-col gap-y-4 rounded-lg pb-0 pt-4 sm:gap-y-6 md:py-7.5 lg:flex-row lg:gap-8">
-        <div className="h-full w-full max-w-[885px]">
+      
+      {/* Breadcrumb */}
+      <nav className="flex items-center text-sm text-gray-600 mb-6 py-4">
+        <a href="/" className="hover:text-gray-900">Beranda</a>
+        <span className="mx-2">›</span>
+        <a href="/search" className="hover:text-gray-900">Toko</a>
+        <span className="mx-2">›</span>
+        <a href="/search" className="hover:text-gray-900">Sepatu dan Topi</a>
+        <span className="mx-2">›</span>
+        <span className="text-gray-900">Fashion</span>
+        <span className="mx-2">›</span>
+        <span className="text-gray-900">Produksi</span>
+      </nav>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-8">
+        {/* Left Column - Image Gallery */}
+        <div className="w-full">
           <Suspense fallback={<ProductDetailSkeleton />}>
             {isArray(data?.cacheGalleryImages) ? (
               <HeroCarousel
@@ -149,15 +164,10 @@ export default async function ProductPage({
             )}
           </Suspense>
         </div>
-        <div className="basis-full lg:basis-4/6">
+
+        {/* Right Column - Product Details */}
+        <div className="w-full">
           <ProductDescription product={product} slug={handle} />
-          <div className="mt-8 border-t pt-6">
-            <h2 className="text-xl font-semibold mb-4">Beri Rating Produk Ini</h2>
-            <RatingStars criteria="Kualitas Bahan" />
-            <RatingStars criteria="Desain" />
-            <RatingStars criteria="Kenyamanan" />
-            <RatingStars criteria="Harga" />
-        </div>
         </div>
       </div>
 

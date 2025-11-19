@@ -13,8 +13,13 @@ import { isArray, isObject } from "@/lib/type-guards";
 import MobileFilter from "@/components/layout/search/filter/modile-filter";
 import CategoryDetail from "@/components/layout/search/category-detail.tsx";
 import Pagination from "@/components/elements/pagination";
+import Breadcrumb from "@/components/layout/search/breadcrumb";
+import FilterSidebar from "@/components/layout/search/filter/sidebar";
+import SearchHeader from "@/components/layout/search/search-header";
+import SearchField from "@/components/layout/search/search-field";
+import ActiveFilters from "@/components/layout/search/active-filters";
 const ProductGridItems = dynamic(
-  () => import("@/components/layout/product-grid-items"),
+  () => import("@/components/layout/product-grid-items-compact"),
   {
     ssr: true,
   }
@@ -90,43 +95,66 @@ export default async function CategoryPage({
   const paginatorInfo = data?.paginatorInfo;
   const { total, currentPage } = paginatorInfo;
 
+  // Check if products array is valid and has items
+  const hasProducts = isArray(products) && products.length > 0;
+  const actualTotal = hasProducts ? total : 0;
+
   return (
-    <section>
-      <Suspense fallback={<FilterListSkeleton />}>
-        <CategoryDetail
-          categoryItem={{ description: categoryItem?.description ?? "" }}
-        />
-      </Suspense>
+    <div className="container mx-auto px-4 py-6">
+      {/* Breadcrumb */}
+      <Breadcrumb
+        items={[
+          { label: "Semua Kategori", href: "/search" },
+          { label: categoryItem?.title || categorySlug },
+        ]}
+      />
 
-      <div className="my-10 hidden gap-4 md:flex md:items-baseline md:justify-between">
-        <Suspense fallback={<FilterListSkeleton />}>
-          <FilterList filterAttributes={filterAttributes} />
-        </Suspense>
-
-        <Suspense fallback={<SortOrderSkeleton />}>
-          <SortOrder sortOrders={sortOrders} title="Sort by" />
-        </Suspense>
-      </div>
-      <div className="flex items-center justify-between gap-4 py-8 md:hidden">
+      {/* Mobile Filter */}
+      <div className="flex items-center justify-between gap-4 mb-6 md:hidden">
         <MobileFilter filterAttributes={filterAttributes} />
-
         <Suspense fallback={<SortOrderSkeleton />}>
-          <SortOrder sortOrders={sortOrders} title="Sort by" />
+          <div className="flex-1 max-w-[200px]">
+            <SortOrder sortOrders={sortOrders} title="Urutkan" />
+          </div>
         </Suspense>
       </div>
-      {products.length === 0 ? (
-        <NotFound
-          msg={`There are no products that match Showing : ${categorySlug}`}
-        />
-      ) : (
-        <Grid className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-          <ProductGridItems products={products} />
-        </Grid>
-      )}
 
-      {isArray(products) ? (
-        <>
-          {total > 12 ? (
+      {/* Main Layout */}
+      <div className="flex gap-6">
+        {/* Sidebar Filter - Desktop */}
+        <Suspense fallback={<div className="hidden md:block w-64 animate-pulse bg-gray-200 rounded-lg h-96" />}>
+          <FilterSidebar filterAttributes={filterAttributes} />
+        </Suspense>
+
+        {/* Main Content */}
+        <div className="flex-1 min-w-0">
+          {/* Search Field */}
+          <SearchField />
+
+          {/* Active Filters */}
+          <ActiveFilters filterAttributes={filterAttributes} />
+
+          {/* Search Header with results count and sort */}
+          <SearchHeader
+            categoryName={categoryItem?.title || categorySlug}
+            totalResults={actualTotal}
+            sortOrders={sortOrders}
+            filterAttributes={filterAttributes}
+          />
+
+          {/* Products Grid */}
+          {!hasProducts ? (
+            <NotFound
+              msg={`There are no products that match Showing : ${categorySlug}`}
+            />
+          ) : (
+            <Grid className="mb-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <ProductGridItems products={products} />
+            </Grid>
+          )}
+
+          {/* Pagination */}
+          {hasProducts && total > 12 ? (
             <nav
               aria-label="Collection pagination"
               className="mt-10 block items-center sm:flex"
@@ -138,8 +166,8 @@ export default async function CategoryPage({
               />
             </nav>
           ) : null}
-        </>
-      ) : null}
-    </section>
+        </div>
+      </div>
+    </div>
   );
 }

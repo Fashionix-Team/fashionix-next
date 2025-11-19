@@ -1,5 +1,6 @@
 "use client";
 import { Accordion, AccordionItem } from "@heroui/accordion";
+import { Tabs, Tab } from "@heroui/react";
 import React, { FC } from "react";
 import { Avatar } from "@heroui/avatar";
 
@@ -37,76 +38,91 @@ export const ProductMoreDetails: FC<{
   totalReview: number;
 }> = ({ description, additionalData, reviews, totalReview }) => {
   return (
-    <div className="mt-7 sm:my-7">
-      <Accordion
-        itemClasses={{
-          base: "shadow-none  bg-neutral-100 dark:bg-neutral-800",
+    <div className="mt-8 border-t pt-6">
+      <Tabs 
+        aria-label="Product Details"
+        classNames={{
+          tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+          cursor: "w-full bg-orange-500",
+          tab: "max-w-fit px-0 h-12",
+          tabContent: "group-data-[selected=true]:text-orange-500"
         }}
-        className="px-0"
-        selectionMode="multiple"
-        showDivider={false}
-        variant="splitted"
       >
-        <AccordionItem
-          key="1"
-          indicator={({ isOpen }) =>
-            isOpen ? (
-              <ChevronLeftIcon className="h-5 w-5 stroke-neutral-800 dark:stroke-white" />
-            ) : (
-              <ChevronRightIcon className="h-5 w-5 stroke-neutral-800 dark:stroke-white" />
-            )
+        <Tab
+          key="description"
+          title={
+            <div className="flex items-center space-x-2">
+              <span>DESKRIPSI</span>
+            </div>
           }
-          aria-label="Description"
-          title="Description"
         >
-          <Prose className="pb-2" html={description} />
-        </AccordionItem>
-        <AccordionItem
-          key="2"
-          indicator={({ isOpen }) =>
-            isOpen ? (
-              <ChevronLeftIcon className="h-5 w-5 stroke-neutral-800 dark:stroke-white" />
-            ) : (
-              <ChevronRightIcon className="h-5 w-5 stroke-neutral-800 dark:stroke-white" />
-            )
-          }
-          aria-label="Additional Information"
-          title="Additional Information"
-        >
-          <div className="grid max-w-max grid-cols-[auto_1fr] gap-x-8 gap-y-4 px-1 pb-2">
-            {additionalData?.map((item) => (
-              <React.Fragment key={item.label}>
-                <div className="grid">
-                  <p className="text-base font-normal text-black/60 dark:text-white">
-                    {item?.label}
-                  </p>
-                </div>
-                <div className="grid">
-                  <p className="text-base font-normal text-black/60 dark:text-white">
-                    {item?.value || "--"}
-                  </p>
-                </div>
-              </React.Fragment>
-            ))}
+          <div className="py-6">
+            <Prose className="text-sm text-gray-700" html={description} />
           </div>
-        </AccordionItem>
+        </Tab>
+        
+        <Tab
+          key="additional"
+          title={
+            <div className="flex items-center space-x-2">
+              <span>INFORMASI TAMBAHAN</span>
+            </div>
+          }
+        >
+          <div className="py-6">
+            <div className="grid max-w-max grid-cols-[auto_1fr] gap-x-8 gap-y-4">
+              {additionalData?.map((item) => (
+                <React.Fragment key={item.label}>
+                  <div className="grid">
+                    <p className="text-sm font-medium text-gray-700">
+                      {item?.label}:
+                    </p>
+                  </div>
+                  <div className="grid">
+                    <p className="text-sm text-gray-600">
+                      {item?.value || "--"}
+                    </p>
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
+        </Tab>
+
+        <Tab
+          key="specifications"
+          title={
+            <div className="flex items-center space-x-2">
+              <span>SPESIFIKASI</span>
+            </div>
+          }
+        >
+          <div className="py-6">
+            <div className="grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 text-sm">
+              <span className="font-medium text-gray-700">Berat:</span>
+              <span className="text-gray-600">0.5 kg</span>
+              
+              <span className="font-medium text-gray-700">Dimensi:</span>
+              <span className="text-gray-600">30 × 20 × 10 cm</span>
+            </div>
+          </div>
+        </Tab>
+
         {totalReview ? (
-          <AccordionItem
-            key="3"
-            indicator={({ isOpen }) =>
-              isOpen ? (
-                <ChevronLeftIcon className="h-5 w-5 stroke-neutral-800 dark:stroke-white" />
-              ) : (
-                <ChevronRightIcon className="h-5 w-5 stroke-neutral-800 dark:stroke-white" />
-              )
+          <Tab
+            key="reviews"
+            title={
+              <div className="flex items-center space-x-2">
+                <span>ULASAN</span>
+              </div>
             }
-            aria-label="Ratings"
-            title="Ratings"
           >
-            <ReviewDetail reviewDetails={reviews} totalReview={totalReview} />
-          </AccordionItem>
+            <div className="py-6">
+              <ReviewDetail reviewDetails={reviews} totalReview={totalReview} />
+            </div>
+          </Tab>
         ) : null}
-      </Accordion>
+      </Tabs>
     </div>
   );
 };
