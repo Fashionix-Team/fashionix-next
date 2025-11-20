@@ -1,20 +1,9 @@
-import type { RelatedProducts } from "@/lib/bagisto/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
-import { 
-  ChevronRightIcon,
-  ShieldCheckIcon,
-  TruckIcon,
-  ArrowPathIcon,
-  ChatBubbleLeftRightIcon,
-  CreditCardIcon
-} from "@heroicons/react/24/outline";
-import {
-  ProductDetailSkeleton,
-  RelatedProductSkeleton,
-} from "@/components/product/place-order";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ProductDetailSkeleton } from "@/components/product/place-order";
 import { ProductDescription } from "@/components/product/product-description";
 import { getAllProductUrls, getCollectionProducts } from "@/lib/bagisto";
 import {
@@ -24,8 +13,6 @@ import {
   PRODUCT_TYPE,
 } from "@/lib/constants";
 import { isArray, isObject } from "@/lib/type-guards";
-import { ProductCard } from "@/components/product-card";
-import Grid from "@/components/grid";
 import HeroCarousel from "@/components/product/slider/hero-carousel";
 
 // Return a list of `params` to populate the [slug] dynamic segment
@@ -181,51 +168,6 @@ export default async function ProductPage({
           </div>
         </div>
       </div>
-
-      {/* Related Products */}
-      <div className="container mx-auto px-4">
-        <Suspense fallback={<RelatedProductSkeleton />}>
-          <RelatedProducts relatedProduct={data?.relatedProducts || []} />
-        </Suspense>
-      </div>
-    </div>
-  );
-}
-
-async function RelatedProducts({
-  relatedProduct,
-}: {
-  relatedProduct: RelatedProducts[];
-}) {
-  if (!relatedProduct.length) return null;
-
-  return (
-    <div className="flex flex-col gap-y-10 py-8 sm:py-12 lg:py-20 border-t border-gray-200">
-      <div className="flex flex-col gap-y-4 font-outfit text-center">
-        <h2 className="text-3xl font-bold text-gray-900">Produk Terkait</h2>
-        <p className="font-normal text-gray-500">
-           Temukan tren terbaru! Produk baru saja ditambahkan.
-        </p>
-      </div>
-      <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {relatedProduct.map((item, index) => (
-          <ProductCard
-            key={index}
-            currency={item?.priceHtml?.currencyCode}
-            imageUrl={
-              item?.cacheGalleryImages?.[0]?.originalImageUrl ??
-              item?.images?.[0]?.url ??
-              NOT_IMAGE
-            }
-            price={
-              item?.priceHtml?.finalPrice ||
-              item?.priceHtml?.regularPrice ||
-              "0"
-            }
-            product={item}
-          />
-        ))}
-      </Grid>
     </div>
   );
 }
