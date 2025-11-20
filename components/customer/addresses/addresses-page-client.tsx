@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody } from "@heroui/card";
 import { Chip } from "@heroui/chip";
-import { Pagination } from "@heroui/pagination";
+import { Pagination } from "@heroui/react";
 import AddressModal from "../account/address-modal";
 import { createAddress, updateAddress, deleteAddress, setDefaultAddress } from "../account/actions";
 import { CustomerAddressDetailTypes } from "@/lib/bagisto/types";
