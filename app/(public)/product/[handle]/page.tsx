@@ -3,13 +3,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
-import { 
+import {
   ChevronRightIcon,
-  ShieldCheckIcon,
-  TruckIcon,
-  ArrowPathIcon,
-  ChatBubbleLeftRightIcon,
-  CreditCardIcon
 } from "@heroicons/react/24/outline";
 import {
   ProductDetailSkeleton,
@@ -204,7 +199,7 @@ async function RelatedProducts({
       <div className="flex flex-col gap-y-4 font-outfit text-center">
         <h2 className="text-3xl font-bold text-gray-900">Produk Terkait</h2>
         <p className="font-normal text-gray-500">
-           Temukan tren terbaru! Produk baru saja ditambahkan.
+            Temukan tren terbaru! Produk baru saja ditambahkan.
         </p>
       </div>
       <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
