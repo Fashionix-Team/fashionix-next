@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { VariantSelector } from "./variant-selector";
 import Price from "@/components/price";
 import { BagistoProductInfo } from "@/lib/bagisto/types";
@@ -13,6 +14,8 @@ import {
   ChevronDownIcon, 
   ChevronUpIcon 
 } from "@heroicons/react/24/outline";
+import { useAddProduct } from "@/components/hooks/use-add-to-cart";
+import { useToast } from "@/app/context/toast-context";
 
 export function ProductDescription({
   product,
@@ -20,8 +23,13 @@ export function ProductDescription({
   product: BagistoProductInfo[];
 }) {
   const [quantity, setQuantity] = useState(1);
-  const [isExpanded, setIsExpanded] = useState(false); // State untuk deskripsi
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const data = product[0];
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { onAddToCart, isCartLoading } = useAddProduct();
+  const { addToast } = useToast();
 
   // Data untuk Varian (Configurable Product)
   const configurableAttributes = data?.configutableData?.attributes || [];
@@ -45,8 +53,134 @@ export function ProductDescription({
   const brandName = brandAttribute?.label || brandAttribute?.textValue || "-";
   const categoryName = (data as any).categories?.[0]?.name || "Umum";
 
+  // Helper functions for cart actions
+  const searchParamsToObject = (searchParams: any) => {
+    const paramsObject: any = {};
+    for (const [key, value] of searchParams.entries()) {
+      paramsObject[key] = value;
+    }
+    return paramsObject;
+  };
+
+  const findMatchingVariant = (searchParamsObject: any) => {
+    for (const variant of configurableIndex) {
+      let match = true;
+      const attributeOptionIds = [];
+
+      for (const attributeOption of variant.attributeOptionIds) {
+        const attributeCode = attributeOption.attributeCode;
+        const attributeOptionId = attributeOption.attributeOptionId;
+
+        if (searchParamsObject[attributeCode] !== attributeOptionId) {
+          match = false;
+          break;
+        }
+        attributeOptionIds.push({
+          attributeId: Number(attributeOption.attributeId),
+          attributeOptionId: Number(attributeOption.attributeOptionId),
+        });
+      }
+      if (match) {
+        return { ...variant, attributeOptionIds };
+      }
+    }
+    return null;
+  };
+
+  const searchParamsObject = searchParamsToObject(searchParams);
+  const matchingVariant = findMatchingVariant(searchParamsObject);
+  const selectedVariantId = matchingVariant?.id || data.id;
+  const selectedConfigurableOption = Number(matchingVariant?.id || data.id);
+  const superAttribute = matchingVariant?.attributeOptionIds || [];
+
+  // Handle Add to Cart
+  const handleAddToCart = async () => {
+    if (!isAvailable) return;
+    
+    try {
+      await onAddToCart({
+        input: {
+          quantity,
+          isBuyNow: false,
+          productId: selectedVariantId,
+          selectedConfigurableOption,
+          superAttribute,
+        },
+      });
+      addToast({
+        message: "Produk berhasil ditambahkan ke keranjang!",
+        type: "success",
+      });
+    } catch (error) {
+      addToast({
+        message: "Gagal menambahkan produk ke keranjang",
+        type: "danger",
+      });
+    }
+  };
+
+  // Handle Buy Now
+  const handleBuyNow = async () => {
+    if (!isAvailable) return;
+    
+    try {
+      await onAddToCart({
+        input: {
+          quantity,
+          isBuyNow: true,
+          productId: selectedVariantId,
+          selectedConfigurableOption,
+          superAttribute,
+        },
+      });
+      router.push("/checkout");
+    } catch (error) {
+      addToast({
+        message: "Gagal memproses pembelian",
+        type: "danger",
+      });
+    }
+  };
+
+  // Handle Share Product
+  const handleShareProduct = async () => {
+    setIsSharing(true);
+    const shareUrl = window.location.href;
+    const shareTitle = data.name;
+    const shareText = `Check out ${data.name}`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+        addToast({
+          message: "Berhasil membagikan produk!",
+          type: "success",
+        });
+      } else {
+        // Fallback: Copy to clipboard
+        await navigator.clipboard.writeText(shareUrl);
+        addToast({
+          message: "Link produk berhasil disalin!",
+          type: "success",
+        });
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+      addToast({
+        message: "Gagal membagikan produk",
+        type: "danger",
+      });
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
   return (
-    <div className="font-sans text-neutral-900">
+    <div className="font-sans text-neutral-900">"
       
       {/* 1. Rating & Reviews */}
       <div className="flex items-center justify-between mb-2">
@@ -171,24 +305,30 @@ export function ProductDescription({
         </div>
 
         <button 
-            className={`flex-1 font-bold text-sm px-6 h-12 rounded-md flex items-center justify-center gap-2 transition-colors uppercase ${isAvailable ? 'bg-[#F97316] hover:bg-orange-600 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'}`}
-            disabled={!isAvailable}
+            onClick={handleAddToCart}
+            className={`flex-1 font-bold text-sm px-6 h-12 rounded-md flex items-center justify-center gap-2 transition-colors uppercase ${isAvailable && !isCartLoading ? 'bg-[#F97316] hover:bg-orange-600 text-white' : 'bg-gray-300 cursor-not-allowed text-gray-500'}`}
+            disabled={!isAvailable || isCartLoading}
         >
-            <span>{isAvailable ? 'TAMBAH KE KERANJANG' : 'HABIS'}</span>
-            <ShoppingCartIcon className="h-5 w-5" />
+            <span>{isCartLoading ? 'MEMPROSES...' : isAvailable ? 'TAMBAH KE KERANJANG' : 'HABIS'}</span>
+            {!isCartLoading && <ShoppingCartIcon className="h-5 w-5" />}
         </button>
 
         <button 
-            className={`flex-1 border-2 font-bold text-sm px-6 h-12 rounded-md transition-colors uppercase ${isAvailable ? 'bg-white border-[#F97316] text-[#F97316] hover:bg-orange-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'}`}
-            disabled={!isAvailable}
+            onClick={handleBuyNow}
+            className={`flex-1 border-2 font-bold text-sm px-6 h-12 rounded-md transition-colors uppercase ${isAvailable && !isCartLoading ? 'bg-white border-[#F97316] text-[#F97316] hover:bg-orange-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'}`}
+            disabled={!isAvailable || isCartLoading}
         >
-            BELI SEKARANG
+            {isCartLoading ? 'MEMPROSES...' : 'BELI SEKARANG'}
         </button>
       </div>
 
       <div className="flex justify-end mt-4">
-         <button className="flex items-center gap-2 text-gray-500 hover:text-gray-800 text-xs font-medium">
-            <span>Bagikan Produk:</span>
+         <button 
+            onClick={handleShareProduct}
+            disabled={isSharing}
+            className="flex items-center gap-2 text-gray-500 hover:text-gray-800 text-xs font-medium disabled:opacity-50"
+         >
+            <span>{isSharing ? 'Membagikan...' : 'Bagikan Produk:'}</span>
             <DocumentDuplicateIcon className="h-4 w-4" />
          </button>
       </div>

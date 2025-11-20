@@ -140,14 +140,6 @@ export default async function ProductPage({
             Beranda
           </Link>
           <ChevronRightIcon className="h-3 w-3" />
-          <Link href="/toko" className="hover:text-neutral-900">
-            Toko
-          </Link>
-          <ChevronRightIcon className="h-3 w-3" />
-          <span className="text-neutral-900 font-medium">Tampilan Grid Toko</span>
-          <ChevronRightIcon className="h-3 w-3" />
-          <span className="text-neutral-900 font-medium">Fashion</span>
-          <ChevronRightIcon className="h-3 w-3" />
           <span className="text-blue-500 font-medium">{data?.name || "Pakaian"}</span>
         </nav>
       </div>
