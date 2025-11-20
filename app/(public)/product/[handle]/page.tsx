@@ -28,9 +28,6 @@ import { ProductCard } from "@/components/product-card";
 import Grid from "@/components/grid";
 import HeroCarousel from "@/components/product/slider/hero-carousel";
 
-// Force dynamic rendering to avoid build-time fetch issues
-export const dynamic = 'force-dynamic';
-
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
   const prooducts = await getAllProductUrls();
@@ -142,14 +139,6 @@ export default async function ProductPage({
           <Link href="/" className="hover:text-neutral-900">
             Beranda
           </Link>
-          <ChevronRightIcon className="h-3 w-3" />
-          <Link href="/toko" className="hover:text-neutral-900">
-            Toko
-          </Link>
-          <ChevronRightIcon className="h-3 w-3" />
-          <span className="text-neutral-900 font-medium">Tampilan Grid Toko</span>
-          <ChevronRightIcon className="h-3 w-3" />
-          <span className="text-neutral-900 font-medium">Fashion</span>
           <ChevronRightIcon className="h-3 w-3" />
           <span className="text-blue-500 font-medium">{data?.name || "Pakaian"}</span>
         </nav>
