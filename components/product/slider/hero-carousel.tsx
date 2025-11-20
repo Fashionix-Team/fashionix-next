@@ -4,6 +4,7 @@ import * as React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { NOT_IMAGE } from "@/lib/constants";
 
 export default function HeroCarousel({
   images,
@@ -12,6 +13,20 @@ export default function HeroCarousel({
 }) {
   const [current, setCurrent] = React.useState(0);
   const thumbnailContainerRef = React.useRef<HTMLDivElement>(null);
+  const [imageErrors, setImageErrors] = React.useState<Record<number, boolean>>({});
+
+  // Helper function to get valid image URL
+  const getValidImageUrl = (src: string) => {
+    if (!src) return NOT_IMAGE;
+    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/')) {
+      return src;
+    }
+    return `/${src}`;
+  };
+
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => ({ ...prev, [index]: true }));
+  };
 
   const scrollThumbnails = (direction: "left" | "right") => {
     if (thumbnailContainerRef.current) {
@@ -42,11 +57,12 @@ export default function HeroCarousel({
         >
           <Image
             fill
-            alt={images[current]?.altText as string}
+            alt={images[current]?.altText || "Product image"}
             className="h-full w-full object-contain"
             priority={current === 0}
             sizes="(min-width: 1024px) 50vw, 100vw"
-            src={images[current]?.src as string}
+            src={imageErrors[current] ? NOT_IMAGE : getValidImageUrl(images[current]?.src)}
+            onError={() => handleImageError(current)}
           />
         </motion.div>
       </div>
@@ -86,11 +102,12 @@ export default function HeroCarousel({
                     aria-label={`View image ${index + 1}`}
                   >
                     <Image
-                      src={image.src}
+                      src={imageErrors[index] ? NOT_IMAGE : getValidImageUrl(image.src)}
                       alt={image.altText || `Thumbnail ${index + 1}`}
                       fill
                       className="object-cover"
                       sizes="64px"
+                      onError={() => handleImageError(index)}
                     />
                   </button>
                 );
