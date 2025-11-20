@@ -19,6 +19,10 @@ import { isArray, isObject } from "@/lib/type-guards";
 import { ProductCard } from "@/components/product-card";
 import Grid from "@/components/grid";
 import HeroCarousel from "@/components/product/slider/hero-carousel";
+
+// Force dynamic rendering to avoid build-time fetch issues
+export const dynamic = 'force-dynamic';
+
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
   const prooducts = await getAllProductUrls();

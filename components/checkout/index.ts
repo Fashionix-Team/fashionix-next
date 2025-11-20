@@ -11,7 +11,6 @@ export type {
   BillingFormData,
   OrderItem,
   BillingFormProps,
-  PaymentMethod,
   PaymentMethodsProps,
   OrderSummaryProps,
 } from './types';
