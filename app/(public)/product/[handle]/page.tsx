@@ -159,7 +159,7 @@ export default async function ProductPage({
             </Suspense>
           </div>
 
-          {/* Right Section: Info Produk & Tombol Beli - 50% */}
+          {/* Right Section: Product Info & Buy Button - 50% */}
           <div className="flex w-full flex-col gap-6 lg:w-1/2">
             {/* Product Info */}
             <div className="flex-1">
