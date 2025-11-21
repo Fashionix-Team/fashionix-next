@@ -134,7 +134,7 @@ export default async function ProductPage({
       <div className="container mx-auto px-4">        
         {/* --- BOTTOM SECTION: PRODUCT IMAGE & PURCHASE DETAILS --- */}
         <div className="flex flex-col gap-8 lg:flex-row mb-12">
-          {/* Left: Image Gallery - 50% */} 
+          {/* Left: Image Gallery - 100% on mobile/tablet, 50% on large screens */} 
           <div className="w-full lg:w-1/2 border border-gray-100 p-4 rounded-md">
             <Suspense fallback={<ProductDetailSkeleton />}>
               {isArray(data?.cacheGalleryImages) ? (
