@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { RadioGroup, Radio } from '@heroui/radio';
+import { RadioGroup, Radio } from '@heroui/react';
 import { type CustomerAddressDetailTypes } from '@/lib/bagisto/types';
 
 interface AddressSelectorProps {

@@ -17,7 +17,7 @@ export default function NotFoundSection() {
   return (
     <div className="flex flex-col items-center justify-start text-center min-h-screen bg-white px-4 font-sans">
       <Image
-        src="image/404.png"
+        src="/image/404.png"
         alt="Error"
         className="w-72 mb-6"
         width={288}
