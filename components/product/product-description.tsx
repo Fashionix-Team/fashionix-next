@@ -31,7 +31,7 @@ export function ProductDescription({
   const { onAddToCart, isCartLoading } = useAddProduct();
   const { addToast } = useToast();
 
-  // Data untuk Varian (Configurable Product)
+  // Data for Variant (Configurable Product)
   const configurableAttributes = data?.configutableData?.attributes || [];
   const configurableIndex = data?.configutableData?.index || [];
 
