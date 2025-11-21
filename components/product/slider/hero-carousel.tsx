@@ -6,6 +6,10 @@ import Image from "next/image";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { NOT_IMAGE } from "@/lib/constants";
 
+// Constants for thumbnail navigation
+const THUMBNAIL_SCROLL_AMOUNT = 280; // Pixels to scroll horizontally when arrow buttons are clicked
+const THUMBNAIL_SCROLL_THRESHOLD = 4; // Number of thumbnails before showing scroll arrows
+
 export default function HeroCarousel({
   images,
 }: {
@@ -30,11 +34,10 @@ export default function HeroCarousel({
 
   const scrollThumbnails = (direction: "left" | "right") => {
     if (thumbnailContainerRef.current) {
-      const scrollAmount = 280;
       const currentScroll = thumbnailContainerRef.current.scrollLeft;
       const newScroll = direction === "left" 
-        ? currentScroll - scrollAmount 
-        : currentScroll + scrollAmount;
+        ? currentScroll - THUMBNAIL_SCROLL_AMOUNT 
+        : currentScroll + THUMBNAIL_SCROLL_AMOUNT;
       
       thumbnailContainerRef.current.scrollTo({
         left: newScroll,
@@ -71,7 +74,7 @@ export default function HeroCarousel({
       {images && images.length > 0 && (
         <div className="flex items-center gap-2">
           {/* Left Arrow Button */}
-          {images.length > 4 && (
+          {images.length > THUMBNAIL_SCROLL_THRESHOLD && (
             <button
               onClick={() => scrollThumbnails("left")}
               className="flex-shrink-0 h-10 w-10 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-md transition-all"
@@ -116,7 +119,7 @@ export default function HeroCarousel({
           </div>
 
           {/* Right Arrow Button */}
-          {images.length > 4 && (
+          {images.length > THUMBNAIL_SCROLL_THRESHOLD && (
             <button
               onClick={() => scrollThumbnails("right")}
               className="flex-shrink-0 h-10 w-10 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-md transition-all"
