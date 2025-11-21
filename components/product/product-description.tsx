@@ -39,19 +39,19 @@ export function ProductDescription({
 
   // --- 1. LOGIKA DATA DINAMIS ---
 
-  const averageRating = parseFloat((data as any).averageRating || "0");
-  const totalReviews = (data as any).reviews?.length || 0;
+  const averageRating = parseFloat(data.averageRating ? String(data.averageRating) : "0");
+  const totalReviews = data.reviews?.length || 0;
 
   const totalStock = data.inventories?.reduce((acc, curr) => acc + parseInt(curr.qty), 0) || 0;
-  const isAvailable = totalStock > 0 || (data as any).isSaleable;
+  const isAvailable = totalStock > 0 || data.isSaleable;
   const availabilityLabel = isAvailable ? "Tersedia" : "Stok Habis";
   const availabilityColor = isAvailable ? "text-green-600" : "text-red-600";
 
-  const brandAttribute = (data as any).additionalData?.find((attr: any) => attr.code === 'brand') || 
-                         (data as any).attributeValues?.find((attr: any) => attr.attribute?.code === 'brand');
+  const brandAttribute = data.additionalData?.find((attr) => attr.code === 'brand') || 
+                         data.attributeValues?.find((attr) => attr.attribute?.code === 'brand');
   
   const brandName = brandAttribute?.label || brandAttribute?.textValue || "-";
-  const categoryName = (data as any).categories?.[0]?.name || "Umum";
+  const categoryName = data.categories?.[0]?.name || "Umum";
 
   // Helper functions for cart actions
   const searchParamsToObject = (searchParams: any) => {
