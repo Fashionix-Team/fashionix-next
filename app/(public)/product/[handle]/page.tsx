@@ -17,10 +17,10 @@ import HeroCarousel from "@/components/product/slider/hero-carousel";
 
 // Return a list of `params` to populate the [slug] dynamic segment
 export async function generateStaticParams() {
-  const prooducts = await getAllProductUrls();
+  const products = await getAllProductUrls();
 
-  return isObject(prooducts)
-    ? prooducts.map((post) => ({
+  return isObject(products)
+    ? products.map((post) => ({
         handle: `${post.slug}?type=${post.type}`,
       }))
     : [];

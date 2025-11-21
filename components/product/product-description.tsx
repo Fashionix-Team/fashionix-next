@@ -16,6 +16,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAddProduct } from "@/components/hooks/use-add-to-cart";
 import { useToast } from "@/app/context/toast-context";
+import DOMPurify from "isomorphic-dompurify";
+
+// Constant for collapsed description height (approximately 4-5 lines of text)
+const COLLAPSED_MAX_HEIGHT = 24;
 
 export function ProductDescription({
   product,
@@ -219,11 +223,13 @@ export function ProductDescription({
         <h3 className="font-semibold text-gray-900 mb-2 text-sm uppercase">Deskripsi Produk</h3>
         <div 
           className={`text-sm text-gray-600 leading-relaxed overflow-hidden transition-all duration-300 ${
-            isExpanded ? "max-h-full" : "max-h-24" // max-h-24 kira-kira 4-5 baris
+            isExpanded ? "max-h-full" : `max-h-${COLLAPSED_MAX_HEIGHT}`
           }`}
         >
           <div 
-            dangerouslySetInnerHTML={{ __html: data.description || data.shortDescription || "Tidak ada deskripsi." }} 
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(data.description || data.shortDescription || "Tidak ada deskripsi.") 
+            }} 
           />
         </div>
         
