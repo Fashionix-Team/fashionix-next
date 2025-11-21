@@ -266,7 +266,7 @@ export function ProductDescription({
         </div>
       </div>
 
-      {/* 6. Variants (Warna & Ukuran) */}
+      {/* 6. Variants (Color & Size) */}
       {data.type === 'configurable' && (
         <div className="mb-8">
             <Suspense fallback={<div className="h-20 bg-gray-100 animate-pulse rounded"></div>}>
