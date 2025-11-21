@@ -214,7 +214,7 @@ export function ProductDescription({
         </div>
       </div>
 
-      {/* 4. Deskripsi Produk (Collapsible) */}
+      {/* 4. Product Description (Collapsible) */}
       <div className="mb-8 border-b border-gray-100 pb-6">
         <h3 className="font-semibold text-gray-900 mb-2 text-sm uppercase">Deskripsi Produk</h3>
         <div 
