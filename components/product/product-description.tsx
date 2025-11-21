@@ -180,7 +180,7 @@ export function ProductDescription({
   };
 
   return (
-    <div className="font-sans text-neutral-900">"
+    <div className="font-sans text-neutral-900">
       
       {/* 1. Rating & Reviews */}
       <div className="flex items-center justify-between mb-2">
