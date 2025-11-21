@@ -132,7 +132,7 @@ export default async function ProductPage({
       </div>
 
       <div className="container mx-auto px-4">        
-        {/* --- BAGIAN BAWAH: GAMBAR PRODUK & DETAIL PEMBELIAN --- */}
+        {/* --- BOTTOM SECTION: PRODUCT IMAGE & PURCHASE DETAILS --- */}
         <div className="flex flex-col gap-8 lg:flex-row mb-12">
           {/* Left: Image Gallery - 50% */} 
           <div className="w-full lg:w-1/2 border border-gray-100 p-4 rounded-md">
