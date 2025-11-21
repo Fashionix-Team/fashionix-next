@@ -37,7 +37,7 @@ export function ProductDescription({
 
   if (!data) return null;
 
-  // --- 1. LOGIKA DATA DINAMIS ---
+  // --- 1. DYNAMIC DATA LOGIC ---
 
   const averageRating = parseFloat(data.averageRating ? String(data.averageRating) : "0");
   const totalReviews = data.reviews?.length || 0;
