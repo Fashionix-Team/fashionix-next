@@ -227,7 +227,7 @@ export function ProductDescription({
           />
         </div>
         
-        {/* Tombol Toggle */}
+        {/* Toggle Button */}
         <button 
           onClick={() => setIsExpanded(!isExpanded)}
           className="mt-2 flex items-center gap-1 text-xs font-bold text-blue-600 hover:text-blue-800 focus:outline-none"
