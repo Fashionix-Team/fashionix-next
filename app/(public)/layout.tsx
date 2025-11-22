@@ -3,6 +3,8 @@ import Navbar from "@/components/custom-layout/navbar";
 import FooterWrapper from "@/components/custom-layout/footer-wrapper";
 import { LayoutProvider } from "@/components/custom-layout/layout-context";
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: {
