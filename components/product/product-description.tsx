@@ -16,6 +16,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAddProduct } from "@/components/hooks/use-add-to-cart";
 import { useToast } from "@/app/context/toast-context";
+import DOMPurify from "isomorphic-dompurify";
 
 export function ProductDescription({
   product,
@@ -217,13 +218,16 @@ export function ProductDescription({
       {/* 4. Product Description (Collapsible) */}
       <div className="mb-8 border-b border-gray-100 pb-6">
         <h3 className="font-semibold text-gray-900 mb-2 text-sm uppercase">Deskripsi Produk</h3>
+        {/* max-h-24 represents approximately 4-5 lines of text when collapsed */}
         <div 
           className={`text-sm text-gray-600 leading-relaxed overflow-hidden transition-all duration-300 ${
-            isExpanded ? "max-h-full" : "max-h-24" // max-h-24 kira-kira 4-5 baris
+            isExpanded ? "max-h-full" : "max-h-24"
           }`}
         >
           <div 
-            dangerouslySetInnerHTML={{ __html: data.description || data.shortDescription || "Tidak ada deskripsi." }} 
+            dangerouslySetInnerHTML={{ 
+              __html: DOMPurify.sanitize(data.description || data.shortDescription || "Tidak ada deskripsi.") 
+            }} 
           />
         </div>
         
