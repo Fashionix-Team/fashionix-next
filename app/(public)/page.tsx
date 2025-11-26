@@ -4,10 +4,10 @@ import Home from "@/components/home";
 export const dynamic = "auto";
 export const metadata = {
   description:
-    "High-performance ecommerce store built with Next.js, Vercel, and Bagisto.",
+    "Website E-Commerce Fashionix menggunakan Bagisto, platform open-source berbasis Laravel dan Vue.js yang kuat untuk membangun toko online yang menarik dan fungsional.",
   openGraph: {
     type: "website",
-    title: "Bagisto Commerce",
+    title: "Fashionix",
     url: process.env.NEXTAUTH_URL,
   },
 };

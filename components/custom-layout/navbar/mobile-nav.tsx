@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -15,6 +16,8 @@ type MobileNavProps = {
 
 export default function MobileNav({ categories = [] }: MobileNavProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
   const { data: session } = useSession();
   useCartDetail();
   const cartDetail = useAppSelector((state) => state.cartDetail);
@@ -150,13 +153,28 @@ export default function MobileNav({ categories = [] }: MobileNavProps) {
 
       {/* Search Bar */}
       <div className="border-b border-gray-200 bg-white px-4 py-2">
-        <div className="relative">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (searchQuery.trim()) {
+              router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+            }
+          }}
+          className="relative"
+        >
           <input
             type="text"
+            name="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full rounded-md border border-gray-300 bg-white py-2 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500"
             placeholder="Cari apa saja..."
           />
-          <div className="pointer-events-none absolute inset-y-0 left-3 flex items-center">
+          <button
+            type="submit"
+            className="absolute inset-y-0 left-3 flex items-center"
+            aria-label="Search"
+          >
             <svg
               width="18"
               height="18"
@@ -180,8 +198,8 @@ export default function MobileNav({ categories = [] }: MobileNavProps) {
                 strokeLinejoin="round"
               />
             </svg>
-          </div>
-        </div>
+          </button>
+        </form>
       </div>
 
       {/* Mobile Menu Drawer */}
@@ -289,7 +307,7 @@ export default function MobileNav({ categories = [] }: MobileNavProps) {
                       {categories.map((category) => (
                         <Link
                           key={category.id}
-                          href={`/category/${category.slug}`}
+                          href={`/search?q=${encodeURIComponent(category.name)}`}
                           className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
                           onClick={() => setIsMenuOpen(false)}
                         >

@@ -166,7 +166,7 @@ const CategoryMegaMenu = ({ categories = [] }: CategoryMegaMenuProps) => {
                     </p>
                   </div>
                   <Link
-                    href={`/search/${activeCategory.slug}`}
+                    href={`/search?q=${activeCategory.slug}`}
                     className="inline-flex items-center gap-2 rounded-md border border-orange-500 px-3 py-1.5 text-sm font-semibold text-orange-500 transition hover:bg-orange-500 hover:text-white"
                     onClick={closeMenu}
                   >
@@ -186,7 +186,7 @@ const CategoryMegaMenu = ({ categories = [] }: CategoryMegaMenuProps) => {
                         return (
                           <div key={child.id} className="space-y-3">
                             <Link
-                              href={`/search/${child.slug}`}
+                              href={`/search?q=${child.slug}`}
                               className="text-sm font-semibold text-gray-900 transition hover:text-orange-500"
                               onClick={closeMenu}
                             >
@@ -198,7 +198,7 @@ const CategoryMegaMenu = ({ categories = [] }: CategoryMegaMenuProps) => {
                                 {grandChildren.map((subChild) => (
                                   <li key={subChild.id}>
                                     <Link
-                                      href={`/search/${subChild.slug}`}
+                                      href={`/search?q=${subChild.slug}`}
                                       className="block rounded px-2 py-1 transition hover:bg-gray-100 hover:text-gray-900"
                                       onClick={closeMenu}
                                     >
