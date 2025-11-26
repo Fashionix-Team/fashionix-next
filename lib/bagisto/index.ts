@@ -1223,10 +1223,14 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 
   if (isCollectionUpdate) {
     revalidateTag(TAGS.collections);
+    // Clear LRU cache for collection-related data
+    lruCache.clear();
   }
 
   if (isProductUpdate) {
     revalidateTag(TAGS.products);
+    // Clear LRU cache for product-related data
+    lruCache.clear();
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });
