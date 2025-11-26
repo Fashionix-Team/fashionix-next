@@ -1,7 +1,7 @@
 import Home from "@/components/home";
 
-// Disable cache completely for homepage
-export const dynamic = "force-dynamic";
+// Remove time-based revalidation, use tag-based instead via webhook
+export const dynamic = "auto";
 export const metadata = {
   description:
     "High-performance ecommerce store built with Next.js, Vercel, and Bagisto.",
