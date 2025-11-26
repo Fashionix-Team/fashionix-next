@@ -46,79 +46,63 @@ export function VariantSelector({
     ),
   }));
 
-  return variants.map((option) => (
-    <dl key={option.id} className="mb-8">
-      <dt className="mb-4 text-sm uppercase tracking-wide">{option.label}</dt>
-      <dd className="flex flex-wrap gap-3">
-        {option.options.map((value) => {
-          const optionNameLowerCase = option.code.toLowerCase();
+  return (
+    <div className="space-y-4 mb-6">
+      {variants.map((option) => (
+        <div key={option.id}>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {option.label}
+          </label>
+          <select
+            className="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            value={searchParams.get(option.code.toLowerCase()) || ""}
+            onChange={(e) => {
+              const optionSearchParams = new URLSearchParams(
+                searchParams.toString()
+              );
+              optionSearchParams.set(option.code.toLowerCase(), e.target.value);
+              const optionUrl = createUrl(pathname, optionSearchParams);
+              router.replace(optionUrl, { scroll: false });
+            }}
+          >
+            <option value="">Pilih {option.label}</option>
+            {option.options.map((value) => {
+              const optionNameLowerCase = option.code.toLowerCase();
+              const optionSearchParams = new URLSearchParams(
+                searchParams.toString()
+              );
+              optionSearchParams.set(optionNameLowerCase, value?.id);
 
-          // Base option params on current params so we can preserve any other param state in the url.
-          const optionSearchParams = new URLSearchParams(
-            searchParams.toString()
-          );
+              const filtered = Array.from(optionSearchParams.entries()).filter(
+                ([key, value]) =>
+                  variants.find(
+                    (option) =>
+                      option.code.toLowerCase() === key &&
+                      option.options.some((option) => option.id === value)
+                  )
+              );
 
-          // Update the option params using the current option to reflect how the url *would* change,
-          // if the option was clicked.
-          optionSearchParams.set(optionNameLowerCase, value?.id);
+              const isAvailableForSale = combinations.find((combination) =>
+                filtered.every(
+                  ([key, value]) =>
+                    combination[key] === value && combination.availableForSale
+                )
+              );
 
-          const optionUrl = createUrl(pathname, optionSearchParams);
-
-          // In order to determine if an option is available for sale, we need to:
-          //
-          // 1. Filter out all other param state
-          // 2. Filter out invalid options
-          // 3. Check if the option combination is available for sale
-          //
-          // This is the "magic" that will cross check possible variant combinations and preemptively
-          // disable combinations that are not available. For example, if the color gray is only available in size medium,
-          // then all other sizes should be disabled.
-          const filtered = Array.from(optionSearchParams.entries()).filter(
-            ([key, value]) =>
-              variants.find(
-                (option) =>
-                  option.code.toLowerCase() === key &&
-                  option.options.some((option) => option.id === value)
-              )
-          );
-
-          const isAvailableForSale = combinations.find((combination) =>
-            filtered.every(
-              ([key, value]) =>
-                combination[key] === value && combination.availableForSale
-            )
-          );
-
-          // The option is active if it's in the url params.
-          const isActive = searchParams.get(optionNameLowerCase) === value?.id;
-
-          return (
-            <button
-              key={value?.label}
-              aria-disabled={!isAvailableForSale}
-              className={clsx(
-                "flex min-w-[48px] cursor-pointer items-center justify-center rounded-full bg-neutral-100 px-2 py-1 text-sm dark:border-neutral-800 dark:bg-neutral-900",
-                {
-                  "cursor-default bg-white ring-2 ring-blue-600": isActive,
-                  "ring-[0] transition duration-300 ease-in-out hover:scale-110 hover:border-blue-600 border":
-                    !isActive && isAvailableForSale,
-                  "relative z-10 cursor-not-allowed overflow-hidden bg-neutral-100 text-neutral-500 ring-1 ring-neutral-300 before:absolute before:inset-x-0 before:-z-10 before:h-px before:-rotate-45 before:bg-neutral-300 before:transition-transform dark:bg-neutral-900 dark:text-neutral-400 dark:ring-neutral-700 before:dark:bg-neutral-700":
-                    !isAvailableForSale,
-                }
-              )}
-              disabled={!isAvailableForSale}
-              title={`${option.label} ${value.label}${
-                !isAvailableForSale ? " (Out of Stock)" : ""
-              }`}
-              onClick={() => {
-                router.replace(optionUrl, { scroll: false });
-              }}
-            >
-              {value?.label}
-            </button>
-          );
-        })}
-      </dd>
-    </dl>
-  ));
+              return (
+                <option
+                  key={value?.label}
+                  value={value?.id}
+                  disabled={!isAvailableForSale}
+                >
+                  {value?.label}
+                  {!isAvailableForSale ? " (Stok Habis)" : ""}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+      ))}
+    </div>
+  );
 }

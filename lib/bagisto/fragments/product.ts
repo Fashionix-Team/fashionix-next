@@ -255,8 +255,8 @@ export const productInfoFragment = /* GraphQL */ `
         regularPrice
         currencyCode
       }
-      images {
-        url
+      cacheGalleryImages {
+        originalImageUrl
       }
     }
     inventories {
@@ -265,25 +265,6 @@ export const productInfoFragment = /* GraphQL */ `
       productId
       inventorySourceId
       vendorId
-      inventorySource {
-        id
-        code
-        name
-        description
-        contactName
-        contactEmail
-        contactNumber
-        contactFax
-        country
-        state
-        city
-        street
-        postcode
-        priority
-        latitude
-        longitude
-        status
-      }
     }
 
     images {

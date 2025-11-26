@@ -60,6 +60,7 @@ export const ProductCardCompact: FC<ProductCardCompactProps> = ({
   return (
     <Link
       href={`/product/${product.urlKey}?type=${product.type}`}
+      prefetch={false}
       className="group block bg-white dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-700 hover:shadow-lg transition-all duration-200"
     >
       {/* Product Image */}

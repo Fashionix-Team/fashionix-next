@@ -38,52 +38,40 @@ export const ProductMoreDetails: FC<{
   totalReview: number;
 }> = ({ description, additionalData, reviews, totalReview }) => {
   return (
-    <div className="mt-8 border-t pt-6">
+    <div className="mt-6">
       <Tabs 
         aria-label="Product Details"
         classNames={{
-          tabList: "gap-6 w-full relative rounded-none p-0 border-b border-divider",
-          cursor: "w-full bg-orange-500",
-          tab: "max-w-fit px-0 h-12",
-          tabContent: "group-data-[selected=true]:text-orange-500"
+          tabList: "gap-0 w-full relative rounded-none p-0 border-b-2 border-gray-200",
+          cursor: "w-full bg-orange-500 h-0.5",
+          tab: "px-4 py-3 text-sm font-medium",
+          tabContent: "group-data-[selected=true]:text-orange-500 text-gray-600"
         }}
       >
         <Tab
           key="description"
-          title={
-            <div className="flex items-center space-x-2">
-              <span>DESKRIPSI</span>
-            </div>
-          }
+          title="DESKRIPSI"
         >
-          <div className="py-6">
-            <Prose className="text-sm text-gray-700" html={description} />
+          <div className="py-4 bg-white rounded-b-lg">
+            <Prose className="text-sm text-gray-700 leading-relaxed" html={description} />
           </div>
         </Tab>
         
         <Tab
           key="additional"
-          title={
-            <div className="flex items-center space-x-2">
-              <span>INFORMASI TAMBAHAN</span>
-            </div>
-          }
+          title="INFORMASI TAMBAHAN"
         >
-          <div className="py-6">
-            <div className="grid max-w-max grid-cols-[auto_1fr] gap-x-8 gap-y-4">
+          <div className="py-4 bg-white rounded-b-lg">
+            <div className="space-y-3">
               {additionalData?.map((item) => (
-                <React.Fragment key={item.label}>
-                  <div className="grid">
-                    <p className="text-sm font-medium text-gray-700">
-                      {item?.label}:
-                    </p>
-                  </div>
-                  <div className="grid">
-                    <p className="text-sm text-gray-600">
-                      {item?.value || "--"}
-                    </p>
-                  </div>
-                </React.Fragment>
+                <div key={item.label} className="flex border-b border-gray-100 pb-2">
+                  <span className="text-sm font-semibold text-gray-700 w-40">
+                    {item?.label}:
+                  </span>
+                  <span className="text-sm text-gray-600 flex-1">
+                    {item?.value || "--"}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
@@ -91,13 +79,9 @@ export const ProductMoreDetails: FC<{
 
         <Tab
           key="specifications"
-          title={
-            <div className="flex items-center space-x-2">
-              <span>SPESIFIKASI</span>
-            </div>
-          }
+          title="SPESIFIKASI"
         >
-          <div className="py-6">
+          <div className="py-4 bg-white rounded-b-lg">
             <div className="grid grid-cols-[auto_1fr] gap-x-8 gap-y-3 text-sm">
               <span className="font-medium text-gray-700">Berat:</span>
               <span className="text-gray-600">0.5 kg</span>

@@ -91,9 +91,9 @@ export default async function CategoryPage({
   });
   const sortOrders = productAttributes?.sortOrders;
   const filterAttributes = productAttributes?.filterAttributes;
-  const products = data?.products;
-  const paginatorInfo = data?.paginatorInfo;
-  const { total, currentPage } = paginatorInfo;
+  const products = data?.products || [];
+  const paginatorInfo = data?.paginatorInfo || { total: 0, currentPage: 1 };
+  const { total = 0, currentPage = 1 } = paginatorInfo;
 
   // Check if products array is valid and has items
   const hasProducts = isArray(products) && products.length > 0;

@@ -23,12 +23,12 @@ function SubmitButton({
   pending: boolean;
 }) {
   const buttonClasses =
-    "relative flex w-full max-w-[16rem] cursor-pointer h-fit items-center justify-center rounded-full bg-blue-600 p-4 tracking-wide text-white";
+    "relative flex flex-1 cursor-pointer h-12 items-center justify-center rounded-lg bg-orange-500 px-6 font-semibold tracking-wide text-white hover:bg-orange-600 transition-colors";
   const disabledClasses = "cursor-wait opacity-60";
 
   if (!availableForSale) {
     return (
-      <button aria-disabled className={clsx(buttonClasses, disabledClasses)}>
+      <button aria-disabled className={clsx(buttonClasses, disabledClasses, "bg-gray-400")}>
         Out Of Stock
       </button>
     );
@@ -42,7 +42,7 @@ function SubmitButton({
         disabled={!selectedVariantId}
         className={clsx(buttonClasses, " opacity-60 !cursor-not-allowed")}
       >
-        Add To Cart ddd
+        🛒 TAMBAH KE KERANJANG
       </button>
     );
   }
@@ -52,7 +52,7 @@ function SubmitButton({
       aria-disabled={pending}
       aria-label="Add to cart"
       className={clsx(buttonClasses, {
-        "hover:opacity-90": true,
+        "hover:bg-orange-600": true,
         [disabledClasses]: pending,
       })}
       onClick={(e: React.FormEvent<HTMLButtonElement>) => {
@@ -62,7 +62,7 @@ function SubmitButton({
       <div className="absolute left-0 ml-4">
         {pending ? <LoadingDots className="mb-3 bg-white" /> : ""}
       </div>
-      Add To Cart
+      🛒 TAMBAH KE KERANJANG
     </button>
   );
 }
@@ -176,12 +176,14 @@ export function AddToCart({
   };
 
   return (
-    <form className="flex gap-x-4" onSubmit={handleSubmit(actionWithVariant)}>
-      <div className="flex items-center justify-center">
-        <div className="flex items-center rounded-full border-2 border-blue-500">
+    <form className="space-y-4" onSubmit={handleSubmit(actionWithVariant)}>
+      {/* Quantity and Action Buttons */}
+      <div className="flex gap-3">
+        {/* Quantity Selector */}
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
           <button
             aria-label="Decrease quantity"
-            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-l-full text-gray-600 transition-colors hover:text-gray-800 dark:text-white hover:dark:text-white/[80%]"
+            className="flex h-12 w-12 cursor-pointer items-center justify-center text-gray-600 transition-colors hover:bg-gray-100"
             type="button"
             onClick={decrement}
           >
@@ -194,25 +196,39 @@ export function AddToCart({
             {...register("quantity", { valueAsNumber: true })}
           />
 
-          <div className="flex h-12 min-w-[3rem] items-center justify-center px-4 font-medium text-gray-800 dark:text-white">
+          <div className="flex h-12 min-w-[3rem] items-center justify-center px-4 font-medium text-gray-800 border-x border-gray-300">
             {quantity}
           </div>
 
           <button
             aria-label="Increase quantity"
-            className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-r-full text-gray-600 transition-colors hover:text-gray-800 dark:text-white hover:dark:text-white/[80%]"
+            className="flex h-12 w-12 cursor-pointer items-center justify-center text-gray-600 transition-colors hover:bg-gray-100"
             type="button"
             onClick={increment}
           >
             <PlusIcon className="h-4 w-4" />
           </button>
         </div>
+
+        {/* Add to Cart Button */}
+        <SubmitButton
+          availableForSale={availableForSale}
+          pending={isCartLoading}
+          selectedVariantId={buttonStatus}
+        />
+
+        {/* Buy Now Button */}
+        <button
+          type="button"
+          className="border-2 border-orange-500 text-orange-500 px-6 py-3 rounded-lg font-semibold hover:bg-orange-50 transition-colors whitespace-nowrap"
+          onClick={() => {
+            setValue("isBuyNow", true);
+            handleSubmit(actionWithVariant)();
+          }}
+        >
+          BELI SEKARANG
+        </button>
       </div>
-      <SubmitButton
-        availableForSale={availableForSale}
-        pending={isCartLoading}
-        selectedVariantId={buttonStatus}
-      />
     </form>
   );
 }

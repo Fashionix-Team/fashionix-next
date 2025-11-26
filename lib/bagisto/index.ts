@@ -91,8 +91,16 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/auth";
 
 const domain = process.env.BAGISTO_STORE_DOMAIN || "";
-
 const endpoint = `${domain}${BAGISTO_GRAPHQL_API_ENDPOINT}`;
+
+// Validate endpoint configuration
+if (!domain) {
+  console.error("[Bagisto] BAGISTO_STORE_DOMAIN is not configured in environment variables");
+}
+
+if (process.env.NODE_ENV === "development") {
+  console.log("[Bagisto] GraphQL Endpoint:", endpoint);
+}
 
 type ExtractVariables<T> = T extends { variables: object }
   ? T["variables"]
@@ -350,26 +358,35 @@ export const reshapeCollections = (collections: BagistoCollection[]) => {
 };
 
 const reshapeImages = (images: Array<ImageInfo>, productTitle: string) => {
+  if (!images || !Array.isArray(images)) {
+    return [];
+  }
+
   const flattened = removeEdgesAndNodes(images);
 
   return flattened.map((image) => {
-    const filename = image?.url.match(/.*\/(.*)\..*/)?.[1];
+    if (!image) return null;
+    
+    const filename = image?.url?.match(/.*\/(.*)\..*/)?.[1];
 
     return {
       ...image,
-      altText: image?.altText || `${productTitle} - ${filename}`,
+      altText: image?.altText || `${productTitle}${filename ? ` - ${filename}` : ""}`,
     };
-  });
+  }).filter(Boolean); // Remove null values
 };
 
 const reshapeProduct = (
   product: BagistoProductInfo,
   filterHiddenProducts: boolean = true
 ) => {
-  if (
-    !product ||
-    (filterHiddenProducts && product.tags?.includes(HIDDEN_PRODUCT_TAG))
-  ) {
+  if (!product) {
+    return undefined;
+  }
+
+  // For Bagisto, tags might not exist, so we skip the hidden tag check
+  // unless tags is explicitly defined
+  if (filterHiddenProducts && product.tags?.includes(HIDDEN_PRODUCT_TAG)) {
     return undefined;
   }
 
@@ -377,21 +394,31 @@ const reshapeProduct = (
 
   return {
     ...rest,
-    images: reshapeImages(images, product.title),
-    variants: removeEdgesAndNodes(variants),
+    // Use 'name' instead of 'title' for Bagisto products
+    images: reshapeImages(images, product.name || product.title || "Product"),
+    variants: variants ? removeEdgesAndNodes(variants) : [],
   };
 };
 
 export const reshapeProducts = (products: BagistoProductInfo[]) => {
+  if (!Array.isArray(products)) {
+    console.warn('[reshapeProducts] Input is not an array:', products);
+    return [];
+  }
+
   const reshapedProducts = [];
 
   for (const product of products) {
-    if (product) {
-      const reshapedProduct = reshapeProduct(product);
+    if (!product) {
+      continue;
+    }
 
-      if (reshapedProduct) {
-        reshapedProducts.push(reshapedProduct);
-      }
+    // Don't filter products - keep all valid products
+    // Only skip if explicitly hidden
+    const reshapedProduct = reshapeProduct(product, false);
+
+    if (reshapedProduct) {
+      reshapedProducts.push(reshapedProduct);
     }
   }
 
@@ -717,40 +744,57 @@ export async function getCollectionProducts({
   sortKey?: string;
   page?: string;
 }): Promise<ProductDetailsInfo[]> {
-  let input = [{ key: "limit", value: "100" }];
+  try {
+    let input = [{ key: "limit", value: "100" }];
 
-  if (collection && page != "product") {
-    input = [{ key: "category_id", value: `${collection}` }, ...input];
-  }
-  if (sortKey) {
-    const direction = reverse ? "desc" : "asc";
+    if (collection && page != "product") {
+      input = [{ key: "category_id", value: `${collection}` }, ...input];
+    }
+    if (sortKey) {
+      const direction = reverse ? "desc" : "asc";
 
-    input = [
-      { key: "sort", value: `${sortKey.toLowerCase()}-${direction}` },
-      ...input,
-    ];
-  }
-  if (collection && page === "product") {
-    input = [
-      { key: "url_key", value: collection },
-      { key: "type", value: type },
-      ...input,
-    ];
-  }
+      input = [
+        { key: "sort", value: `${sortKey.toLowerCase()}-${direction}` },
+        ...input,
+      ];
+    }
+    if (collection && page === "product") {
+      input = [
+        { key: "url_key", value: collection },
+        { key: "type", value: type },
+        ...input,
+      ];
+    }
 
-  const res = await bagistoFetch<BagistoCollectionProductsOperation>({
-    query: getCollectionProductQuery,
-    tags: [TAGS.collections, TAGS.products],
-    variables: {
-      input,
-    },
-  });
+    const res = await bagistoFetch<BagistoCollectionProductsOperation>({
+      query: getCollectionProductQuery,
+      tags: [TAGS.collections, TAGS.products],
+      variables: {
+        input,
+      },
+      cache: page === "product" ? "no-store" : "force-cache",
+    });
 
-  if (!res.body.data?.allProducts) {
+    if (!res.body.data?.allProducts) {
+      if (page === "product") {
+        console.warn("[getCollectionProducts] Product not found in API response");
+      }
+      return [];
+    }
+
+    if (!Array.isArray(res.body.data.allProducts.data)) {
+      console.warn("[getCollectionProducts] Invalid API response format");
+      return [];
+    }
+
+    const products = res.body.data.allProducts.data;
+    return reshapeProducts(products);
+  } catch (error) {
+    if (page === "product") {
+      console.warn("[getCollectionProducts] Failed to fetch product:", error instanceof Error ? error.message : error);
+    }
     return [];
   }
-
-  return reshapeProducts(res.body.data.allProducts.data);
 }
 
 export async function getDashboardSummary(): Promise<any> {
@@ -1101,31 +1145,61 @@ export async function getProducts({
     input = [...filters, ...input];
   }
 
-  const res = await bagistoFetch<BagistoCollectionProductsOperation>({
-    query: getCollectionProductsQuery,
-    tags: [tag, TAGS.products],
-    isCookies: false,
-    variables: {
-      input,
-    },
-  });
+  try {
+    const res = await bagistoFetch<BagistoCollectionProductsOperation>({
+      query: getCollectionProductsQuery,
+      tags: [tag, TAGS.products],
+      isCookies: false,
+      variables: {
+        input,
+      },
+    });
 
-  if (!isArray(res.body.data.allProducts.data)) {
+    if (!res.body.data?.allProducts) {
+      return {
+        paginatorInfo: {
+          count: 0,
+          currentPage: 1,
+          lastPage: 1,
+          total: 0,
+        },
+        products: [],
+      };
+    }
+
+    if (!isArray(res.body.data.allProducts.data)) {
+      return {
+        paginatorInfo: res.body.data.allProducts.paginatorInfo || {
+          count: 0,
+          currentPage: 1,
+          lastPage: 1,
+          total: 0,
+        },
+        products: [],
+      };
+    }
+
+    return {
+      paginatorInfo: res.body.data.allProducts.paginatorInfo || {
+        count: 0,
+        currentPage: 1,
+        lastPage: 1,
+        total: 0,
+      },
+      products: reshapeProducts(res.body.data.allProducts.data),
+    };
+  } catch (error) {
+    console.error("[getProducts] Error:", error);
     return {
       paginatorInfo: {
         count: 0,
         currentPage: 1,
         lastPage: 1,
-        total: 12,
+        total: 0,
       },
       products: [],
     };
   }
-
-  return {
-    paginatorInfo: res.body.data.allProducts?.paginatorInfo,
-    products: reshapeProducts(res.body.data.allProducts.data),
-  };
 }
 
 // --- Export helper functions ---

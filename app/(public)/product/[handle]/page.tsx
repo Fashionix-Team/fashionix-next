@@ -46,43 +46,56 @@ export async function generateMetadata({
   const { handle } = await params;
   const { type } = await searchParams;
 
-  const product = await getCollectionProducts({
-    collection: handle,
-    type: type,
-    page: "product",
-  });
+  try {
+    const product = await getCollectionProducts({
+      collection: handle,
+      type: type || "simple",
+      page: "product",
+    });
 
-  if (!product) return notFound();
-  const data = product[0];
-  const { url, altText: alt } = data?.images?.[0] || {};
+    if (!product || !Array.isArray(product) || product.length === 0 || !product[0] || !product[0].id) {
+      return {
+        title: "Product Not Found",
+        description: "The requested product could not be found.",
+      };
+    }
 
-  const { width, height = "100", name, description } = data || {};
-  const indexable = true;
+    const data = product[0];
+    const { url, altText: alt } = data?.images?.[0] || { url: "", altText: "" };
+    const { width, height = "100", name, description } = data;
+    const indexable = true;
 
-  return {
-    title: name,
-    description: description,
-    robots: {
-      index: indexable,
-      follow: indexable,
-      googleBot: {
+    return {
+      title: name,
+      description: description,
+      robots: {
         index: indexable,
         follow: indexable,
+        googleBot: {
+          index: indexable,
+          follow: indexable,
+        },
       },
-    },
-    openGraph: url
-      ? {
-          images: [
-            {
-              url,
-              width,
-              height,
-              alt,
-            },
-          ],
-        }
-      : null,
-  };
+      openGraph: url
+        ? {
+            images: [
+              {
+                url,
+                width,
+                height,
+                alt,
+              },
+            ],
+          }
+        : null,
+    };
+  } catch (error) {
+    console.error("[generateMetadata] Error:", error);
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
 }
 
 export default async function ProductPage({
@@ -97,27 +110,35 @@ export default async function ProductPage({
 
   const product = await getCollectionProducts({
     collection: handle,
-    type: type,
+    type: type || "simple",
     page: "product",
   });
 
-  if (!product[0]) return notFound();
+  if (!product || !Array.isArray(product) || product.length === 0) {
+    notFound();
+  }
+
   const data = product[0];
+  
+  if (!data || !data.id || !data.name) {
+    notFound();
+  }
+
   const productJsonLd = {
     "@context": BASE_SCHEMA_URL,
     "@type": PRODUCT_TYPE,
-    name: data?.name,
-    description: data?.description,
-    image: data?.images?.[0]?.url,
+    name: data.name,
+    description: data.description || "",
+    image: data?.images?.[0]?.url || "",
     offers: {
       "@type": PRODUCT_OFFER_TYPE,
       availability:
-        data?.inventories?.[0]?.qty || 0 > 0
+        (data?.inventories?.[0]?.qty || 0) > 0
           ? `${BASE_SCHEMA_URL}/InStock`
           : `${BASE_SCHEMA_URL}/OutOfStock`,
-      priceCurrency: data?.priceHtml.currencyCode,
-      highPrice: data?.priceHtml?.regularPrice,
-      lowPrice: data?.priceHtml?.regularPrice,
+      priceCurrency: data?.priceHtml?.currencyCode || "IDR",
+      highPrice: data?.priceHtml?.regularPrice || "0",
+      lowPrice: data?.priceHtml?.regularPrice || "0",
     },
   };
 
@@ -130,54 +151,57 @@ export default async function ProductPage({
         type="application/ld+json"
       />
       
-      {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-gray-600 mb-6 py-4">
-        <a href="/" className="hover:text-gray-900">Beranda</a>
-        <span className="mx-2">›</span>
-        <a href="/search" className="hover:text-gray-900">Toko</a>
-        <span className="mx-2">›</span>
-        <a href="/search" className="hover:text-gray-900">Sepatu dan Topi</a>
-        <span className="mx-2">›</span>
-        <span className="text-gray-900">Fashion</span>
-        <span className="mx-2">›</span>
-        <span className="text-gray-900">Produksi</span>
-      </nav>
+      <div className="container mx-auto px-4 py-6">
+        {/* Breadcrumb */}
+        <nav className="flex items-center text-sm text-gray-600 mb-6">
+          <a href="/" className="hover:text-gray-900">Beranda</a>
+          <span className="mx-2">›</span>
+          <a href="/search" className="hover:text-gray-900">Toko</a>
+          <span className="mx-2">›</span>
+          <a href="/search" className="hover:text-gray-900">Sepatu dan Topi</a>
+          <span className="mx-2">›</span>
+          <span className="text-gray-900">Fashion</span>
+          <span className="mx-2">›</span>
+          <span className="font-medium text-gray-900">Produksi</span>
+        </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pb-8">
-        {/* Left Column - Image Gallery */}
-        <div className="w-full">
-          <Suspense fallback={<ProductDetailSkeleton />}>
-            {isArray(data?.cacheGalleryImages) ? (
-              <HeroCarousel
-                images={
-                  data?.cacheGalleryImages?.map((image) => ({
-                    src: image?.originalImageUrl || "",
-                    altText: image?.originalImageUrl || "",
-                  })) || []
-                }
-              />
-            ) : (
-              <HeroCarousel
-                images={[
-                  {
-                    src: NOT_IMAGE,
-                    altText: "product image",
-                  },
-                ]}
-              />
-            )}
-          </Suspense>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_400px] gap-8 pb-8">
+          {/* Left Column - Image Gallery */}
+          <div className="w-full">
+            <Suspense fallback={<ProductDetailSkeleton />}>
+              {isArray(data?.cacheGalleryImages) ? (
+                <HeroCarousel
+                  images={
+                    data?.cacheGalleryImages?.map((image) => ({
+                      src: image?.originalImageUrl || "",
+                      altText: image?.originalImageUrl || "",
+                    })) || []
+                  }
+                />
+              ) : (
+                <HeroCarousel
+                  images={[
+                    {
+                      src: NOT_IMAGE,
+                      altText: "product image",
+                    },
+                  ]}
+                />
+              )}
+            </Suspense>
+          </div>
+
+          {/* Right Column - Product Details */}
+          <div className="w-full">
+            <ProductDescription product={product} slug={handle} />
+          </div>
         </div>
 
-        {/* Right Column - Product Details */}
-        <div className="w-full">
-          <ProductDescription product={product} slug={handle} />
-        </div>
+        {/* Related Products Section */}
+        <Suspense fallback={<RelatedProductSkeleton />}>
+          <RelatedProducts relatedProduct={data?.relatedProducts || []} />
+        </Suspense>
       </div>
-
-      <Suspense fallback={<RelatedProductSkeleton />}>
-        <RelatedProducts relatedProduct={data?.relatedProducts || []} />
-      </Suspense>
     </>
   );
 }
@@ -199,23 +223,25 @@ async function RelatedProducts({
         </p>
       </div>
       <Grid className="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {relatedProduct.map((item, index) => (
-          <ProductCard
-            key={index}
-            currency={item?.priceHtml?.currencyCode}
-            imageUrl={
-              item?.cacheGalleryImages?.[0]?.originalImageUrl ??
-              item?.images?.[0]?.url ??
-              NOT_IMAGE
-            }
-            price={
-              item?.priceHtml?.finalPrice ||
-              item?.priceHtml?.regularPrice ||
-              "0"
-            }
-            product={item}
-          />
-        ))}
+        {relatedProduct
+          .filter((item) => item?.urlKey && item?.name && item?.id)
+          .map((item, index) => (
+            <ProductCard
+              key={item.id || index}
+              currency={item?.priceHtml?.currencyCode || "IDR"}
+              imageUrl={
+                item?.cacheGalleryImages?.[0]?.originalImageUrl ??
+                item?.images?.[0]?.url ??
+                NOT_IMAGE
+              }
+              price={
+                item?.priceHtml?.finalPrice ||
+                item?.priceHtml?.regularPrice ||
+                "0"
+              }
+              product={item}
+            />
+          ))}
       </Grid>
     </div>
   );

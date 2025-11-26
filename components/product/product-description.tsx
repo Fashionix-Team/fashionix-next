@@ -26,10 +26,10 @@ export async function ProductDescription({
   });
 
   return (
-    <>
-      {/* Rating dan Judul */}
-      <div className="mb-4">
-        <div className="flex items-center gap-2 mb-2">
+    <div className="sticky top-4">
+      {/* Rating dan Judul Produk */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-3">
           <Rating
             length={5}
             reviewCount={moreDetails?.averageRating}
@@ -37,30 +37,26 @@ export async function ProductDescription({
             totalReview={moreDetails?.reviews?.length}
           />
           <span className="text-sm text-gray-600">
-            {moreDetails?.averageRating || 4.7} Penilaian Bintang
+            {moreDetails?.averageRating || 4.7} ({moreDetails?.reviews?.length || 0} Ulasan Pengguna)
           </span>
         </div>
-        <h1 className="font-outfit text-2xl font-semibold mb-4">{data?.name}</h1>
-      </div>
-
-      {/* Info Produk */}
-      <div className="mb-6 space-y-2 text-sm">
-        <div className="flex">
-          <span className="text-gray-600 w-32">Ketersediaan:</span>
-          <span className="text-green-600 font-medium">Tersedia</span>
+        <h1 className="font-outfit text-2xl font-bold mb-2">{data?.name}</h1>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-gray-600">Ketersediaan:</span>
+          <span className="text-blue-600 font-medium">Tersedia</span>
         </div>
-        <div className="flex">
-          <span className="text-gray-600 w-32">Merek:</span>
-          <span className="text-blue-600">Onitsuka</span>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-gray-600">Merek:</span>
+          <span className="text-blue-600 font-medium">Onitsuka</span>
         </div>
-        <div className="flex">
-          <span className="text-gray-600 w-32">Kategori:</span>
-          <span className="text-blue-600">Sepatu</span>
+        <div className="flex items-center gap-2 text-sm">
+          <span className="text-gray-600">Kategori:</span>
+          <span className="text-blue-600 font-medium">Sepatu</span>
         </div>
       </div>
 
       {/* Harga */}
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-6 flex items-center gap-3 flex-wrap">
         <Price
           amount={
             data?.priceHtml?.finalPrice ||
@@ -75,15 +71,15 @@ export async function ProductDescription({
             <span className="text-lg text-gray-400 line-through">
               Rp. {parseFloat(data?.priceHtml?.regularPrice || "0").toLocaleString('id-ID')}
             </span>
-            <span className="bg-yellow-400 text-black px-2 py-1 rounded text-sm font-semibold">
-              50% OFF
+            <span className="bg-yellow-400 text-black px-2 py-1 rounded text-xs font-bold">
+              SAVE 50%
             </span>
           </>
         )}
       </div>
 
       {/* Variant Selector */}
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<div className="h-20 bg-gray-100 animate-pulse rounded" />}>
         <VariantSelector
           index={configurableProductIndexData}
           variants={configurableProductData}
@@ -91,7 +87,7 @@ export async function ProductDescription({
       </Suspense>
 
       {/* Add to Cart */}
-      <Suspense fallback={<p>Loading...</p>}>
+      <Suspense fallback={<div className="h-12 bg-gray-100 animate-pulse rounded" />}>
         <AddToCart
           availableForSale={data?.status || false}
           index={configurableProductIndexData}
@@ -100,18 +96,108 @@ export async function ProductDescription({
         />
       </Suspense>
 
-      {/* Bagikan Produk */}
-      <div className="mt-6 flex items-center gap-2">
-        <span className="text-sm text-gray-600">Bagikan Produk:</span>
-        <button className="p-2 hover:bg-gray-100 rounded">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+      {/* Bandingkan Produk */}
+      <div className="mt-4 mb-6">
+        <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
+          Bandingkan Produk
         </button>
       </div>
 
-      {/* Tabs Section */}
-      <Suspense fallback={<p>Loading...</p>}>
+      {/* Filter Section */}
+      <div className="bg-gray-50 rounded-lg p-4 mb-6">
+        <h3 className="font-semibold text-base mb-4">Filter</h3>
+        <div className="space-y-3">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              defaultChecked 
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+            />
+            <div className="flex items-start gap-2 text-sm">
+              <span>🏷️</span>
+              <span>Diskon / Tokcer Gratis</span>
+            </div>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+            />
+            <div className="flex items-start gap-2 text-sm">
+              <span>📦</span>
+              <span>Ongkir & Pengemasan Super Cepat</span>
+            </div>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+            />
+            <div className="flex items-start gap-2 text-sm">
+              <span>💯</span>
+              <span>Dijamin Uang Kembali 100%</span>
+            </div>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+            />
+            <div className="flex items-start gap-2 text-sm">
+              <span>🎁</span>
+              <span>Layanan Pelanggan 24 Jam</span>
+            </div>
+          </label>
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="w-4 h-4 mt-0.5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" 
+            />
+            <div className="flex items-start gap-2 text-sm">
+              <span>💬</span>
+              <span>Metode Pembayaran Aman</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      {/* Informasi Pengiriman */}
+      <div className="border-t pt-4 space-y-2 text-sm mb-6">
+        <div className="flex items-start gap-2">
+          <span className="text-orange-500">✓</span>
+          <div>
+            <span className="font-semibold">Kursi: </span>
+            <span className="text-gray-600">Gratis ongkir untuk negara pilihan</span>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="text-orange-500">✓</span>
+          <div>
+            <span className="font-semibold">Pengiriman Lebih: </span>
+            <span className="text-gray-600">Rp. 500 - Rp. 5000</span>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="text-orange-500">✓</span>
+          <div>
+            <span className="font-semibold">Pengiriman Global (DHL): </span>
+            <span className="text-gray-600">Rp. 25.00 - Rp. 40.00</span>
+          </div>
+        </div>
+        <div className="flex items-start gap-2">
+          <span className="text-orange-500">✓</span>
+          <div>
+            <span className="font-semibold">Barang Imitasi Murahka: </span>
+            <span className="text-gray-600">3 - 4 hari, 500,00</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs Section - Moved below in the main layout */}
+      <Suspense fallback={<div className="h-40 bg-gray-100 animate-pulse rounded" />}>
         <ProductMoreDetails
           additionalData={moreDetails?.additionalData || []}
           description={moreDetails?.description || ""}
@@ -119,6 +205,6 @@ export async function ProductDescription({
           totalReview={moreDetails?.reviews?.length}
         />
       </Suspense>
-    </>
+    </div>
   );
 }
