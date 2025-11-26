@@ -1,6 +1,6 @@
 import Home from "@/components/home";
 
-export const revalidate = 60;
+// Remove time-based revalidation, use tag-based instead via webhook
 export const dynamic = "auto";
 export const metadata = {
   description:

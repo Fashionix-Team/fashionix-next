@@ -184,6 +184,17 @@ export const addShippingAddressMutation = /* GraphQL */ `
           updatedAt
         }
       }
+      shippingMethods {
+        title
+        methods {
+          code
+          label
+          price
+          formattedPrice
+          basePrice
+          formattedBasePrice
+        }
+      }
     }
   }
 `;
