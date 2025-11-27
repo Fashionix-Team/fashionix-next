@@ -1,11 +1,18 @@
-import ResetPasswordForm from "@/components/customer/login/reset-password-form";
+// app/(public)/customer/reset-password/page.tsx
 
+export const dynamic = 'force-dynamic';
+import { ResetPasswordForm } from "@/components/customer/login/reset-password-form";
+import AuthLayout from "@/components/auth/auth-layout";
+
+// Set properti dinamis ke 'force-dynamic' untuk memastikan searchParams selalu segar
+// Namun, karena menggunakan useSearchParams di Client Component, ini mungkin tidak mutlak perlu.
+// Mari kita pastikan form dipanggil dalam tata letak yang benar.
 
 export default function ResetPasswordPage() {
   return (
-    // Menggunakan h-screen (atau min-h-screen) dan justify-center untuk pemusatan vertikal
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-50"> 
-      <ResetPasswordForm />
-    </div>
+    <AuthLayout>
+      {/* Komponen Client yang menangani URL params */}
+      <ResetPasswordForm /> 
+    </AuthLayout>
   );
 }
