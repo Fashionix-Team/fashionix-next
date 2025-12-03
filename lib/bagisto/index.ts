@@ -1209,25 +1209,42 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   ];
   const topic = (await headers()).get("x-bagisto-topic") || "unknown";
   const secret = req.nextUrl.searchParams.get("secret");
+  const tag = req.nextUrl.searchParams.get("tag"); // Support custom tag revalidation
   const isCollectionUpdate = collectionWebhooks.includes(topic);
   const isProductUpdate = productWebhooks.includes(topic);
 
+  // Log untuk debugging
+  console.log("[Revalidate] Topic:", topic, "| Tag:", tag, "| Time:", new Date().toISOString());
+
   if (!secret || secret !== process.env.BAGISTO_REVALIDATION_SECRET) {
+    console.log("[Revalidate] Invalid or missing secret");
     return NextResponse.json({ status: 200 });
   }
 
+  // Handle custom tag revalidation
+  if (tag) {
+    console.log("[Revalidate] Revalidating custom tag:", tag);
+    revalidateTag(tag);
+    // Clear LRU cache for the specific tag
+    lruCache.delete(tag);
+    return NextResponse.json({ status: 200, revalidated: true, tag, now: Date.now() });
+  }
+
   if (!isCollectionUpdate && !isProductUpdate) {
-    // We don't need to revalidate anything for any other topics.
+    // We don't need to revalidate anything f or any other topics.
+    console.log("[Revalidate] Unknown topic, skipping revalidation");
     return NextResponse.json({ status: 200 });
   }
 
   if (isCollectionUpdate) {
+    console.log("[Revalidate] Revalidating collections");
     revalidateTag(TAGS.collections);
     // Clear LRU cache for collection-related data
     lruCache.clear();
   }
 
   if (isProductUpdate) {
+    console.log("[Revalidate] Revalidating products");
     revalidateTag(TAGS.products);
     // Clear LRU cache for product-related data
     lruCache.clear();
