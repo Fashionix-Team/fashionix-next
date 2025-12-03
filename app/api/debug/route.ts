@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCollectionHomeProducts } from "@/lib/bagisto";
+import { getHomeProductQuery } from "@/lib/bagisto/queries/common/product-collection";
 
 export const dynamic = "force-dynamic";
 
@@ -7,20 +7,31 @@ export async function GET() {
   const bagistoDomain = process.env.BAGISTO_STORE_DOMAIN;
   const endpoint = `${bagistoDomain}/graphql`;
   
-  let testResult = null;
+  let rawResponse = null;
   let error = null;
   
   try {
-    // Test direct fetch
+    // Test RAW fetch to see exactly what backend returns
     const filters = [
       { key: "limit", value: "8" },
       { key: "sort", value: "name-asc" },
     ];
     
-    testResult = await getCollectionHomeProducts({
-      filters,
-      tag: "debug-test",
+    const res = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-locale": "en",
+        "x-currency": "USD",
+      },
+      body: JSON.stringify({
+        query: getHomeProductQuery,
+        variables: { input: filters },
+      }),
+      cache: "no-store",
     });
+    
+    rawResponse = await res.json();
   } catch (e: any) {
     error = e?.message || String(e);
   }
@@ -31,10 +42,7 @@ export async function GET() {
       endpoint: endpoint,
       NODE_ENV: process.env.NODE_ENV,
     },
-    testResult: {
-      productsCount: testResult?.length || 0,
-      products: testResult?.map((p: any) => ({ id: p.id, name: p.name })) || [],
-    },
+    rawResponse,
     error,
     timestamp: new Date().toISOString(),
   });
