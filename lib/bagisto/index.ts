@@ -253,8 +253,8 @@ export async function bagistoFetchNoSession<T>({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-locale": "en",
-        "x-currency": "USD",
+        "x-locale": "id",
+        "x-currency": "IDR",
         ...headers,
       },
       body: JSON.stringify({
