@@ -2,6 +2,8 @@ import { getCollectionHomeProducts } from "@/lib/bagisto";
 import { mapBagistoProducts } from "@/lib/bagisto/helpers/product-mapper";
 import ProductsTabs from "../products/product-tabs";
 
+export const revalidate = 3600; // Revalidate every hour
+
 export default async function Products01Section() {
   // Fetch products from Bagisto API
   const filters = [
