@@ -146,7 +146,7 @@ async function fetchWithTimeout(
 }
 
 export async function bagistoFetch<T>({
-  cache = "force-cache", // Always fetch fresh data
+  cache = "force-cache", // Use force-cache for static generation with revalidation
   headers,
   query,
   tags,
@@ -246,6 +246,11 @@ export async function bagistoFetchNoSession<T>({
   cache?: RequestCache;
 }): Promise<{ status: number; body: T } | never> {
   try {
+    // Log cache configuration for debugging
+    if (tags && tags.length > 0) {
+      console.log("[Fetch] Tags:", tags, "| Cache:", cache, "| Revalidate: 60s");
+    }
+    
     const result = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -887,8 +892,14 @@ export async function getCollectionHomeProducts({
   filters: any;
   tag: string;
 }): Promise<ProductDetailsInfo[]> {
-  const cachedData = lruCache.get(tag);
-  if (cachedData) return cachedData;
+  // Skip LRU cache in production to ensure revalidation works on Vercel
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  if (!isProduction) {
+    const cachedData = lruCache.get(tag);
+    if (cachedData) return cachedData;
+  }
+  
   try {
     const res = await bagistoFetchNoSession<BagistoCollectionProductsOperation>(
       {
@@ -906,7 +917,12 @@ export async function getCollectionHomeProducts({
       Array.isArray(res.body.data.allProducts.data)
     ) {
       const BannerProduct = reshapeProducts(res.body.data.allProducts.data);
-      lruCache.set(tag, BannerProduct);
+      
+      // Only use LRU cache in development
+      if (!isProduction) {
+        lruCache.set(tag, BannerProduct);
+      }
+      
       return BannerProduct;
     }
     return [];
