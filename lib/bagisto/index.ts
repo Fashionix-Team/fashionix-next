@@ -193,10 +193,13 @@ export async function bagistoFetch<T>({
         ...(variables && { variables }),
       }),
       cache: cache,
-      next: {
-        revalidate: cache === "no-store" ? 0 : 60,
-        ...(tags && { tags }),
-      },
+      // Don't use next config for no-store cache
+      ...(cache !== "no-store" && {
+        next: {
+          revalidate: 60,
+          ...(tags && { tags }),
+        },
+      }),
     }));
 
     const body = await result.json();
@@ -259,10 +262,13 @@ export async function bagistoFetchNoSession<T>({
         ...(variables && { variables }),
       }),
       cache,
-      next: {
-        revalidate: cache === "no-store" ? 0 : 60,
-        ...(tags && { tags }),
-      },
+      // Don't use next config for no-store cache
+      ...(cache !== "no-store" && {
+        next: {
+          revalidate: 60,
+          ...(tags && { tags }),
+        },
+      }),
     });
 
     const body = await result.json();

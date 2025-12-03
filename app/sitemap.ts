@@ -6,6 +6,10 @@ import { BagistoCollectionProductsOperation, BagistoPagesOperation, Page, Pagina
 import { isArray } from "@/lib/type-guards";
 import type { MetadataRoute } from "next";
 
+// Force dynamic rendering for sitemap
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type Route = {
   url: string;
   lastModified: string;
@@ -16,6 +20,7 @@ const baseUrl = process.env.NEXTAUTH_URL;
 export async function getHomeCategories(): Promise<any[]> {
   const res = await bagistoFetchNoSession<any>({
     query: getMenuQuery,
+    cache: "no-store", // Force no cache for dynamic sitemap
   });
   const bagistoCollections = removeEdgesAndNodes(
     res.body?.data?.homeCategories
@@ -48,6 +53,7 @@ export async function getProducts(): Promise<PaginatedProducts> {
 
   const res = await bagistoFetchNoSession<BagistoCollectionProductsOperation>({
     query: getCollectionProductsQuery,
+    cache: "no-store", // Force no cache for dynamic sitemap
     variables: {
       input,
     },
@@ -75,6 +81,7 @@ export async function getProducts(): Promise<PaginatedProducts> {
 export async function getPages(): Promise<Page> {
   const res = await bagistoFetchNoSession<BagistoPagesOperation>({
     query: getPagesQuery,
+    cache: "no-store", // Force no cache for dynamic sitemap
   });
 
   return res.body.data?.cmsPages;
