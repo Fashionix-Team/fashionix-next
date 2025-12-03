@@ -1,4 +1,4 @@
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import lruCache from "../lru";
@@ -237,7 +237,7 @@ export async function bagistoFetchNoSession<T>({
   tags,
   variables,
   headers,
-  cache = "force-cache",
+  cache = "no-store",
 }: {
   query: string;
   tags?: string[];
@@ -246,11 +246,6 @@ export async function bagistoFetchNoSession<T>({
   cache?: RequestCache;
 }): Promise<{ status: number; body: T } | never> {
   try {
-    // Log cache configuration for debugging
-    if (tags && tags.length > 0) {
-      console.log("[Fetch] Tags:", tags, "| Cache:", cache, "| Revalidate: 60s");
-    }
-    
     const result = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -887,25 +882,17 @@ export async function getCollectionReviewProducts({
 
 export async function getCollectionHomeProducts({
   filters,
+  // eslint-disable-next-line no-unused-vars
   tag,
 }: {
   filters: any;
   tag: string;
 }): Promise<ProductDetailsInfo[]> {
-  // Skip LRU cache in production to ensure revalidation works on Vercel
-  const isProduction = process.env.NODE_ENV === 'production';
-  
-  if (!isProduction) {
-    const cachedData = lruCache.get(tag);
-    if (cachedData) return cachedData;
-  }
-  
   try {
     const res = await bagistoFetchNoSession<BagistoCollectionProductsOperation>(
       {
         query: getHomeProductQuery,
-        tags: [tag, TAGS.collections, TAGS.products], // Include custom tag for specific revalidation
-        cache: "force-cache", // Use force-cache with revalidation
+        cache: "no-store", // No cache, always fetch fresh data
         variables: { input: filters },
       }
     );
@@ -916,18 +903,11 @@ export async function getCollectionHomeProducts({
       res.body.data.allProducts &&
       Array.isArray(res.body.data.allProducts.data)
     ) {
-      const BannerProduct = reshapeProducts(res.body.data.allProducts.data);
-      
-      // Only use LRU cache in development
-      if (!isProduction) {
-        lruCache.set(tag, BannerProduct);
-      }
-      
-      return BannerProduct;
+      return reshapeProducts(res.body.data.allProducts.data);
     }
     return [];
   } catch (error) {
-    console.error("Error fetching collection home products: line 630", error);
+    console.error("Error fetching collection home products:", error);
   }
   return [];
 }
@@ -1240,50 +1220,23 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
 
   // Handle custom tag revalidation
   if (tag) {
-    console.log("[Revalidate] Revalidating custom tag:", tag);
-    try {
-      revalidateTag(tag);
-      // Also revalidate the homepage path for immediate update
-      revalidatePath("/", "page");
-      // Clear LRU cache for the specific tag
-      lruCache.delete(tag);
-      console.log("[Revalidate] Successfully revalidated tag:", tag);
-    } catch (error) {
-      console.error("[Revalidate] Error revalidating tag:", error);
-    }
-    return NextResponse.json({ status: 200, revalidated: true, tag, now: Date.now() });
+    console.log("[Revalidate] Custom tag revalidation requested:", tag);
+    return NextResponse.json({ status: 200, message: "Homepage is now dynamic, no cache to revalidate", tag, now: Date.now() });
   }
 
   if (!isCollectionUpdate && !isProductUpdate) {
-    // We don't need to revalidate anything f or any other topics.
-    console.log("[Revalidate] Unknown topic, skipping revalidation");
+    console.log("[Revalidate] Unknown topic");
     return NextResponse.json({ status: 200 });
   }
 
   if (isCollectionUpdate) {
-    console.log("[Revalidate] Revalidating collections");
-    try {
-      revalidateTag(TAGS.collections);
-      revalidatePath("/", "page");
-      // Clear LRU cache for collection-related data
-      lruCache.clear();
-      console.log("[Revalidate] Successfully revalidated collections");
-    } catch (error) {
-      console.error("[Revalidate] Error revalidating collections:", error);
-    }
+    console.log("[Revalidate] Collections update");
+    revalidateTag(TAGS.collections);
   }
 
   if (isProductUpdate) {
-    console.log("[Revalidate] Revalidating products");
-    try {
-      revalidateTag(TAGS.products);
-      revalidatePath("/", "page");
-      // Clear LRU cache for product-related data
-      lruCache.clear();
-      console.log("[Revalidate] Successfully revalidated products");
-    } catch (error) {
-      console.error("[Revalidate] Error revalidating products:", error);
-    }
+    console.log("[Revalidate] Products update");
+    revalidateTag(TAGS.products);
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });

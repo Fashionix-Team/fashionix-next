@@ -1,9 +1,8 @@
 import Home from "@/components/home";
 
-export const revalidate = 3600; // Revalidate every hour (ISR)
-
-// Force static generation to enable cache revalidation on Vercel
-export const dynamic = "force-static";
+// Make homepage fully dynamic without cache, like search page
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const metadata = {
   description:
     "Website E-Commerce Fashionix menggunakan Bagisto, platform open-source berbasis Laravel dan Vue.js yang kuat untuk membangun toko online yang menarik dan fungsional.",
