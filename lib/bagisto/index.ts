@@ -667,8 +667,7 @@ export async function getCollectionHomePage(
 ): Promise<ThemeCustomizationTypes[]> {
   const res: any = await bagistoFetchNoSession<BagistoCollectionHomeOperation>({
     query: getHomeCustomizationQuery,
-    tags: [handle, TAGS.themeCustomize],
-    cache: "force-cache",
+    cache: "no-store",
   });
   if (!isArray(res.body.data?.themeCustomization)) {
     return [];
@@ -686,21 +685,16 @@ export async function getCollectionMenus({
   getCategoryTree: boolean;
   tag: string;
 }): Promise<BagistoCollectionMenus[]> {
-  const cachedData = lruCache.get(tag);
-
-  if (cachedData) return cachedData;
-
+  // No cache - always fetch fresh data
   try {
     const input = { input: inputs, getCategoryTree: getCategoryTree };
 
     const res =
       await bagistoFetchNoSession<BagistoCollectionHomeCategoryCarousel>({
         query: getHomeCategoriesQuery,
-        tags: [TAGS.collections, TAGS.products],
+        cache: "no-store",
         variables: input,
       });
-
-    lruCache.set(tag, res.body.data.homeCategories);
 
     return res.body.data.homeCategories;
   } catch (error) {
@@ -949,47 +943,11 @@ export async function getHomeCategories(): Promise<any[]> {
 }
 
 export async function getMenu(handle: string): Promise<Menu[]> {
-  const cached = lruCache.get(handle);
-
-  if (cached) {
-    // If entry is stale (expired), lruCache.has(handle) will be false
-    if (!lruCache.has(handle)) {
-      // Trigger background refresh
-      bagistoFetch<BagistoMenuOperation>({
-        query: getMenuQuery,
-        tags: [TAGS.collections],
-        variables: { handle },
-      }).then((res) => {
-        const response =
-          res.body?.data?.homeCategories?.map(
-            (item: {
-              name: string;
-              slug: string;
-              id: string;
-              description: string;
-            }) => ({
-              id: item.id,
-              title: item.name,
-              description: item.description,
-              path: `/search/${item.slug
-                .replace(domain, "")
-                .replace("/collections", "/search")
-                .replace("/pages", "/search")}`,
-            })
-          ) || [];
-
-        lruCache.set(handle, response);
-      });
-    }
-
-    // Return cached (fresh or stale)
-    return cached;
-  }
-
-  // No cache at all → fetch fresh
+  // No cache - always fetch fresh data
   const res = await bagistoFetch<BagistoMenuOperation>({
     query: getMenuQuery,
-    tags: [TAGS.collections],
+    cache: "no-store",
+    isCookies: false,
     variables: { handle },
   });
 
@@ -1006,8 +964,6 @@ export async function getMenu(handle: string): Promise<Menu[]> {
         .replace("/collections", "/search")
         .replace("/pages", "/search")}`,
     })) || [];
-
-  lruCache.set(handle, response);
 
   return response;
 }
