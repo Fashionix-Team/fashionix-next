@@ -146,7 +146,7 @@ async function fetchWithTimeout(
 }
 
 export async function bagistoFetch<T>({
-  cache = "force-cache", // Always fetch fresh data
+  cache = "force-cache", // Use force-cache for static generation with revalidation
   headers,
   query,
   tags,
@@ -193,10 +193,13 @@ export async function bagistoFetch<T>({
         ...(variables && { variables }),
       }),
       cache: cache,
-      next: {
-        revalidate: cache === "no-store" ? 0 : 60,
-        ...(tags && { tags }),
-      },
+      // Don't use next config for no-store cache
+      ...(cache !== "no-store" && {
+        next: {
+          revalidate: 60,
+          ...(tags && { tags }),
+        },
+      }),
     }));
 
     const body = await result.json();
@@ -237,7 +240,7 @@ export async function bagistoFetchNoSession<T>({
   tags,
   variables,
   headers,
-  cache = "force-cache",
+  cache = "no-store",
 }: {
   query: string;
   tags?: string[];
@@ -250,8 +253,8 @@ export async function bagistoFetchNoSession<T>({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-locale": "en",
-        "x-currency": "USD",
+        "x-locale": "id",
+        "x-currency": "IDR",
         ...headers,
       },
       body: JSON.stringify({
@@ -259,10 +262,13 @@ export async function bagistoFetchNoSession<T>({
         ...(variables && { variables }),
       }),
       cache,
-      next: {
-        revalidate: cache === "no-store" ? 0 : 60,
-        ...(tags && { tags }),
-      },
+      // Don't use next config for no-store cache
+      ...(cache !== "no-store" && {
+        next: {
+          revalidate: 60,
+          ...(tags && { tags }),
+        },
+      }),
     });
 
     const body = await result.json();
@@ -661,8 +667,7 @@ export async function getCollectionHomePage(
 ): Promise<ThemeCustomizationTypes[]> {
   const res: any = await bagistoFetchNoSession<BagistoCollectionHomeOperation>({
     query: getHomeCustomizationQuery,
-    tags: [handle, TAGS.themeCustomize],
-    cache: "force-cache",
+    cache: "no-store",
   });
   if (!isArray(res.body.data?.themeCustomization)) {
     return [];
@@ -680,21 +685,16 @@ export async function getCollectionMenus({
   getCategoryTree: boolean;
   tag: string;
 }): Promise<BagistoCollectionMenus[]> {
-  const cachedData = lruCache.get(tag);
-
-  if (cachedData) return cachedData;
-
+  // No cache - always fetch fresh data
   try {
     const input = { input: inputs, getCategoryTree: getCategoryTree };
 
     const res =
       await bagistoFetchNoSession<BagistoCollectionHomeCategoryCarousel>({
         query: getHomeCategoriesQuery,
-        tags: [TAGS.collections, TAGS.products],
+        cache: "no-store",
         variables: input,
       });
-
-    lruCache.set(tag, res.body.data.homeCategories);
 
     return res.body.data.homeCategories;
   } catch (error) {
@@ -882,18 +882,17 @@ export async function getCollectionReviewProducts({
 
 export async function getCollectionHomeProducts({
   filters,
+  // eslint-disable-next-line no-unused-vars
   tag,
 }: {
   filters: any;
   tag: string;
 }): Promise<ProductDetailsInfo[]> {
-  const cachedData = lruCache.get(tag);
-  if (cachedData) return cachedData;
   try {
     const res = await bagistoFetchNoSession<BagistoCollectionProductsOperation>(
       {
         query: getHomeProductQuery,
-        tags: [TAGS.collections, TAGS.products],
+        cache: "no-store", // No cache, always fetch fresh data
         variables: { input: filters },
       }
     );
@@ -904,13 +903,11 @@ export async function getCollectionHomeProducts({
       res.body.data.allProducts &&
       Array.isArray(res.body.data.allProducts.data)
     ) {
-      const BannerProduct = reshapeProducts(res.body.data.allProducts.data);
-      lruCache.set(tag, BannerProduct);
-      return BannerProduct;
+      return reshapeProducts(res.body.data.allProducts.data);
     }
     return [];
   } catch (error) {
-    console.error("Error fetching collection home products: line 630", error);
+    console.error("Error fetching collection home products:", error);
   }
   return [];
 }
@@ -946,47 +943,11 @@ export async function getHomeCategories(): Promise<any[]> {
 }
 
 export async function getMenu(handle: string): Promise<Menu[]> {
-  const cached = lruCache.get(handle);
-
-  if (cached) {
-    // If entry is stale (expired), lruCache.has(handle) will be false
-    if (!lruCache.has(handle)) {
-      // Trigger background refresh
-      bagistoFetch<BagistoMenuOperation>({
-        query: getMenuQuery,
-        tags: [TAGS.collections],
-        variables: { handle },
-      }).then((res) => {
-        const response =
-          res.body?.data?.homeCategories?.map(
-            (item: {
-              name: string;
-              slug: string;
-              id: string;
-              description: string;
-            }) => ({
-              id: item.id,
-              title: item.name,
-              description: item.description,
-              path: `/search/${item.slug
-                .replace(domain, "")
-                .replace("/collections", "/search")
-                .replace("/pages", "/search")}`,
-            })
-          ) || [];
-
-        lruCache.set(handle, response);
-      });
-    }
-
-    // Return cached (fresh or stale)
-    return cached;
-  }
-
-  // No cache at all → fetch fresh
+  // No cache - always fetch fresh data
   const res = await bagistoFetch<BagistoMenuOperation>({
     query: getMenuQuery,
-    tags: [TAGS.collections],
+    cache: "no-store",
+    isCookies: false,
     variables: { handle },
   });
 
@@ -1003,8 +964,6 @@ export async function getMenu(handle: string): Promise<Menu[]> {
         .replace("/collections", "/search")
         .replace("/pages", "/search")}`,
     })) || [];
-
-  lruCache.set(handle, response);
 
   return response;
 }
@@ -1209,28 +1168,37 @@ export async function revalidate(req: NextRequest): Promise<NextResponse> {
   ];
   const topic = (await headers()).get("x-bagisto-topic") || "unknown";
   const secret = req.nextUrl.searchParams.get("secret");
+  const tag = req.nextUrl.searchParams.get("tag"); // Support custom tag revalidation
   const isCollectionUpdate = collectionWebhooks.includes(topic);
   const isProductUpdate = productWebhooks.includes(topic);
 
+  // Log untuk debugging
+  console.log("[Revalidate] Topic:", topic, "| Tag:", tag, "| Time:", new Date().toISOString());
+
   if (!secret || secret !== process.env.BAGISTO_REVALIDATION_SECRET) {
+    console.log("[Revalidate] Invalid or missing secret");
     return NextResponse.json({ status: 200 });
   }
 
+  // Handle custom tag revalidation
+  if (tag) {
+    console.log("[Revalidate] Custom tag revalidation requested:", tag);
+    return NextResponse.json({ status: 200, message: "Homepage is now dynamic, no cache to revalidate", tag, now: Date.now() });
+  }
+
   if (!isCollectionUpdate && !isProductUpdate) {
-    // We don't need to revalidate anything for any other topics.
+    console.log("[Revalidate] Unknown topic");
     return NextResponse.json({ status: 200 });
   }
 
   if (isCollectionUpdate) {
+    console.log("[Revalidate] Collections update");
     revalidateTag(TAGS.collections);
-    // Clear LRU cache for collection-related data
-    lruCache.clear();
   }
 
   if (isProductUpdate) {
+    console.log("[Revalidate] Products update");
     revalidateTag(TAGS.products);
-    // Clear LRU cache for product-related data
-    lruCache.clear();
   }
 
   return NextResponse.json({ status: 200, revalidated: true, now: Date.now() });

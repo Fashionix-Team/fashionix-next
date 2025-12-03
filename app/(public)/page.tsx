@@ -1,7 +1,8 @@
 import Home from "@/components/home";
 
-// Remove time-based revalidation, use tag-based instead via webhook
-export const dynamic = "auto";
+// Make homepage fully dynamic without cache, like search page
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export const metadata = {
   description:
     "Website E-Commerce Fashionix menggunakan Bagisto, platform open-source berbasis Laravel dan Vue.js yang kuat untuk membangun toko online yang menarik dan fungsional.",
